@@ -4,40 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
-struct nmea_gpgll_s
-{
-	char	type[5];
-	// latitude
-	unsigned int	lat_deg;
-	float	lat_min;
-	unsigned int	n_or_s;
-	// longitude
-	unsigned int	long_deg;
-	float	long_min;
-	unsigned int	e_or_w;
-};
-
-/* NMEA ENTRY TYPES */
-#define NMEA_GPBOD	"GPBOD"	// Bearing, origin to destination
-#define NMEA_GPBWC 	"GPBWC"	// Bearing and distance to waypoint, great circle
-#define NMEA_GPGGA 	"GPGAA"	// Global Positioning System Fix Data
-#define NMEA_GPGLL 	"GPGLL"	// Geographic position, latitude / longitude
-#define NMEA_GPGSA 	"GPGSA"	// GPS DOP and active satellites 
-#define NMEA_GPGSV 	"GPGSV"	// GPS Satellites in view
-#define NMEA_GPHDT 	"GPHDT"	// Heading, True
-#define NMEA_GPR00 	"GPR00"	// List of waypoints in currently active route
-#define NMEA_GPRMA 	"GPRMA"	// Recommended minimum specific Loran-C data
-#define NMEA_GPRMB 	"GPRMB"	// Recommended minimum navigation info
-#define NMEA_GPRMC 	"GPRMC"	// Recommended minimum specific GPS/Transit data
-#define NMEA_GPRTE 	"GPRTE"	// Routes
-#define NMEA_GPTRF 	"GPTRF"	// Transit Fix Data
-#define NMEA_GPSTN 	"GPSTN"	// Multiple Data ID
-#define NMEA_GPVBW 	"GPVBW"	// Dual Ground / Water Speed
-#define NMEA_GPVTG 	"GPVTG"	// Track made good and ground speed
-#define NMEA_GPWPL 	"GPWPL"	// Waypoint location
-#define NMEA_GPXTE 	"GPXTE"	// Cross-track error, Measured
-#define NMEA_GPZDA 	"GPZDA"	// Date & Time
+#include "nmea.h"
 
 int
 main(void)
@@ -87,11 +54,18 @@ main(void)
 			continue;
 		}
 
+		*end = '\n';
 		end++;
 
 		/* handle data */
-		if (0 == strncmp(start + 1, NMEA_GPGLL, 5)) {
-		      write(1, start, end - start);
+		nmea_t type = nmea_get_type(start);
+		if (NMEA_GPGLL_T == type) {
+			char actual_chk = nmea_get_checksum(start);
+			long int expected_chk =strtol(end - 3, NULL, 16);
+			if (expected_chk != (long int) actual_chk) {
+				fprintf(stderr, "Invalid checksum!\n");
+			}
+			write(1, start, end - start);
 		}
 
 		/* copy rest of buffer to beginning */
