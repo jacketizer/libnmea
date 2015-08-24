@@ -10,7 +10,7 @@ int
 main(void)
 {
 	int gps_fd;
-	int read_bytes, total_bytes;
+	int read_bytes, total_bytes = 0;
 	char *buffer, *start, *end;
 
 	buffer = malloc(4096);
@@ -26,46 +26,47 @@ main(void)
 	}
 
 	while (1) {
-		read_bytes = read(gps_fd, buffer + total_bytes, 100);
+		read_bytes = read(gps_fd, buffer + total_bytes, 20);
 		if (-1 == read_bytes) {
 			perror("read ttyUSB0");
 			exit(EXIT_FAILURE);
 		}
 		total_bytes += read_bytes;
 
-		/* process entire buffer */
-		
-		/* find start ($) */
+		/* find start (a dollar $ign) */
 		start = memchr(buffer, '$', total_bytes);
-		if (NULL == start || start == buffer + total_bytes) {
+		if (NULL == start) {
 			total_bytes = 0;
 			continue;
 		}
 
 		/* find end of line */
-		end = memchr(start, '\n', total_bytes - (start - buffer));
-		if (NULL == end) {
+		end = memchr(start, '\r', total_bytes - (start - buffer));
+		if (NULL == end || '\n' != *(++end)) {
 			continue;
 		}
-
-		/* end of buffer? */
-		if (end == buffer + total_bytes) {
-			total_bytes = 0;
-			continue;
-		}
-
-		*end = '\n';
-		end++;
 
 		/* handle data */
 		nmea_t type = nmea_get_type(start);
-		if (NMEA_GPGLL_T == type) {
-			char actual_chk = nmea_get_checksum(start);
-			long int expected_chk =strtol(end - 3, NULL, 16);
-			if (expected_chk != (long int) actual_chk) {
-				fprintf(stderr, "Invalid checksum!\n");
-			}
-			write(1, start, end - start);
+		switch (type) {
+			case NMEA_UNKNOWN:
+				fprintf(stderr, "Unknown NMEA sentence type.\n");
+				break;
+			case NMEA_GPGLL:
+				if (-1 == nmea_validate(start, end - start + 1)) {
+					fprintf(stderr, "Invalid NMEA sentence!\n");
+				}
+				write(1, start, end - start);
+				break;
+			default:
+				fprintf(stderr, "Unhandled NMEA sentence type.\n");
+				
+		}
+
+		/* buffer empty? */
+		if (end == buffer + total_bytes) {
+			total_bytes = 0;
+			continue;
 		}
 
 		/* copy rest of buffer to beginning */

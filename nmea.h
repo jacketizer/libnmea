@@ -12,11 +12,43 @@
 #define NMEA_PREFIX_GPGLL	"GPGLL"	// Geographic Position, Latitude/Longitude
 
 /* NMEA sentence types */
-#define NMEA_GPGLL_T		1
+typedef enum {NMEA_UNKNOWN, NMEA_GPGLL} nmea_t;
 
-typedef unsigned int nmea_t;
+/* pre-allocated buffer for hexadecimal checksum conversions */
+char checksum[3];
 
+/**
+ * Get the type of the sentence.
+ *
+ * sentence needs to be a validated NMEA sentence string.
+ */
 nmea_t nmea_get_type(const char *sentence);
-char nmea_get_checksum(char *sentence);
+
+/**
+ * Calculate the checksum of the sentence.
+ *
+ * sentence needs to be a validated NMEA sentence string.
+ */
+char nmea_get_checksum(const char *sentence);
+
+/**
+ * Check if the sentence has a precalculated checksum.
+ *
+ * sentence needs to be a validated NMEA sentence string.
+ * length is the byte length of the sentence string.
+ */
+int nmea_has_checksum(const char *sentence, int length);
+
+/**
+ * Validate the sentence according to NMEA 0183.
+ *
+ * - Should start with a dollar sign.
+ * - The next five chars should be uppercase letters.
+ * - IF it has a checksum, it checks it.
+ * - Ends with \r\n (<CR><LF>).
+ *
+ * length is the byte length of the sentence string.
+ */
+int nmea_validate(const char *sentence, int length);
 
 #endif  /* INC_NMEA_H */
