@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "nmea.h"
+#include "src/nmea.h"
 
 int
 main(void)

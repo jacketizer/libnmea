@@ -1,21 +1,19 @@
-OBJS	= nmea_gpgll.o nmea.o main.o
-CC	= gcc
-CFLAGS	= -Wl,--no-as-needed -fPIC -Wall -g
-LDFLAGS	= -s
-LDLIBS	= 
+VPATH=src
+SRC_FILES=nmea.c nmea_gpgll.c
+OBJ_FILES=$(patsubst %.c, %.o, $(SRC_FILES))
+CC=gcc
+CFLAGS=-c -fPIC -g -Wall
+LDFLAGS=-s -shared -Wl,--no-as-needed,-soname,libnmea.so -Wall -g
 
-nmea:	$(OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) $(LDLIBS) $(OBJS) -o nmea
+nmea:	$(OBJ_FILES)
+	$(CC) $(LDFLAGS) $(OBJ_FILES) -o libnmea.so
 
-main.o:	main.c
-	$(CC) -c $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) $< -o $@
 
-nmea.o:	nmea.c
-	$(CC) -c $< -o $@
-
-nmea_gpgll.o: nmea_gpgll.c
-	$(CC) -c $< -o $@
+test:
+	$(CC) test.c -L. -lnmea -o test
 
 clean:
-	rm -f *.o
-	rm -f nmea
+	@rm -f *.o
+	@rm -f libnmea.so

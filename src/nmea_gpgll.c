@@ -1,3 +1,4 @@
+#include "nmea.h"
 #include "nmea_gpgll.h"
 
 nmea_gpgll_s

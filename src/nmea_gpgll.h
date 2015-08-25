@@ -1,8 +1,6 @@
 #ifndef INC_NMEA_GPGLL_H
 #define INC_NMEA_GPGLL_H
 
-#include "nmea.h"
-
 typedef struct {
 	nmea_t type;
 	nmea_position logitude;

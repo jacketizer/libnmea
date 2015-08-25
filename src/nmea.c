@@ -1,4 +1,5 @@
 #include "nmea.h"
+#include "nmea_gpgll.h"
 
 nmea_t
 nmea_get_type(const char *sentence)
