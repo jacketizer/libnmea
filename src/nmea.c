@@ -75,7 +75,7 @@ nmea_validate(const char *sentence, int length)
 	}
 
 	/* should end with \r\n */
-	if ('\n' != sentence[length - 1] || '\r' != sentence[length - 2]) {
+	if ('\n' != sentence[length - 1] || '\n' != sentence[length - 2]) {
 		return -1;
 	}
 

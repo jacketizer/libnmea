@@ -19,12 +19,12 @@ main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	gps_fd = 0; // stdin
-	//gps_fd = open("/dev/ttyUSB0", O_RDONLY);
-	//if (-1 == gps_fd) {
-	//	perror("open ttyUSB0");
-	//	exit(EXIT_FAILURE);
-	//}
+	//gps_fd = 0; // stdin
+	gps_fd = open("/dev/ttyUSB0", O_RDONLY);
+	if (-1 == gps_fd) {
+		perror("open ttyUSB0");
+		exit(EXIT_FAILURE);
+	}
 
 	while (1) {
 		read_bytes = read(gps_fd, buffer + total_bytes, 20);
@@ -42,7 +42,7 @@ main(void)
 		}
 
 		/* find end of line */
-		end = memchr(start, '\r', total_bytes - (start - buffer));
+		end = memchr(start, '\n', total_bytes - (start - buffer));
 		if (NULL == end || '\n' != *(++end)) {
 			continue;
 		}
@@ -51,7 +51,6 @@ main(void)
 		nmea_t type = nmea_get_type(start);
 		switch (type) {
 			case NMEA_UNKNOWN:
-				fprintf(stderr, "Unknown NMEA sentence type.\n");
 				break;
 			case NMEA_GPGLL:
 				if (-1 == nmea_validate(start, end - start + 1)) {
@@ -59,12 +58,7 @@ main(void)
 					break;
 				}
 
-				char **values = malloc(200);
-				int n_vals = _nmea_split_sentence(start, end - start + 1, values);
-				fprintf(stderr, "Number of values: %d\n", n_vals);
-				while (n_vals > 0) {
-					fprintf(stderr, "  value[%d]: %s\n", n_vals, values[--n_vals]);
-				}
+				nmea_gpgll_parse(start, end - start + 1);
 				break;
 			default:
 				fprintf(stderr, "Unhandled NMEA sentence type.\n");
