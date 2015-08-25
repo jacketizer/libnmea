@@ -17,3 +17,4 @@ test:
 clean:
 	@rm -f *.o
 	@rm -f libnmea.so
+	@rm -f test
