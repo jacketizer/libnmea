@@ -14,8 +14,17 @@
 /* NMEA sentence types */
 typedef enum {NMEA_UNKNOWN, NMEA_GPGLL} nmea_t;
 
-/* pre-allocated buffer for hexadecimal checksum conversions */
+typedef struct {
+	float minutes;
+	int degrees;
+	char dir;
+	
+} nmea_position;
+
+/* pre-defined variables for hexadecimal checksum conversions */
 char checksum[3];
+char actual_chk;
+long int expected_chk;
 
 /**
  * Get the type of the sentence.
@@ -44,7 +53,7 @@ int nmea_has_checksum(const char *sentence, int length);
  *
  * - Should start with a dollar sign.
  * - The next five chars should be uppercase letters.
- * - IF it has a checksum, it checks it.
+ * - If it has a checksum, it checks it.
  * - Ends with \r\n (<CR><LF>).
  *
  * length is the byte length of the sentence string.

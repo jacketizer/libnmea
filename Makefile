@@ -1,4 +1,4 @@
-OBJS	= nmea.o main.o
+OBJS	= nmea_gpgll.o nmea.o main.o
 CC	= gcc
 CFLAGS	= -Wl,--no-as-needed -fPIC -Wall -g
 LDFLAGS	= -s
@@ -11,6 +11,9 @@ main.o:	main.c
 	$(CC) -c $< -o $@
 
 nmea.o:	nmea.c
+	$(CC) -c $< -o $@
+
+nmea_gpgll.o: nmea_gpgll.c
 	$(CC) -c $< -o $@
 
 clean:

@@ -66,8 +66,8 @@ nmea_validate(const char *sentence, int length)
 		checksum[0] = sentence[length - 4];
 		checksum[1] = sentence[length - 3];
 		checksum[2] = '\0';
-		char actual_chk = nmea_get_checksum(sentence);
-		long int expected_chk = strtol(checksum, NULL, 16);
+		actual_chk = nmea_get_checksum(sentence);
+		expected_chk = strtol(checksum, NULL, 16);
 		if (expected_chk != (long int) actual_chk) {
 			return -1;
 		}
