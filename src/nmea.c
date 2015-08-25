@@ -1,6 +1,37 @@
 #include "nmea.h"
 #include "nmea_gpgll.h"
 
+int
+_nmea_split_sentence(char *sentence, int length, char **values)
+{
+	char *cursor = sentence + 7; // skip type type word
+	int i = 0;
+
+	values[i++] = cursor;
+	while (cursor != NULL && cursor - sentence < length) {
+		cursor = (char *) memchr(cursor, ',', length - (cursor - sentence));
+		if (NULL == cursor) {
+			break;
+		}
+
+		*cursor = '\0';
+		values[i++] = ++cursor;
+	}
+
+	/* null terminate the last value */
+	cursor = values[i - 1];
+	cursor = (char *) memchr(cursor, '*', length - (cursor - sentence));
+	if (NULL != cursor) {
+		/* has checksum */
+		*cursor = '\0';
+	} else {
+		/* no checksum */
+		sentence[length - 2] = '\0';
+	}
+
+	return i;
+}
+
 nmea_t
 nmea_get_type(const char *sentence)
 {

@@ -20,6 +20,10 @@ typedef struct {
 	char dir;
 } nmea_position;
 
+
+/* returns number of tokens */
+int _nmea_split_sentence(char *sentence, int length, char **values);
+
 /**
  * Get the type of the sentence.
  *

@@ -12,7 +12,7 @@ nmea:	$(OBJ_FILES)
 	$(CC) $(CFLAGS) $< -o $@
 
 test:
-	$(CC) test.c -L. -lnmea -o test
+	$(CC) test.c -I./src/ -L. -lnmea -o test
 
 clean:
 	@rm -f *.o

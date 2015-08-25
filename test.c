@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "src/nmea.h"
+#include <nmea.h>
 
 int
 main(void)
@@ -19,11 +19,12 @@ main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	gps_fd = open("/dev/ttyUSB0", O_RDONLY);
-	if (-1 == gps_fd) {
-		perror("open ttyUSB0");
-		exit(EXIT_FAILURE);
-	}
+	gps_fd = 0; // stdin
+	//gps_fd = open("/dev/ttyUSB0", O_RDONLY);
+	//if (-1 == gps_fd) {
+	//	perror("open ttyUSB0");
+	//	exit(EXIT_FAILURE);
+	//}
 
 	while (1) {
 		read_bytes = read(gps_fd, buffer + total_bytes, 20);
@@ -55,8 +56,15 @@ main(void)
 			case NMEA_GPGLL:
 				if (-1 == nmea_validate(start, end - start + 1)) {
 					fprintf(stderr, "Invalid NMEA sentence!\n");
+					break;
 				}
-				write(1, start, end - start);
+
+				char **values = malloc(200);
+				int n_vals = _nmea_split_sentence(start, end - start + 1, values);
+				fprintf(stderr, "Number of values: %d\n", n_vals);
+				while (n_vals > 0) {
+					fprintf(stderr, "  value[%d]: %s\n", n_vals, values[--n_vals]);
+				}
 				break;
 			default:
 				fprintf(stderr, "Unhandled NMEA sentence type.\n");
