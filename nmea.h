@@ -18,13 +18,7 @@ typedef struct {
 	float minutes;
 	int degrees;
 	char dir;
-	
 } nmea_position;
-
-/* pre-defined variables for hexadecimal checksum conversions */
-char checksum[3];
-char actual_chk;
-long int expected_chk;
 
 /**
  * Get the type of the sentence.

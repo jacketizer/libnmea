@@ -61,8 +61,12 @@ nmea_validate(const char *sentence, int length)
 		return -1;
 	}
 
-	/* check for checksum */ // TODO: optimize...
-	if (0 == nmea_has_checksum(sentence, length)) {
+	/* check for checksum */
+  if (0 == nmea_has_checksum(sentence, length)) {
+    char actual_chk;
+    long int expected_chk;
+    char checksum[3];
+
 		checksum[0] = sentence[length - 4];
 		checksum[1] = sentence[length - 3];
 		checksum[2] = '\0';
