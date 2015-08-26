@@ -1,7 +1,7 @@
 #include "nmea.h"
-#include "nmea_gpgll.h"
+#include "gpgll.h"
 
-nmea_gpgll_s
+nmea_gpgll_s *
 nmea_gpgll_parse(const char *sentence, int length)
 {
 	nmea_gpgll_s data;
@@ -17,22 +17,28 @@ nmea_gpgll_parse(const char *sentence, int length)
 	
 	char **values = malloc(200);
 	int n_vals = _nmea_split_sentence(sentence, length, values);
-	while (n_vals > 0) {
-		fprintf(stderr, "  value[%d]: %s\n", n_vals, values[--n_vals]);
-	}
 
 	if (NMEA_GPGLL_N_VALUES != n_vals) {
 		return NULL;
 	}
 
-	/* parse logitude */
-	char *dot = memchr(values[0], '.', strlen(values[0]));	
-	if (NULL == dot) {
+	/* LATITUDE */
+
+	nmea_position lat_pos;
+	if (!_nmea_get_position(values[NMEA_GPGLL_LONGITUDE], &lat_pos)) {
 		return NULL;
 	}
+	printf("  Degrees: %d\n", lat_pos.degrees);
+	printf("  Minutes: %f\n", lat_pos.minutes);
 
-	dot -= 2; // minutes takes 2 digits before dot
-	fprintf(stderr, "  Minutes: %s\n", dot);
+	/* LONGITUDE */
 
-	return data;
+	nmea_position long_pos;
+	if (!_nmea_get_position(values[NMEA_GPGLL_LONGITUDE], &long_pos)) {
+		return NULL;
+	}
+	printf("  Degrees: %d\n", long_pos.degrees);
+	printf("  Minutes: %f\n", long_pos.minutes);
+
+	return &data;
 }

@@ -1,5 +1,5 @@
 #include "nmea.h"
-#include "nmea_gpgll.h"
+#include "gpgll.h"
 
 int
 _nmea_split_sentence(char *sentence, int length, char **values)
@@ -30,6 +30,26 @@ _nmea_split_sentence(char *sentence, int length, char **values)
 	}
 
 	return i;
+}
+
+int
+_nmea_get_position(char *s, nmea_position *pos)
+{
+	// decimal minutes
+	char *cursor = memchr(s, '.', strlen(s));	
+	if (NULL == cursor) {
+		return -1;
+	}
+
+	cursor -= 2; // minutes takes 2 digits before dot
+	pos->minutes = atof(cursor);
+	*cursor = '\0';
+
+	// integer degrees
+	cursor = s;
+	pos->degrees = atoi(cursor);
+
+	return 0;
 }
 
 nmea_t

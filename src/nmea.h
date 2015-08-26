@@ -15,7 +15,7 @@
 typedef enum {NMEA_UNKNOWN, NMEA_GPGLL} nmea_t;
 
 typedef struct {
-	float minutes;
+	double minutes;
 	int degrees;
 	char dir;
 } nmea_position;
@@ -23,6 +23,9 @@ typedef struct {
 
 /* returns number of tokens */
 int _nmea_split_sentence(char *sentence, int length, char **values);
+
+/* return gps position longitude or latitude */
+int _nmea_get_position(char *s, nmea_position *pos);
 
 /**
  * Get the type of the sentence.

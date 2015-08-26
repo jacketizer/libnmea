@@ -1,5 +1,5 @@
 VPATH=src
-SRC_FILES=nmea.c nmea_gpgll.c
+SRC_FILES=nmea.c gpgll.c
 OBJ_FILES=$(patsubst %.c, %.o, $(SRC_FILES))
 CC=gcc
 CFLAGS=-c -fPIC -g -Wall
