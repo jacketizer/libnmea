@@ -35,13 +35,20 @@ _nmea_split_sentence(char *sentence, int length, char **values)
 int
 _nmea_get_position(char *s, nmea_position *pos)
 {
+	pos->degrees = 0;
+	pos->minutes = 0;
+
+	if (*s == NULL) {
+		return -1;
+	}
+
 	// decimal minutes
-	char *cursor = memchr(s, '.', strlen(s));	
+	char *cursor = memchr(s, '.', strlen(s));
 	if (NULL == cursor) {
 		return -1;
 	}
 
-	cursor -= 2; // minutes takes 2 digits before dot
+	cursor -= 2; // minutes starts 2 digits before dot
 	pos->minutes = atof(cursor);
 	*cursor = '\0';
 

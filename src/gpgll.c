@@ -25,18 +25,20 @@ nmea_gpgll_parse(const char *sentence, int length)
 	/* LATITUDE */
 
 	nmea_position lat_pos;
-	if (!_nmea_get_position(values[NMEA_GPGLL_LONGITUDE], &lat_pos)) {
+	if (-1 == _nmea_get_position(values[NMEA_GPGLL_LATITUDE], &lat_pos)) {
 		return NULL;
 	}
+	printf("Latitude:\n");
 	printf("  Degrees: %d\n", lat_pos.degrees);
 	printf("  Minutes: %f\n", lat_pos.minutes);
 
 	/* LONGITUDE */
 
 	nmea_position long_pos;
-	if (!_nmea_get_position(values[NMEA_GPGLL_LONGITUDE], &long_pos)) {
+	if (-1 == _nmea_get_position(values[NMEA_GPGLL_LONGITUDE], &long_pos)) {
 		return NULL;
 	}
+	printf("Longitude:\n");
 	printf("  Degrees: %d\n", long_pos.degrees);
 	printf("  Minutes: %f\n", long_pos.minutes);
 

@@ -19,12 +19,12 @@ main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	//gps_fd = 0; // stdin
-	gps_fd = open("/dev/ttyUSB0", O_RDONLY);
-	if (-1 == gps_fd) {
-		perror("open ttyUSB0");
-		exit(EXIT_FAILURE);
-	}
+	gps_fd = 0; // stdin
+	//gps_fd = open("/dev/ttyUSB0", O_RDONLY);
+	//if (-1 == gps_fd) {
+	//	perror("open ttyUSB0");
+	//	exit(EXIT_FAILURE);
+	//}
 
 	while (1) {
 		read_bytes = read(gps_fd, buffer + total_bytes, 20);
@@ -58,6 +58,7 @@ main(void)
 					break;
 				}
 
+				//write(1, start, end - start + 1);
 				nmea_gpgll_parse(start, end - start + 1);
 				break;
 			default:
