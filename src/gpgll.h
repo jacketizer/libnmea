@@ -10,7 +10,7 @@ typedef struct {
 	nmea_position latitude;
 } nmea_gpgll_s;
 
-#define NMEA_GPGLL_N_VALUES	7
+#define NMEA_GPGLL_N_VALUES	4
 #define NMEA_GPGLL_LATITUDE	0
 #define NMEA_GPGLL_LATITUDE_NS	1
 #define NMEA_GPGLL_LONGITUDE	2

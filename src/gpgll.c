@@ -14,33 +14,31 @@ nmea_gpgll_parse(const char *sentence, int length)
 	// Take the remaing digits in front of minutes and save it as degrees.
 	// Get direction (N, S, E, W).
 
-	
+
 	char **values = malloc(200);
 	int n_vals = _nmea_split_sentence(sentence, length, values);
 
-	if (NMEA_GPGLL_N_VALUES != n_vals) {
+	if (NMEA_GPGLL_N_VALUES > n_vals) {
 		return NULL;
 	}
 
 	/* LATITUDE */
-
 	nmea_position lat_pos;
-	if (-1 == _nmea_get_position(values[NMEA_GPGLL_LATITUDE], &lat_pos)) {
-		return NULL;
+  memset(&lat_pos, 0, sizeof(lat_pos));
+	if (0 == _nmea_get_position(values[NMEA_GPGLL_LATITUDE], &lat_pos)) {
+	  printf("Latitude:\n");
+	  printf("  Degrees: %d\n", lat_pos.degrees);
+	  printf("  Minutes: %f\n", lat_pos.minutes);
 	}
-	printf("Latitude:\n");
-	printf("  Degrees: %d\n", lat_pos.degrees);
-	printf("  Minutes: %f\n", lat_pos.minutes);
 
 	/* LONGITUDE */
-
 	nmea_position long_pos;
-	if (-1 == _nmea_get_position(values[NMEA_GPGLL_LONGITUDE], &long_pos)) {
-		return NULL;
+  memset(&long_pos, 0, sizeof(long_pos));
+	if (0 == _nmea_get_position(values[NMEA_GPGLL_LONGITUDE], &long_pos)) {
+	  printf("Longitude:\n");
+	  printf("  Degrees: %d\n", long_pos.degrees);
+	  printf("  Minutes: %f\n", long_pos.minutes);
 	}
-	printf("Longitude:\n");
-	printf("  Degrees: %d\n", long_pos.degrees);
-	printf("  Minutes: %f\n", long_pos.minutes);
 
 	return &data;
 }

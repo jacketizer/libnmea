@@ -15,7 +15,12 @@ _nmea_split_sentence(char *sentence, int length, char **values)
 		}
 
 		*cursor = '\0';
-		values[i++] = ++cursor;
+    cursor++;
+    if (*cursor == ',') {
+		  values[i++] = NULL;
+    } else {
+		  values[i++] = cursor;
+    }
 	}
 
 	/* null terminate the last value */
