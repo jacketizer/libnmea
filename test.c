@@ -42,8 +42,8 @@ main(void)
 		}
 
 		/* find end of line */
-		end = memchr(start, '\n', total_bytes - (start - buffer));
-		if (NULL == end || '\n' != *(++end)) {
+		end = memchr(start, NMEA_END_CHAR_1, total_bytes - (start - buffer));
+		if (NULL == end || NMEA_END_CHAR_2 != *(++end)) {
 			continue;
 		}
 
@@ -59,7 +59,7 @@ main(void)
 				}
 
 				//write(1, start, end - start + 1);
-				nmea_gpgll_parse(start, end - start + 1);
+				nmea_parse(start, end - start + 1, NMEA_GPGLL);
 				break;
 			default:
 				fprintf(stderr, "Unhandled NMEA sentence type.\n");

@@ -7,6 +7,10 @@
 /* nmea sentence max length */
 #define NMEA_MAX_LENGTH		50
 
+/* nmea sentence endings */
+#define NMEA_END_CHAR_1		'\n'
+#define NMEA_END_CHAR_2		'\n'
+
 /* NMEA sentence prefixes */
 #define NMEA_PREFIX_LENGTH	5
 #define NMEA_PREFIX_GPGLL	"GPGLL"	// Geographic Position, Latitude/Longitude
@@ -60,5 +64,13 @@ int nmea_has_checksum(const char *sentence, int length);
  * length is the byte length of the sentence string.
  */
 int nmea_validate(const char *sentence, int length);
+
+/**
+ * Parses an NMEA sentence string.
+ *
+ * sentence needs to be a validated NMEA sentence string.
+ * length is the byte length of the sentence string.
+ */
+void nmea_parse(char *sentence, int length, nmea_t type);
 
 #endif  /* INC_NMEA_H */

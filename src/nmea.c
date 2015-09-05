@@ -15,12 +15,12 @@ _nmea_split_sentence(char *sentence, int length, char **values)
 		}
 
 		*cursor = '\0';
-    cursor++;
-    if (*cursor == ',') {
-		  values[i++] = NULL;
-    } else {
-		  values[i++] = cursor;
-    }
+		cursor++;
+		if (*cursor == ',') {
+		    	  values[i++] = NULL;
+		} else {
+		    	  values[i++] = cursor;
+		}
 	}
 
 	/* null terminate the last value */
@@ -126,10 +126,10 @@ nmea_validate(const char *sentence, int length)
 	}
 
 	/* check for checksum */
-  if (0 == nmea_has_checksum(sentence, length)) {
-    char actual_chk;
-    long int expected_chk;
-    char checksum[3];
+	if (0 == nmea_has_checksum(sentence, length)) {
+		char actual_chk;
+		long int expected_chk;
+		char checksum[3];
 
 		checksum[0] = sentence[length - 4];
 		checksum[1] = sentence[length - 3];
@@ -142,4 +142,24 @@ nmea_validate(const char *sentence, int length)
 	}
 
 	return 0;
+}
+
+void
+nmea_parse(char *sentence, int length, nmea_t type)
+{
+	switch (type) {
+		case NMEA_UNKNOWN:
+			break;
+		case NMEA_GPGLL:
+			if (-1 == nmea_validate(sentence, length)) {
+				printf("Invalid NMEA sentence!\n");
+				break;
+			}
+
+			nmea_gpgll_parse(sentence, length);
+			break;
+		default:
+			printf("Unhandled NMEA sentence type.\n");
+			
+	}
 }
