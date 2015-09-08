@@ -6,7 +6,7 @@
 
 typedef struct {
 	nmea_t type;
-	nmea_position logitude;
+	nmea_position longitude;
 	nmea_position latitude;
 } nmea_gpgll_s;
 

@@ -19,6 +19,10 @@
 typedef enum {NMEA_UNKNOWN, NMEA_GPGLL} nmea_t;
 
 typedef struct {
+	nmea_t type;
+} nmea_s;
+
+typedef struct {
 	double minutes;
 	int degrees;
 	char dir;
@@ -71,6 +75,6 @@ int nmea_validate(const char *sentence, int length);
  * sentence needs to be a validated NMEA sentence string.
  * length is the byte length of the sentence string.
  */
-void nmea_parse(char *sentence, int length, nmea_t type);
+nmea_s *nmea_parse(char *sentence, int length, nmea_t type);
 
 #endif  /* INC_NMEA_H */

@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <nmea.h>
+#include <gpgll.h>
 
 int
 main(void)
@@ -59,7 +60,15 @@ main(void)
 				}
 
 				//write(1, start, end - start + 1);
-				nmea_parse(start, end - start + 1, NMEA_GPGLL);
+				nmea_gpgll_s *pos = (nmea_gpgll_s *) nmea_parse(start, end - start + 1, NMEA_GPGLL);
+				if (NULL != pos && NMEA_GPGLL == pos->type) {
+					printf("Longitude:\n");
+					printf("  Degrees: %d\n", pos->longitude.degrees);
+					printf("  Minutes: %f\n", pos->longitude.minutes);
+					printf("Latitude:\n");
+					printf("  Degrees: %d\n", pos->latitude.degrees);
+					printf("  Minutes: %f\n", pos->latitude.minutes);
+				}
 				break;
 			default:
 				fprintf(stderr, "Unhandled NMEA sentence type.\n");

@@ -144,7 +144,7 @@ nmea_validate(const char *sentence, int length)
 	return 0;
 }
 
-void
+nmea_s *
 nmea_parse(char *sentence, int length, nmea_t type)
 {
 	switch (type) {
@@ -156,10 +156,12 @@ nmea_parse(char *sentence, int length, nmea_t type)
 				break;
 			}
 
-			nmea_gpgll_parse(sentence, length);
-			break;
+			nmea_s *data = (nmea_s *) nmea_gpgll_parse(sentence, length);
+			data->type = NMEA_GPGLL;
+			return data;
 		default:
 			printf("Unhandled NMEA sentence type.\n");
-			
 	}
+
+	return (nmea_s *) NULL;
 }

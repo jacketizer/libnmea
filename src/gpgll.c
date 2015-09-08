@@ -4,7 +4,11 @@
 nmea_gpgll_s *
 nmea_gpgll_parse(const char *sentence, int length)
 {
-	nmea_gpgll_s data;
+	nmea_gpgll_s *data = malloc(sizeof(nmea_gpgll_s));
+	if (NULL == data) {
+		return NULL;
+	}
+
 
 	// Parse sentence to struct.
 	// .........................
@@ -23,22 +27,16 @@ nmea_gpgll_parse(const char *sentence, int length)
 	}
 
 	/* LATITUDE */
-	nmea_position lat_pos;
-	memset(&lat_pos, 0, sizeof(lat_pos));
-	if (0 == _nmea_get_position(values[NMEA_GPGLL_LATITUDE], &lat_pos)) {
-		printf("Latitude:\n");
-		printf("  Degrees: %d\n", lat_pos.degrees);
-		printf("  Minutes: %f\n", lat_pos.minutes);
+	memset(&data->latitude, 0, sizeof(nmea_position));
+	if (0 == _nmea_get_position(values[NMEA_GPGLL_LATITUDE], &data->latitude)) {
+		// report error?
 	}
 
 	/* LONGITUDE */
-	nmea_position long_pos;
-  	memset(&long_pos, 0, sizeof(long_pos));
-	if (0 == _nmea_get_position(values[NMEA_GPGLL_LONGITUDE], &long_pos)) {
-		printf("Longitude:\n");
-		printf("  Degrees: %d\n", long_pos.degrees);
-		printf("  Minutes: %f\n", long_pos.minutes);
+  	memset(&data->longitude, 0, sizeof(nmea_position));
+	if (0 == _nmea_get_position(values[NMEA_GPGLL_LONGITUDE], &data->longitude)) {
+		// report error?
 	}
 
-	return &data;
+	return data;
 }
