@@ -42,7 +42,7 @@ nmea_position_parse(char *s, nmea_position *pos)
 	pos->degrees = 0;
 	pos->minutes = 0;
 
-	if (*s == NULL) {
+	if (s == NULL || *s == NULL) {
 		return -1;
 	}
 
