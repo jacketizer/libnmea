@@ -17,6 +17,6 @@ typedef struct {
 #define NMEA_GPGLL_LONGITUDE	2
 #define NMEA_GPGLL_LONGITUDE_EW	3
 
-nmea_gpgll_s * nmea_gpgll_parse(const char *sentence, int length);
+nmea_gpgll_s * nmea_gpgll_parse(char *sentence, int length);
 
 #endif  /* INC_NMEA_GPGLL_H */

@@ -1,7 +1,7 @@
 #include "gpgll.h"
 
 nmea_gpgll_s *
-nmea_gpgll_parse(const char *sentence, int length)
+nmea_gpgll_parse(char *sentence, int length)
 {
 	nmea_gpgll_s *data = malloc(sizeof(nmea_gpgll_s));
 	if (NULL == data) {

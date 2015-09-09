@@ -89,7 +89,6 @@ nmea_parse(char *sentence, int length, nmea_t type)
 			break;
 		case NMEA_GPGLL:
 			if (-1 == nmea_validate(sentence, length)) {
-				printf("Invalid NMEA sentence!\n");
 				break;
 			}
 
@@ -97,7 +96,7 @@ nmea_parse(char *sentence, int length, nmea_t type)
 			data->type = NMEA_GPGLL;
 			return data;
 		default:
-			printf("Unhandled NMEA sentence type.\n");
+			break;
 	}
 
 	return (nmea_s *) NULL;
