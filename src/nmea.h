@@ -22,32 +22,19 @@ typedef struct {
 	nmea_t type;
 } nmea_s;
 
-typedef struct {
-	double minutes;
-	int degrees;
-	char dir;
-} nmea_position;
-
-
-/* returns number of tokens */
-int _nmea_split_sentence(char *sentence, int length, char **values);
-
-/* return gps position longitude or latitude */
-int _nmea_get_position(char *s, nmea_position *pos);
-
 /**
  * Get the type of the sentence.
  *
  * sentence needs to be a validated NMEA sentence string.
  */
-nmea_t nmea_get_type(const char *sentence);
+extern nmea_t nmea_get_type(const char *sentence);
 
 /**
  * Calculate the checksum of the sentence.
  *
  * sentence needs to be a validated NMEA sentence string.
  */
-char nmea_get_checksum(const char *sentence);
+extern char nmea_get_checksum(const char *sentence);
 
 /**
  * Check if the sentence has a precalculated checksum.
@@ -55,7 +42,7 @@ char nmea_get_checksum(const char *sentence);
  * sentence needs to be a validated NMEA sentence string.
  * length is the byte length of the sentence string.
  */
-int nmea_has_checksum(const char *sentence, int length);
+extern int nmea_has_checksum(const char *sentence, int length);
 
 /**
  * Validate the sentence according to NMEA 0183.
@@ -67,7 +54,7 @@ int nmea_has_checksum(const char *sentence, int length);
  *
  * length is the byte length of the sentence string.
  */
-int nmea_validate(const char *sentence, int length);
+extern int nmea_validate(const char *sentence, int length);
 
 /**
  * Parses an NMEA sentence string.
@@ -75,6 +62,6 @@ int nmea_validate(const char *sentence, int length);
  * sentence needs to be a validated NMEA sentence string.
  * length is the byte length of the sentence string.
  */
-nmea_s *nmea_parse(char *sentence, int length, nmea_t type);
+extern nmea_s *nmea_parse(char *sentence, int length, nmea_t type);
 
 #endif  /* INC_NMEA_H */

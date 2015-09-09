@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "parse.h"
 
 typedef struct {
 	nmea_t type;
