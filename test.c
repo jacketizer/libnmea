@@ -65,9 +65,11 @@ main(void)
 					printf("Longitude:\n");
 					printf("  Degrees: %d\n", pos->longitude.degrees);
 					printf("  Minutes: %f\n", pos->longitude.minutes);
+					printf("  Cardinal: %c\n", pos->longitude.cardinal);
 					printf("Latitude:\n");
 					printf("  Degrees: %d\n", pos->latitude.degrees);
 					printf("  Minutes: %f\n", pos->latitude.minutes);
+					printf("  Cardinal: %c\n", pos->latitude.cardinal);
 				}
 				break;
 			default:

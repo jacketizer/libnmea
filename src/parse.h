@@ -8,10 +8,17 @@
 typedef struct {
 	double minutes;
 	int degrees;
-	char dir;
+	char cardinal;
 } nmea_position;
 
-/* returns number of tokens */
+/**
+ * Splits an NMEA sentence by comma.
+ *
+ * sentence is the string to split, will be manipulated.
+ * length is the char length of the sentence string.
+ * values is a char pointer array that will be filled with pointers to the
+ * splitted values in the sentence string.
+ */
 int nmea_sentence_split(char *sentence, int length, char **values);
 
 /* return gps position longitude or latitude */

@@ -18,6 +18,11 @@
 /* NMEA sentence types */
 typedef enum {NMEA_UNKNOWN, NMEA_GPGLL} nmea_t;
 
+#define NMEA_CARDINAL_DIR_NORTH	'N'
+#define NMEA_CARDINAL_DIR_EAST	'E'
+#define NMEA_CARDINAL_DIR_SOUTH	'S'
+#define NMEA_CARDINAL_DIR_WEST	'W'
+
 typedef struct {
 	nmea_t type;
 } nmea_s;

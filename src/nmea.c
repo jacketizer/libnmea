@@ -93,6 +93,10 @@ nmea_parse(char *sentence, int length, nmea_t type)
 			}
 
 			nmea_s *data = (nmea_s *) nmea_gpgll_parse(sentence, length);
+			if (NULL == data) {
+				break;
+			}
+
 			data->type = NMEA_GPGLL;
 			return data;
 		default:

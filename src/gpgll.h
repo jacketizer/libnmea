@@ -11,11 +11,11 @@ typedef struct {
 	nmea_position latitude;
 } nmea_gpgll_s;
 
-#define NMEA_GPGLL_N_VALUES	4
-#define NMEA_GPGLL_LATITUDE	0
-#define NMEA_GPGLL_LATITUDE_NS	1
-#define NMEA_GPGLL_LONGITUDE	2
-#define NMEA_GPGLL_LONGITUDE_EW	3
+#define NMEA_GPGLL_N_VALUES		4
+#define NMEA_GPGLL_LATITUDE		0
+#define NMEA_GPGLL_LATITUDE_CARDINAL	1
+#define NMEA_GPGLL_LONGITUDE		2
+#define NMEA_GPGLL_LONGITUDE_CARDINAL	3
 
 nmea_gpgll_s * nmea_gpgll_parse(char *sentence, int length);
 
