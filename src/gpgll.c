@@ -5,12 +5,12 @@ nmea_gpgll_parse(char *sentence, int length)
 {
 	int n_vals;
 	char *values[200];
-	char *dir;
 
 	nmea_gpgll_s *data = malloc(sizeof(nmea_gpgll_s));
 	if (NULL == data) {
 		return NULL;
 	}
+	memset(data, 0, sizeof(nmea_gpgll_s));
 
 	n_vals = nmea_sentence_split(sentence, length, values);
 	if (NMEA_GPGLL_N_VALUES > n_vals) {
@@ -19,32 +19,30 @@ nmea_gpgll_parse(char *sentence, int length)
 	}
 
 	/* LATITUDE */
-	memset(&data->latitude, 0, sizeof(nmea_position));
-	if (0 == nmea_position_parse(values[NMEA_GPGLL_LATITUDE], &data->latitude)) {
-		// report error?
+	if (-1 == nmea_position_parse(values[NMEA_GPGLL_LATITUDE], &data->latitude)) {
+		// report error
+		data->error = 1;
 	}
 
-	/* North or South */
-	dir = values[NMEA_GPGLL_LATITUDE_CARDINAL];
-	if (NULL == dir || (NMEA_CARDINAL_DIR_NORTH != *dir && NMEA_CARDINAL_DIR_SOUTH != *dir)) {
-		free(data);
-		return NULL;
+	/* Get cardinal direction */
+	data->latitude.cardinal = nmea_cardinal_direction_parse(values[NMEA_GPGLL_LATITUDE_CARDINAL]);
+	if (NMEA_CARDINAL_DIR_UNKNOWN == data->latitude.cardinal) {
+		// report error
+		data->error = 1;
 	}
-	data->latitude.cardinal = *dir;
 
 	/* LONGITUDE */
-  	memset(&data->longitude, 0, sizeof(nmea_position));
-	if (0 == nmea_position_parse(values[NMEA_GPGLL_LONGITUDE], &data->longitude)) {
-		// report error?
+	if (-1 == nmea_position_parse(values[NMEA_GPGLL_LONGITUDE], &data->longitude)) {
+		// report error
+		data->error = 1;
 	}
 
-	/* East or West */
-	dir = values[NMEA_GPGLL_LONGITUDE_CARDINAL];
-	if (NULL == dir || (NMEA_CARDINAL_DIR_EAST != *dir && NMEA_CARDINAL_DIR_WEST != *dir)) {
-		free(data);
-		return NULL;
+	/* Get cardinal direction */
+	data->longitude.cardinal = nmea_cardinal_direction_parse(values[NMEA_GPGLL_LONGITUDE_CARDINAL]);
+	if (NMEA_CARDINAL_DIR_UNKNOWN == data->longitude.cardinal) {
+		// report error
+		data->error = 1;
 	}
-	data->longitude.cardinal = *dir;
 
 	return data;
 }

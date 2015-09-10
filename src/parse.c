@@ -62,3 +62,26 @@ nmea_position_parse(char *s, nmea_position *pos)
 
 	return 0;
 }
+
+char
+nmea_cardinal_direction_parse(char *s)
+{
+	if (s == NULL || *s == '\0') {
+		return NMEA_CARDINAL_DIR_UNKNOWN;
+	}
+
+	switch (*s) {
+		case NMEA_CARDINAL_DIR_NORTH:
+			return NMEA_CARDINAL_DIR_NORTH;
+		case NMEA_CARDINAL_DIR_EAST:
+			return NMEA_CARDINAL_DIR_EAST;
+		case NMEA_CARDINAL_DIR_SOUTH:
+			return NMEA_CARDINAL_DIR_SOUTH;
+		case NMEA_CARDINAL_DIR_WEST:
+			return NMEA_CARDINAL_DIR_WEST;
+		default:
+			break;
+	}
+
+	return NMEA_CARDINAL_DIR_UNKNOWN;
+}

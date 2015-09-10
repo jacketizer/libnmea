@@ -21,7 +21,10 @@ typedef struct {
  */
 int nmea_sentence_split(char *sentence, int length, char **values);
 
-/* return gps position longitude or latitude */
+/* Return gps position longitude or latitude */
 int nmea_position_parse(char *s, nmea_position *pos);
+
+/* Returns a cardinal direction */
+char nmea_cardinal_direction_parse(char *s);
 
 #endif  /* INC_NMEA_PARSE_H */

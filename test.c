@@ -70,6 +70,9 @@ main(void)
 					printf("  Degrees: %d\n", pos->latitude.degrees);
 					printf("  Minutes: %f\n", pos->latitude.minutes);
 					printf("  Cardinal: %c\n", pos->latitude.cardinal);
+					if (1 == pos->error) {
+						printf("The position struct has errors!\n");
+					}
 				}
 				break;
 			default:
