@@ -6,8 +6,7 @@
 #include "parse.h"
 
 typedef struct {
-	nmea_t type;
-	int error;
+	nmea_s super;
 	nmea_position longitude;
 	nmea_position latitude;
 } nmea_gpgll_s;

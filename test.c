@@ -60,8 +60,9 @@ main(void)
 				}
 
 				//write(1, start, end - start + 1);
-				nmea_gpgll_s *pos = (nmea_gpgll_s *) nmea_parse(start, end - start + 1, NMEA_GPGLL);
-				if (NULL != pos && NMEA_GPGLL == pos->type) {
+				nmea_s *data = nmea_parse(start, end - start + 1, NMEA_GPGLL);
+				nmea_gpgll_s *pos = (nmea_gpgll_s *) data;
+				if (NULL != data && NMEA_GPGLL == data->type) {
 					printf("Longitude:\n");
 					printf("  Degrees: %d\n", pos->longitude.degrees);
 					printf("  Minutes: %f\n", pos->longitude.minutes);
@@ -70,7 +71,7 @@ main(void)
 					printf("  Degrees: %d\n", pos->latitude.degrees);
 					printf("  Minutes: %f\n", pos->latitude.minutes);
 					printf("  Cardinal: %c\n", pos->latitude.cardinal);
-					if (1 == pos->error) {
+					if (1 == data->error) {
 						printf("The position struct has errors!\n");
 					}
 				}
