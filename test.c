@@ -66,11 +66,11 @@ main(void)
 					printf("Longitude:\n");
 					printf("  Degrees: %d\n", pos->longitude.degrees);
 					printf("  Minutes: %f\n", pos->longitude.minutes);
-					printf("  Cardinal: %c\n", pos->longitude.cardinal);
+					printf("  Cardinal: %c\n", (char) pos->longitude.cardinal);
 					printf("Latitude:\n");
 					printf("  Degrees: %d\n", pos->latitude.degrees);
 					printf("  Minutes: %f\n", pos->latitude.minutes);
-					printf("  Cardinal: %c\n", pos->latitude.cardinal);
+					printf("  Cardinal: %c\n", (char) pos->latitude.cardinal);
 					if (1 == data->error) {
 						printf("The position struct has errors!\n");
 					}

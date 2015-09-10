@@ -63,7 +63,7 @@ nmea_position_parse(char *s, nmea_position *pos)
 	return 0;
 }
 
-char
+nmea_cardinal_t
 nmea_cardinal_direction_parse(char *s)
 {
 	if (s == NULL || *s == '\0') {

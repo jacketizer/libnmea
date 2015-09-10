@@ -5,12 +5,6 @@
 #include <string.h>
 #include "nmea.h"
 
-typedef struct {
-	double minutes;
-	int degrees;
-	char cardinal;
-} nmea_position;
-
 /**
  * Splits an NMEA sentence by comma.
  *
@@ -25,6 +19,6 @@ int nmea_sentence_split(char *sentence, int length, char **values);
 int nmea_position_parse(char *s, nmea_position *pos);
 
 /* Returns a cardinal direction */
-char nmea_cardinal_direction_parse(char *s);
+nmea_cardinal_t nmea_cardinal_direction_parse(char *s);
 
 #endif  /* INC_NMEA_PARSE_H */

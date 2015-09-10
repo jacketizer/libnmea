@@ -18,16 +18,24 @@
 /* NMEA sentence types */
 typedef enum {NMEA_UNKNOWN, NMEA_GPGLL} nmea_t;
 
-#define NMEA_CARDINAL_DIR_NORTH		'N'
-#define NMEA_CARDINAL_DIR_EAST		'E'
-#define NMEA_CARDINAL_DIR_SOUTH		'S'
-#define NMEA_CARDINAL_DIR_WEST		'W'
-#define NMEA_CARDINAL_DIR_UNKNOWN	'\0'
+/* NMEA cardinal direction types */
+typedef char nmea_cardinal_t;
+#define NMEA_CARDINAL_DIR_NORTH		(nmea_cardinal_t) 'N'
+#define NMEA_CARDINAL_DIR_EAST		(nmea_cardinal_t) 'E'
+#define NMEA_CARDINAL_DIR_SOUTH		(nmea_cardinal_t) 'S'
+#define NMEA_CARDINAL_DIR_WEST		(nmea_cardinal_t) 'W'
+#define NMEA_CARDINAL_DIR_UNKNOWN	(nmea_cardinal_t) '\0'
 
 typedef struct {
 	nmea_t type;
 	int error;
 } nmea_s;
+
+typedef struct {
+	double minutes;
+	int degrees;
+	nmea_cardinal_t cardinal;
+} nmea_position;
 
 /**
  * Get the type of the sentence.
