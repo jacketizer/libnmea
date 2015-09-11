@@ -85,3 +85,17 @@ nmea_cardinal_direction_parse(char *s)
 
 	return NMEA_CARDINAL_DIR_UNKNOWN;
 }
+
+int
+nmea_time_parse(char *s, struct tm *time)
+{
+	char *rv;
+
+	memset(time, 0, sizeof(struct tm));
+	rv = strptime(s, NMEA_TIME_FORMAT, time);
+	if (NULL == rv || (int) (rv - s) != NMEA_TIME_FORMAT_LEN) {
+		return -1;
+	}
+
+	return 0;
+}

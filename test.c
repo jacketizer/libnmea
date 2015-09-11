@@ -71,6 +71,10 @@ main(void)
 					printf("  Degrees: %d\n", pos->latitude.degrees);
 					printf("  Minutes: %f\n", pos->latitude.minutes);
 					printf("  Cardinal: %c\n", (char) pos->latitude.cardinal);
+
+					char buf[255];
+					strftime(buf, sizeof(buf), "%H:%M:%S", &pos->time);
+					printf("Time: %s\n", buf);
 					if (1 == data->error) {
 						printf("The position struct has errors!\n");
 					}
