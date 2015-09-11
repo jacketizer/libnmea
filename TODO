@@ -1,7 +1,7 @@
 TODO
 ====
 
- * Fix checksum bug
+ * Fix checksum bug, add check checksum option
  * Use int header files
  * Use sentence parsing as modules/shared libraries etc...
      Should be able to be added as files without changing code in other files.
