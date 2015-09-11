@@ -2,6 +2,8 @@ TODO
 ====
 
  * Fix checksum bug, add check checksum option
+ * Loop through value list in parse function...
+ * Write a default function (memset).
  * Use int header files
  * Use sentence parsing as modules/shared libraries etc...
      Should be able to be added as files without changing code in other files.
