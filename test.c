@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <nmea.h>
 #include <gpgll.h>
+#include <gpgga.h>
 
 int
 main(void)
@@ -21,11 +22,11 @@ main(void)
 	}
 
 	gps_fd = 0; // stdin
-	//gps_fd = open("/dev/ttyUSB0", O_RDONLY);
-	//if (-1 == gps_fd) {
-	//	perror("open ttyUSB0");
-	//	exit(EXIT_FAILURE);
-	//}
+	gps_fd = open("/dev/ttyUSB0", O_RDONLY);
+	if (-1 == gps_fd) {
+		perror("open ttyUSB0");
+		exit(EXIT_FAILURE);
+	}
 
 	while (1) {
 		read_bytes = read(gps_fd, buffer + total_bytes, 20);
@@ -50,19 +51,33 @@ main(void)
 
 		/* handle data */
 		nmea_t type = nmea_get_type(start);
+		nmea_s *data;
+		char buf[255];
 		switch (type) {
 			case NMEA_UNKNOWN:
 				break;
+			case NMEA_GPGGA:
 			case NMEA_GPGLL:
-				if (-1 == nmea_validate(start, end - start + 1)) {
-					fprintf(stderr, "Invalid NMEA sentence!\n");
+				data = nmea_parse(start, end - start + 1, type);
+				if (NULL == data) {
+					printf("Could not parse sentence\n");
 					break;
 				}
 
-				//write(1, start, end - start + 1);
-				nmea_s *data = nmea_parse(start, end - start + 1, NMEA_GPGLL);
-				nmea_gpgll_s *pos = (nmea_gpgll_s *) data;
-				if (NULL != data && NMEA_GPGLL == data->type) {
+				if (1 == data->error) {
+					printf("WARN: The sentence struct contains parse errors!\n");
+				}
+
+				if (NMEA_GPGGA == data->type) {
+					printf("GPGGA sentence\n");
+					nmea_gpgga_s *gpgga = (nmea_gpgga_s *) data;
+					printf("Number of satellites: %d\n", gpgga->n_satellites);
+					printf("Altitude: %d %c\n", gpgga->altitude, gpgga->altitude_unit);
+				}
+
+				if (NMEA_GPGLL == data->type) {
+					printf("GPGLL sentence\n");
+					nmea_gpgll_s *pos = (nmea_gpgll_s *) data;
 					printf("Longitude:\n");
 					printf("  Degrees: %d\n", pos->longitude.degrees);
 					printf("  Minutes: %f\n", pos->longitude.minutes);
@@ -71,13 +86,8 @@ main(void)
 					printf("  Degrees: %d\n", pos->latitude.degrees);
 					printf("  Minutes: %f\n", pos->latitude.minutes);
 					printf("  Cardinal: %c\n", (char) pos->latitude.cardinal);
-
-					char buf[255];
 					strftime(buf, sizeof(buf), "%H:%M:%S", &pos->time);
 					printf("Time: %s\n", buf);
-					if (1 == data->error) {
-						printf("The position struct has errors!\n");
-					}
 				}
 				break;
 			default:

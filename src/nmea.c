@@ -1,11 +1,16 @@
 #include "nmea.h"
 #include "gpgll.h"
+#include "gpgga.h"
 
 nmea_t
 nmea_get_type(const char *sentence)
 {
 	if (0 == strncmp(sentence + 1, NMEA_PREFIX_GPGLL, NMEA_PREFIX_LENGTH)) {
 		return NMEA_GPGLL;
+	}
+
+	if (0 == strncmp(sentence + 1, NMEA_PREFIX_GPGGA, NMEA_PREFIX_LENGTH)) {
+		return NMEA_GPGGA;
 	}
 
 	return NMEA_UNKNOWN;
@@ -43,7 +48,7 @@ nmea_validate(const char *sentence, int length)
 		return -1;
 	}
 
-	/* should end with \r\n */
+	/* should end with \r\n, or other... */
 	if ('\n' != sentence[length - 1] || '\n' != sentence[length - 2]) {
 		return -1;
 	}
@@ -84,20 +89,34 @@ nmea_validate(const char *sentence, int length)
 nmea_s *
 nmea_parse(char *sentence, int length, nmea_t type)
 {
+	nmea_s *data;
+
 	switch (type) {
 		case NMEA_UNKNOWN:
 			break;
+		case NMEA_GPGGA:
+			if (-1 == nmea_validate(sentence, length)) {
+				break;
+			}
+
+			data = (nmea_s *) nmea_gpgga_parse(sentence, length);
+			if (NULL == data) {
+				break;
+			}
+
+			data->type = type;
+			return data;
 		case NMEA_GPGLL:
 			if (-1 == nmea_validate(sentence, length)) {
 				break;
 			}
 
-			nmea_s *data = (nmea_s *) nmea_gpgll_parse(sentence, length);
+			data = (nmea_s *) nmea_gpgll_parse(sentence, length);
 			if (NULL == data) {
 				break;
 			}
 
-			data->type = NMEA_GPGLL;
+			data->type = type;
 			return data;
 		default:
 			break;

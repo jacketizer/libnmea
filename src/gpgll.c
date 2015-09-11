@@ -47,7 +47,7 @@ nmea_gpgll_parse(char *sentence, int length)
 	}
 
 	/* Parse time, if supplied... */
-	if (n_vals > NMEA_GPGLL_TIME) {
+	if (0 == nmea_value_is_set(values, n_vals, NMEA_GPGLL_TIME)) {
 		if (-1 == nmea_time_parse(values[NMEA_GPGLL_TIME], &data->time)) {
 			nmea_data->error = 1;
 		}

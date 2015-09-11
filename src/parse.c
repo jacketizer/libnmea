@@ -37,6 +37,20 @@ nmea_sentence_split(char *sentence, int length, char **values)
 }
 
 int
+nmea_value_is_set(char **values, int length, int index)
+{
+	if (index >= length) {
+		return -1;
+	}
+
+	if (NULL == values[index] || '\0' == *values[index]) {
+		return -1;
+	}
+
+	return 0;
+}
+
+int
 nmea_position_parse(char *s, nmea_position *pos)
 {
 	pos->degrees = 0;
@@ -90,8 +104,12 @@ int
 nmea_time_parse(char *s, struct tm *time)
 {
 	char *rv;
-
 	memset(time, 0, sizeof(struct tm));
+
+	if (s == NULL || *s == '\0') {
+		return -1;
+	}
+
 	rv = strptime(s, NMEA_TIME_FORMAT, time);
 	if (NULL == rv || (int) (rv - s) != NMEA_TIME_FORMAT_LEN) {
 		return -1;

@@ -13,10 +13,11 @@
 
 /* NMEA sentence prefixes */
 #define NMEA_PREFIX_LENGTH	5
-#define NMEA_PREFIX_GPGLL	"GPGLL"	// Geographic Position, Latitude/Longitude
+#define NMEA_PREFIX_GPGGA	"GPGGA"	// Global Positioning System Fix Data
+#define NMEA_PREFIX_GPGLL	"GPGLL"	// Geographic Position, Latitude/Longitude/Time
 
 /* NMEA sentence types */
-typedef enum {NMEA_UNKNOWN, NMEA_GPGLL} nmea_t;
+typedef enum {NMEA_UNKNOWN, NMEA_GPGGA, NMEA_GPGLL} nmea_t;
 
 /* NMEA cardinal direction types */
 typedef char nmea_cardinal_t;
