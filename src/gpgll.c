@@ -1,10 +1,8 @@
 #include "gpgll.h"
 
 nmea_gpgll_s *
-nmea_gpgll_parse(char *sentence, int length)
+nmea_gpgll_parse(char **values, int length)
 {
-	int n_vals;
-	char *values[200];
 	nmea_s *nmea_data;
 
 	nmea_gpgll_s *data = malloc(sizeof(nmea_gpgll_s));
@@ -14,8 +12,7 @@ nmea_gpgll_parse(char *sentence, int length)
 	memset(data, 0, sizeof(nmea_gpgll_s));
 	nmea_data = (nmea_s *) data;
 
-	n_vals = nmea_sentence_split(sentence, length, values);
-	if (NMEA_GPGLL_N_VALUES > n_vals) {
+	if (NMEA_GPGLL_N_VALUES > length) {
 		free(data);
 		return NULL;
 	}
@@ -47,7 +44,7 @@ nmea_gpgll_parse(char *sentence, int length)
 	}
 
 	/* Parse time, if supplied... */
-	if (0 == nmea_value_is_set(values, n_vals, NMEA_GPGLL_TIME)) {
+	if (0 == nmea_value_is_set(values, length, NMEA_GPGLL_TIME)) {
 		if (-1 == nmea_time_parse(values[NMEA_GPGLL_TIME], &data->time)) {
 			nmea_data->error = 1;
 		}

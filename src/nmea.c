@@ -89,38 +89,38 @@ nmea_validate(const char *sentence, int length, int check_checksum)
 nmea_s *
 nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 {
-	nmea_s *data;
-
-	switch (type) {
-		case NMEA_UNKNOWN:
-			break;
-		case NMEA_GPGGA:
-			if (-1 == nmea_validate(sentence, length, check_checksum)) {
-				break;
-			}
-
-			data = (nmea_s *) nmea_gpgga_parse(sentence, length);
-			if (NULL == data) {
-				break;
-			}
-
-			data->type = type;
-			return data;
-		case NMEA_GPGLL:
-			if (-1 == nmea_validate(sentence, length, check_checksum)) {
-				break;
-			}
-
-			data = (nmea_s *) nmea_gpgll_parse(sentence, length);
-			if (NULL == data) {
-				break;
-			}
-
-			data->type = type;
-			return data;
-		default:
-			break;
+	if (NMEA_UNKNOWN == type) {
+		return (nmea_s *) NULL;
 	}
 
-	return (nmea_s *) NULL;
+	int n_vals;
+	char *values[200];
+	nmea_s *data;
+
+	if (-1 == nmea_validate(sentence, length, check_checksum)) {
+		return (nmea_s *) NULL;
+	}
+
+	n_vals = nmea_sentence_split(sentence, length, values);
+	if (0 == n_vals) {
+		return (nmea_s *) NULL;
+	}
+
+	switch (type) {
+		case NMEA_GPGGA:
+			data = (nmea_s *) nmea_gpgga_parse(values, n_vals);
+			break;
+		case NMEA_GPGLL:
+			data = (nmea_s *) nmea_gpgll_parse(sentence, n_vals);
+			break;
+		default:
+			return (nmea_s *) NULL;
+	}
+
+	if (NULL == data) {
+		return (nmea_s *) NULL;
+	}
+
+	data->type = type;
+	return data;
 }

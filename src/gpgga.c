@@ -1,10 +1,8 @@
 #include "gpgga.h"
 
 nmea_gpgga_s *
-nmea_gpgga_parse(char *sentence, int length)
+nmea_gpgga_parse(char **values, int length)
 {
-	int n_vals;
-	char *values[200];
 	nmea_s *nmea_data;
 
 	nmea_gpgga_s *data = malloc(sizeof(nmea_gpgga_s));
@@ -14,8 +12,7 @@ nmea_gpgga_parse(char *sentence, int length)
 	memset(data, 0, sizeof(nmea_gpgga_s));
 	nmea_data = (nmea_s *) data;
 
-	n_vals = nmea_sentence_split(sentence, length, values);
-	if (NMEA_GPGGA_N_VALUES > n_vals) {
+	if (NMEA_GPGGA_N_VALUES > length) {
 		free(data);
 		return NULL;
 	}
@@ -52,12 +49,12 @@ nmea_gpgga_parse(char *sentence, int length)
 	}
 
 	/* Parse number of satellies, if supplied... */
-	if (0 == nmea_value_is_set(values, n_vals, NMEA_GPGGA_N_SATELLITES)) {
+	if (0 == nmea_value_is_set(values, length, NMEA_GPGGA_N_SATELLITES)) {
 		data->n_satellites = atoi(values[NMEA_GPGGA_N_SATELLITES]);
 	}
 
 	/* Parse altitude, if supplied... */
-	if (0 == nmea_value_is_set(values, n_vals, NMEA_GPGGA_ALTITUDE)) {
+	if (0 == nmea_value_is_set(values, length, NMEA_GPGGA_ALTITUDE)) {
 		data->altitude = atoi(values[NMEA_GPGGA_ALTITUDE]);
 		data->altitude_unit = *values[NMEA_GPGGA_ALTITUDE_UNIT];
 	}

@@ -20,6 +20,6 @@ typedef struct {
 #define NMEA_GPGLL_LONGITUDE_CARDINAL	3
 #define NMEA_GPGLL_TIME			4
 
-nmea_gpgll_s * nmea_gpgll_parse(char *sentence, int length);
+nmea_gpgll_s * nmea_gpgll_parse(char **values, int length);
 
 #endif  /* INC_NMEA_GPGLL_H */
