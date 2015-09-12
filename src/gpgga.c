@@ -21,12 +21,6 @@ nmea_gpgga_parse(char **values, int length)
 	memset(data, 0, sizeof(nmea_gpgga_s));
 	nmea_data = (nmea_s *) data;
 
-	/* Enough values in sentence? */
-	if (NMEA_GPGGA_N_VALUES > length) {
-		free(data);
-		return NULL;
-	}
-
 	int i = 0;
 	char *value;
 	while (i < length) {

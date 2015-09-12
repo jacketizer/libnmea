@@ -16,7 +16,6 @@ typedef struct {
 	char altitude_unit;
 } nmea_gpgga_s;
 
-#define NMEA_GPGGA_N_VALUES		5 // Minimum number of values in sentence
 #define NMEA_GPGGA_TIME			0
 #define NMEA_GPGGA_LATITUDE		1
 #define NMEA_GPGGA_LATITUDE_CARDINAL	2
