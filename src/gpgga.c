@@ -31,6 +31,10 @@ nmea_gpgga_parse(char **values, int length)
 	char *value;
 	while (i < length) {
 		value = values[i];
+		if (-1 == nmea_value_is_set(value)) {
+			i++;
+			continue;
+		}
 
 		switch (i) {
 			case NMEA_GPGGA_TIME:
@@ -72,23 +76,17 @@ nmea_gpgga_parse(char **values, int length)
 
 			case NMEA_GPGGA_N_SATELLITES:
 				/* Parse number of satellies */
-				if (0 == nmea_value_is_set(value)) {
-					data->n_satellites = atoi(value);
-				}
+				data->n_satellites = atoi(value);
 				break;
 
 			case NMEA_GPGGA_ALTITUDE:
 				/* Parse altitude */
-				if (0 == nmea_value_is_set(value)) {
-					data->altitude = atoi(value);
-				}
+				data->altitude = atoi(value);
 				break;
 
 			case NMEA_GPGGA_ALTITUDE_UNIT:
 				/* Parse altitude unit */
-				if (0 == nmea_value_is_set(value)) {
-					data->altitude_unit = *value;
-				}
+				data->altitude_unit = *value;
 				break;
 
 			default:

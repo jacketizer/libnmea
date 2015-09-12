@@ -30,7 +30,11 @@ nmea_gpgll_parse(char **values, int length)
 	int i = 0;
 	char *value;
 	while (i < length) {
-		value = values[i++];
+		value = values[i];
+		if (-1 == nmea_value_is_set(value)) {
+			i++;
+			continue;
+		}
 
 		switch (i) {
 			case NMEA_GPGLL_TIME:
@@ -73,6 +77,8 @@ nmea_gpgll_parse(char **values, int length)
 			default:
 				break;
 		}
+
+		i++;
 	}
 
 	return data;

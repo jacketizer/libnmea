@@ -1,8 +1,6 @@
 TODO
 ====
 
- * Add check checksum option.
- * Loop through value list in parse function...
  * Fix checksum bug
  * Write a default function (memset).
  * Use int header files
