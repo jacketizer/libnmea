@@ -37,13 +37,9 @@ nmea_sentence_split(char *sentence, int length, char **values)
 }
 
 int
-nmea_value_is_set(char **values, int length, int index)
+nmea_value_is_set(char *value)
 {
-	if (index >= length) {
-		return -1;
-	}
-
-	if (NULL == values[index] || '\0' == *values[index]) {
+	if (NULL == value || '\0' == *value) {
 		return -1;
 	}
 

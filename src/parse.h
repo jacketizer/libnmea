@@ -20,7 +20,7 @@
 int nmea_sentence_split(char *sentence, int length, char **values);
 
 /* Check if a value is supplied and set */
-int nmea_value_is_set(char **values, int length, int index);
+int nmea_value_is_set(char *value);
 
 /* Return gps position longitude or latitude */
 int nmea_position_parse(char *s, nmea_position *pos);

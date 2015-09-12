@@ -111,7 +111,7 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 			data = (nmea_s *) nmea_gpgga_parse(values, n_vals);
 			break;
 		case NMEA_GPGLL:
-			data = (nmea_s *) nmea_gpgll_parse(sentence, n_vals);
+			data = (nmea_s *) nmea_gpgll_parse(values, n_vals);
 			break;
 		default:
 			return (nmea_s *) NULL;

@@ -3,50 +3,68 @@
 nmea_gpgll_s *
 nmea_gpgll_parse(char **values, int length)
 {
+	nmea_gpgll_s *data;
 	nmea_s *nmea_data;
 
-	nmea_gpgll_s *data = malloc(sizeof(nmea_gpgll_s));
+	/* Allocate data struct */
+	data = malloc(sizeof(nmea_gpgll_s));
 	if (NULL == data) {
 		return NULL;
 	}
 	memset(data, 0, sizeof(nmea_gpgll_s));
 	nmea_data = (nmea_s *) data;
 
+	/* Enough values in sentence? */
 	if (NMEA_GPGLL_N_VALUES > length) {
 		free(data);
 		return NULL;
 	}
 
-	/* LATITUDE */
-	if (-1 == nmea_position_parse(values[NMEA_GPGLL_LATITUDE], &data->latitude)) {
-		// report error
-		nmea_data->error = 1;
-	}
+	int i = 0;
+	char *value;
+	while (i < length) {
+		value = values[i++];
 
-	/* Get cardinal direction */
-	data->latitude.cardinal = nmea_cardinal_direction_parse(values[NMEA_GPGLL_LATITUDE_CARDINAL]);
-	if (NMEA_CARDINAL_DIR_UNKNOWN == data->latitude.cardinal) {
-		// report error
-		nmea_data->error = 1;
-	}
+		switch (i) {
+			case NMEA_GPGLL_TIME:
+				/* Parse time */
+				if (-1 == nmea_time_parse(value, &data->time)) {
+					nmea_data->error = 1;
+				}
+				break;
 
-	/* LONGITUDE */
-	if (-1 == nmea_position_parse(values[NMEA_GPGLL_LONGITUDE], &data->longitude)) {
-		// report error
-		nmea_data->error = 1;
-	}
+			case NMEA_GPGLL_LATITUDE:
+				/* Parse latitude */
+				if (-1 == nmea_position_parse(value, &data->latitude)) {
+					nmea_data->error = 1;
+				}
+				break;
 
-	/* Get cardinal direction */
-	data->longitude.cardinal = nmea_cardinal_direction_parse(values[NMEA_GPGLL_LONGITUDE_CARDINAL]);
-	if (NMEA_CARDINAL_DIR_UNKNOWN == data->longitude.cardinal) {
-		// report error
-		nmea_data->error = 1;
-	}
+			case NMEA_GPGLL_LATITUDE_CARDINAL:
+				/* Parse cardinal direction */
+				data->latitude.cardinal = nmea_cardinal_direction_parse(value);
+				if (NMEA_CARDINAL_DIR_UNKNOWN == data->latitude.cardinal) {
+					nmea_data->error = 1;
+				}
+				break;
 
-	/* Parse time, if supplied... */
-	if (0 == nmea_value_is_set(values, length, NMEA_GPGLL_TIME)) {
-		if (-1 == nmea_time_parse(values[NMEA_GPGLL_TIME], &data->time)) {
-			nmea_data->error = 1;
+			case NMEA_GPGLL_LONGITUDE:
+				/* Parse longitude */
+				if (-1 == nmea_position_parse(value, &data->longitude)) {
+					nmea_data->error = 1;
+				}
+				break;
+
+			case NMEA_GPGLL_LONGITUDE_CARDINAL:
+				/* Parse cardinal direction */
+				data->longitude.cardinal = nmea_cardinal_direction_parse(value);
+				if (NMEA_CARDINAL_DIR_UNKNOWN == data->longitude.cardinal) {
+					nmea_data->error = 1;
+				}
+				break;
+
+			default:
+				break;
 		}
 	}
 
