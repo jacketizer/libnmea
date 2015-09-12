@@ -41,7 +41,7 @@ nmea_has_checksum(const char *sentence, int length)
 }
 
 int
-nmea_validate(const char *sentence, int length)
+nmea_validate(const char *sentence, int length, int check_checksum)
 {
 	/* should start with $ */
 	if ('$' != *sentence) {
@@ -68,7 +68,7 @@ nmea_validate(const char *sentence, int length)
 	}
 
 	/* check for checksum */
-	if (0 == nmea_has_checksum(sentence, length)) {
+	if (1 == check_checksum && 0 == nmea_has_checksum(sentence, length)) {
 		char actual_chk;
 		long int expected_chk;
 		char checksum[3];
@@ -87,7 +87,7 @@ nmea_validate(const char *sentence, int length)
 }
 
 nmea_s *
-nmea_parse(char *sentence, int length, nmea_t type)
+nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 {
 	nmea_s *data;
 
@@ -95,7 +95,7 @@ nmea_parse(char *sentence, int length, nmea_t type)
 		case NMEA_UNKNOWN:
 			break;
 		case NMEA_GPGGA:
-			if (-1 == nmea_validate(sentence, length)) {
+			if (-1 == nmea_validate(sentence, length, check_checksum)) {
 				break;
 			}
 
@@ -107,7 +107,7 @@ nmea_parse(char *sentence, int length, nmea_t type)
 			data->type = type;
 			return data;
 		case NMEA_GPGLL:
-			if (-1 == nmea_validate(sentence, length)) {
+			if (-1 == nmea_validate(sentence, length, check_checksum)) {
 				break;
 			}
 

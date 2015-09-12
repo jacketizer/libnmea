@@ -22,7 +22,7 @@ main(void)
 	}
 
 	gps_fd = 0; // stdin
-	gps_fd = open("/dev/ttyUSB0", O_RDONLY);
+	//gps_fd = open("/dev/ttyUSB0", O_RDONLY);
 	if (-1 == gps_fd) {
 		perror("open ttyUSB0");
 		exit(EXIT_FAILURE);
@@ -58,7 +58,7 @@ main(void)
 				break;
 			case NMEA_GPGGA:
 			case NMEA_GPGLL:
-				data = nmea_parse(start, end - start + 1, type);
+				data = nmea_parse(start, end - start + 1, type, 0);
 				if (NULL == data) {
 					printf("Could not parse sentence\n");
 					break;

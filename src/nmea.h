@@ -70,14 +70,15 @@ extern int nmea_has_checksum(const char *sentence, int length);
  *
  * length is the byte length of the sentence string.
  */
-extern int nmea_validate(const char *sentence, int length);
+extern int nmea_validate(const char *sentence, int length, int check_checksum);
 
 /**
  * Parses an NMEA sentence string.
  *
  * sentence needs to be a validated NMEA sentence string.
  * length is the byte length of the sentence string.
+ * check_checksum, if 1 and there is a checksum, validate it.
  */
-extern nmea_s *nmea_parse(char *sentence, int length, nmea_t type);
+extern nmea_s *nmea_parse(char *sentence, int length, nmea_t type, int check_checksum);
 
 #endif  /* INC_NMEA_H */
