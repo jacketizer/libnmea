@@ -1,25 +1,27 @@
 #include "gpgll.h"
 
-void
+int
 nmea_gpgll_init(nmea_sentence_parser_s *parser)
 {
 	memset(parser, 0, sizeof(nmea_sentence_parser_s));
 	parser->parse = &nmea_gpgll_parse;
-}
-
-nmea_gpgll_s *
-nmea_gpgll_parse(char **values, int length)
-{
-	nmea_gpgll_s *data;
-	nmea_s *nmea_data;
 
 	/* Allocate data struct */
+	nmea_s *data;
 	data = malloc(sizeof(nmea_gpgll_s));
 	if (NULL == data) {
-		return NULL;
+		return -1;
 	}
 	memset(data, 0, sizeof(nmea_gpgll_s));
-	nmea_data = (nmea_s *) data;
+	parser->data = data;
+
+	return 0;
+}
+
+int
+nmea_gpgll_parse(char **values, int length, nmea_s *nmea_data)
+{
+	nmea_gpgll_s *data = (nmea_gpgll_s *) nmea_data;
 
 	int i = 0;
 	char *value;
@@ -75,5 +77,5 @@ nmea_gpgll_parse(char **values, int length)
 		i++;
 	}
 
-	return data;
+	return 0;
 }

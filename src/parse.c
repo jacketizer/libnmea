@@ -3,7 +3,7 @@
 int
 nmea_sentence_split(char *sentence, int length, char **values)
 {
-	char *cursor = sentence + 7; // skip type type word
+	char *cursor = sentence + 7; // skip type word
 	int i = 0;
 
 	values[i++] = cursor;

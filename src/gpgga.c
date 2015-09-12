@@ -1,25 +1,27 @@
 #include "gpgga.h"
 
-void
+int
 nmea_gpgga_init(nmea_sentence_parser_s *parser)
 {
 	memset(parser, 0, sizeof(nmea_sentence_parser_s));
 	parser->parse = &nmea_gpgga_parse;
-}
-
-nmea_gpgga_s *
-nmea_gpgga_parse(char **values, int length)
-{
-	nmea_gpgga_s *data;
-	nmea_s *nmea_data;
 
 	/* Allocate data struct */
+	nmea_s *data;
 	data = malloc(sizeof(nmea_gpgga_s));
 	if (NULL == data) {
-		return NULL;
+		return -1;
 	}
 	memset(data, 0, sizeof(nmea_gpgga_s));
-	nmea_data = (nmea_s *) data;
+	parser->data = data;
+
+	return 0;
+}
+
+int
+nmea_gpgga_parse(char **values, int length, nmea_s *nmea_data)
+{
+	nmea_gpgga_s *data = (nmea_gpgga_s *) nmea_data;
 
 	int i = 0;
 	char *value;
@@ -90,5 +92,5 @@ nmea_gpgga_parse(char **values, int length)
 		i++;
 	}
 
-	return data;
+	return 0;
 }

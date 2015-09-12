@@ -115,20 +115,25 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 
 	switch (type) {
 		case NMEA_GPGGA:
-			nmea_gpgga_init(parser);
+			if (-1 == nmea_gpgga_init(parser)) {
+				return (nmea_s *) NULL;
+			}
 			break;
+
 		case NMEA_GPGLL:
-			nmea_gpgll_init(parser);
+			if (-1 == nmea_gpgll_init(parser)) {
+				return (nmea_s *) NULL;
+			}
 			break;
+
 		default:
 			return (nmea_s *) NULL;
 	}
 
-	data = parser->parse(values, n_vals);
-	if (NULL == data) {
+	if (-1 == parser->parse(values, n_vals, parser->data)) {
 		return (nmea_s *) NULL;
 	}
 
-	data->type = type;
-	return data;
+	parser->data->type = type;
+	return parser->data;
 }
