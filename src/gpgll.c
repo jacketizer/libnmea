@@ -1,5 +1,12 @@
 #include "gpgll.h"
 
+void
+nmea_gpgll_init(nmea_sentence_parser_s *parser)
+{
+	memset(parser, 0, sizeof(nmea_sentence_parser_s));
+	parser->parse = &nmea_gpgll_parse;
+}
+
 nmea_gpgll_s *
 nmea_gpgll_parse(char **values, int length)
 {

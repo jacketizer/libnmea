@@ -1,5 +1,12 @@
 #include "gpgga.h"
 
+void
+nmea_gpgga_init(nmea_sentence_parser_s *parser)
+{
+	memset(parser, 0, sizeof(nmea_sentence_parser_s));
+	parser->parse = &nmea_gpgga_parse;
+}
+
 nmea_gpgga_s *
 nmea_gpgga_parse(char **values, int length)
 {

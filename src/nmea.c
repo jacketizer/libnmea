@@ -96,6 +96,7 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 	int n_vals;
 	char *values[200];
 	nmea_s *data;
+	nmea_sentence_parser_s *parser;
 
 	if (-1 == nmea_validate(sentence, length, check_checksum)) {
 		return (nmea_s *) NULL;
@@ -106,17 +107,24 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 		return (nmea_s *) NULL;
 	}
 
+	/* Allocate parser struct */
+	parser = malloc(sizeof(nmea_sentence_parser_s));
+	if (NULL == parser) {
+		return (nmea_s *) NULL;
+	}
+
 	switch (type) {
 		case NMEA_GPGGA:
-			data = (nmea_s *) nmea_gpgga_parse(values, n_vals);
+			nmea_gpgga_init(parser);
 			break;
 		case NMEA_GPGLL:
-			data = (nmea_s *) nmea_gpgll_parse(values, n_vals);
+			nmea_gpgll_init(parser);
 			break;
 		default:
 			return (nmea_s *) NULL;
 	}
 
+	data = parser->parse(values, n_vals);
 	if (NULL == data) {
 		return (nmea_s *) NULL;
 	}

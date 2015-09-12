@@ -9,6 +9,10 @@
 #define NMEA_TIME_FORMAT	"%H%M%S"
 #define NMEA_TIME_FORMAT_LEN	6
 
+typedef struct {
+	nmea_s * (*parse)(char **, int);
+} nmea_sentence_parser_s;
+
 /**
  * Splits an NMEA sentence by comma.
  *
