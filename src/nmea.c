@@ -94,8 +94,9 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 	}
 
 	int n_vals;
+	int val_index = 0;
+	char *value;
 	char *values[200];
-	nmea_s *data;
 	nmea_sentence_parser_s *parser;
 
 	if (-1 == nmea_validate(sentence, length, check_checksum)) {
@@ -130,10 +131,22 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 			return (nmea_s *) NULL;
 	}
 
-	if (-1 == parser->parse(values, n_vals, parser->data)) {
-		return (nmea_s *) NULL;
+	/* Loop through the values and parse them... */
+	while (val_index < n_vals) {
+		value = values[val_index];
+		if (-1 == nmea_value_is_set(value)) {
+			val_index++;
+			continue;
+		}
+
+		if (-1 == parser->parse(value, val_index, parser->data)) {
+			parser->errors++;
+		}
+
+		val_index++;
 	}
 
 	parser->data->type = type;
+	parser->data->errors = parser->errors;
 	return parser->data;
 }

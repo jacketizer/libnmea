@@ -10,8 +10,9 @@
 #define NMEA_TIME_FORMAT_LEN	6
 
 typedef struct {
-	int (*parse)(char **, int, nmea_s *nmea_data);
+	int (*parse)(char *, int val_index, nmea_s *nmea_data);
 	nmea_s *data;
+	int errors;
 } nmea_sentence_parser_s;
 
 /**

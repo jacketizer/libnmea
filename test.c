@@ -64,7 +64,7 @@ main(void)
 					break;
 				}
 
-				if (1 == data->error) {
+				if (0 < data->errors) {
 					printf("WARN: The sentence struct contains parse errors!\n");
 				}
 

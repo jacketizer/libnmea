@@ -29,7 +29,7 @@ typedef char nmea_cardinal_t;
 
 typedef struct {
 	nmea_t type;
-	int error;
+	int errors;
 } nmea_s;
 
 typedef struct {

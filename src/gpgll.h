@@ -13,6 +13,7 @@ typedef struct {
 	struct tm time;
 } nmea_gpgll_s;
 
+/* Value indexes */
 #define NMEA_GPGLL_LATITUDE		0
 #define NMEA_GPGLL_LATITUDE_CARDINAL	1
 #define NMEA_GPGLL_LONGITUDE		2
@@ -20,6 +21,6 @@ typedef struct {
 #define NMEA_GPGLL_TIME			4
 
 int nmea_gpgll_init(nmea_sentence_parser_s *parser);
-int nmea_gpgll_parse(char **values, int length, nmea_s *nmea_data);
+int nmea_gpgll_parse(char *value, int val_index, nmea_s *nmea_data);
 
 #endif  /* INC_NMEA_GPGLL_H */

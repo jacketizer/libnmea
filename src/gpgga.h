@@ -16,6 +16,7 @@ typedef struct {
 	char altitude_unit;
 } nmea_gpgga_s;
 
+/* Value indexes */
 #define NMEA_GPGGA_TIME			0
 #define NMEA_GPGGA_LATITUDE		1
 #define NMEA_GPGGA_LATITUDE_CARDINAL	2
@@ -26,6 +27,6 @@ typedef struct {
 #define NMEA_GPGGA_ALTITUDE_UNIT	9
 
 int nmea_gpgga_init(nmea_sentence_parser_s *parser);
-int nmea_gpgga_parse(char **values, int length, nmea_s *nmea_data);
+int nmea_gpgga_parse(char *value, int val_index, nmea_s *nmea_data);
 
 #endif  /* INC_NMEA_GPGGA_H */
