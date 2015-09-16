@@ -11,6 +11,7 @@
 
 typedef struct {
 	int (*parse)(char *, int val_index, nmea_s *nmea_data);
+	void (*set_default)(nmea_s *nmea_data);
 	nmea_s *data;
 	int errors;
 } nmea_sentence_parser_s;

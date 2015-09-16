@@ -3,8 +3,8 @@
 int
 nmea_gpgga_init(nmea_sentence_parser_s *parser)
 {
-	memset(parser, 0, sizeof(nmea_sentence_parser_s));
 	parser->parse = &nmea_gpgga_parse;
+	parser->set_default = &nmea_gpgga_default;
 
 	/* Allocate data struct */
 	nmea_s *data;
@@ -12,10 +12,15 @@ nmea_gpgga_init(nmea_sentence_parser_s *parser)
 	if (NULL == data) {
 		return -1;
 	}
-	memset(data, 0, sizeof(nmea_gpgga_s));
 	parser->data = data;
 
 	return 0;
+}
+
+void
+nmea_gpgga_default(nmea_s *data)
+{
+	memset(data, 0, sizeof(nmea_gpgga_s));
 }
 
 int

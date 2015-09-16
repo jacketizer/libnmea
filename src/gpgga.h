@@ -28,5 +28,6 @@ typedef struct {
 
 int nmea_gpgga_init(nmea_sentence_parser_s *parser);
 int nmea_gpgga_parse(char *value, int val_index, nmea_s *nmea_data);
+void nmea_gpgga_default(nmea_s *data);
 
 #endif  /* INC_NMEA_GPGGA_H */

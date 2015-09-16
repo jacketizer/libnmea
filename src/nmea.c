@@ -131,6 +131,9 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 			return (nmea_s *) NULL;
 	}
 
+	/* Set default values */
+	parser->set_default(parser->data);
+
 	/* Loop through the values and parse them... */
 	while (val_index < n_vals) {
 		value = values[val_index];
