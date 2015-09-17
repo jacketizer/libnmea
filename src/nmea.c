@@ -151,5 +151,8 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 
 	parser->data->type = type;
 	parser->data->errors = parser->errors;
-	return parser->data;
+
+  nmea_s *data = parser->data;
+  free(parser);
+	return data;
 }

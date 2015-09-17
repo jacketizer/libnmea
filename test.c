@@ -22,7 +22,7 @@ main(void)
 	}
 
 	gps_fd = 0; // stdin
-	gps_fd = open("/dev/ttyUSB0", O_RDONLY);
+	//gps_fd = open("/dev/ttyUSB0", O_RDONLY);
 	if (-1 == gps_fd) {
 		perror("open ttyUSB0");
 		exit(EXIT_FAILURE);
@@ -89,10 +89,12 @@ main(void)
 					strftime(buf, sizeof(buf), "%H:%M:%S", &pos->time);
 					printf("Time: %s\n", buf);
 				}
+
+        free(data);
 				break;
 			default:
 				fprintf(stderr, "Unhandled NMEA sentence type.\n");
-				
+
 		}
 
 		/* buffer empty? */
