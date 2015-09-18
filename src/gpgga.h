@@ -7,7 +7,7 @@
 #include "parse.h"
 
 typedef struct {
-	nmea_s super;
+	nmea_s base;
 	struct tm time;
 	nmea_position longitude;
 	nmea_position latitude;
