@@ -27,7 +27,8 @@ typedef struct {
 #define NMEA_GPGGA_ALTITUDE_UNIT	9
 
 int nmea_gpgga_init(nmea_sentence_parser_s *parser);
+void nmea_gpgga_default(nmea_s *nmea_data);
+void nmea_gpgga_free(nmea_s *nmea_data);
 int nmea_gpgga_parse(char *value, int val_index, nmea_s *nmea_data);
-void nmea_gpgga_default(nmea_s *data);
 
 #endif  /* INC_NMEA_GPGGA_H */

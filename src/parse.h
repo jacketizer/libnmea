@@ -17,6 +17,13 @@ typedef struct {
 } nmea_sentence_parser_s;
 
 /**
+ * Get a parser struct.
+ *
+ * type is the NMEA sentence type to parse.
+ */
+nmea_sentence_parser_s * nmea_create_parser(nmea_t type);
+
+/**
  * Splits an NMEA sentence by comma.
  *
  * sentence is the string to split, will be manipulated.

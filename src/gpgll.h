@@ -21,7 +21,8 @@ typedef struct {
 #define NMEA_GPGLL_TIME			4
 
 int nmea_gpgll_init(nmea_sentence_parser_s *parser);
-int nmea_gpgll_parse(char *value, int val_index, nmea_s *nmea_data);
 void nmea_gpgll_default(nmea_s *data);
+void nmea_gpgll_free(nmea_s *nmea_data);
+int nmea_gpgll_parse(char *value, int val_index, nmea_s *nmea_data);
 
 #endif  /* INC_NMEA_GPGLL_H */

@@ -86,6 +86,27 @@ nmea_validate(const char *sentence, int length, int check_checksum)
 	return 0;
 }
 
+void
+nmea_free(nmea_s *data)
+{
+	if (NULL == data) {
+		return;
+	}
+
+	switch (data->type) {
+		case NMEA_GPGGA:
+			nmea_gpgga_free(data);
+			break;
+
+		case NMEA_GPGLL:
+			nmea_gpgll_free(data);
+			break;
+
+		default:
+			return;
+	}
+}
+
 nmea_s *
 nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 {
@@ -108,31 +129,10 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 		return (nmea_s *) NULL;
 	}
 
-	/* Allocate parser struct */
-	parser = malloc(sizeof(nmea_sentence_parser_s));
+	parser = nmea_create_parser(type);
 	if (NULL == parser) {
 		return (nmea_s *) NULL;
 	}
-
-	switch (type) {
-		case NMEA_GPGGA:
-			if (-1 == nmea_gpgga_init(parser)) {
-				return (nmea_s *) NULL;
-			}
-			break;
-
-		case NMEA_GPGLL:
-			if (-1 == nmea_gpgll_init(parser)) {
-				return (nmea_s *) NULL;
-			}
-			break;
-
-		default:
-			return (nmea_s *) NULL;
-	}
-
-	/* Set default values */
-	parser->set_default(parser->data);
 
 	/* Loop through the values and parse them... */
 	while (val_index < n_vals) {
@@ -152,7 +152,7 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 	parser->data->type = type;
 	parser->data->errors = parser->errors;
 
-  nmea_s *data = parser->data;
-  free(parser);
+	nmea_s *data = parser->data;
+	free(parser);
 	return data;
 }

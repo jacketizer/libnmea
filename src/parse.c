@@ -1,5 +1,40 @@
 #include "parse.h"
 
+nmea_sentence_parser_s *
+nmea_create_parser(nmea_t type)
+{
+	nmea_sentence_parser_s *parser;
+
+	/* Allocate parser struct */
+	parser = malloc(sizeof(nmea_sentence_parser_s));
+	if (NULL == parser) {
+		return (nmea_sentence_parser_s *) NULL;
+	}
+
+	/* Get parser struct */
+	switch (type) {
+		case NMEA_GPGGA:
+			if (-1 == nmea_gpgga_init(parser)) {
+				return (nmea_sentence_parser_s *) NULL;
+			}
+			break;
+
+		case NMEA_GPGLL:
+			if (-1 == nmea_gpgll_init(parser)) {
+				return (nmea_sentence_parser_s *) NULL;
+			}
+			break;
+
+		default:
+			return (nmea_sentence_parser_s *) NULL;
+	}
+
+	/* Set default values */
+	parser->set_default(parser->data);
+
+	return parser;
+}
+
 int
 nmea_sentence_split(char *sentence, int length, char **values)
 {

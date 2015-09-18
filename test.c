@@ -56,6 +56,7 @@ main(void)
 		switch (type) {
 			case NMEA_UNKNOWN:
 				break;
+
 			case NMEA_GPGGA:
 			case NMEA_GPGLL:
 				data = nmea_parse(start, end - start + 1, type, 0);
@@ -90,8 +91,9 @@ main(void)
 					printf("Time: %s\n", buf);
 				}
 
-        free(data);
+				nmea_free(data);
 				break;
+
 			default:
 				fprintf(stderr, "Unhandled NMEA sentence type.\n");
 
