@@ -5,8 +5,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <nmea.h>
-#include <gpgll.h>
-#include <gpgga.h>
+#include <sentences/gpgll.h>
+#include <sentences/gpgga.h>
 
 int
 main(void)

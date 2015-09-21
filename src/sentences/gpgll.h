@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "parse.h"
+#include "types.h"
+#include "../parse.h"
 
 typedef struct {
 	nmea_s base;
@@ -20,9 +21,9 @@ typedef struct {
 #define NMEA_GPGLL_LONGITUDE_CARDINAL	3
 #define NMEA_GPGLL_TIME			4
 
-int nmea_gpgll_init(nmea_sentence_parser_s *parser);
-void nmea_gpgll_default(nmea_s *data);
-void nmea_gpgll_free(nmea_s *nmea_data);
-int nmea_gpgll_parse(char *value, int val_index, nmea_s *nmea_data);
+extern init_f init(nmea_sentence_parser_s *parser);
+extern set_default_f set_default(nmea_s *nmea_data);
+extern free_data_f free_data(nmea_s *nmea_data);
+extern parse_f parse(char *value, int val_index, nmea_s *nmea_data);
 
 #endif  /* INC_NMEA_GPGLL_H */

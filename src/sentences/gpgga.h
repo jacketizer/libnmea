@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "parse.h"
+#include "../types.h"
+#include "../parse.h"
 
 typedef struct {
 	nmea_s base;
@@ -26,9 +27,9 @@ typedef struct {
 #define NMEA_GPGGA_ALTITUDE		8
 #define NMEA_GPGGA_ALTITUDE_UNIT	9
 
-int nmea_gpgga_init(nmea_sentence_parser_s *parser);
-void nmea_gpgga_default(nmea_s *nmea_data);
-void nmea_gpgga_free(nmea_s *nmea_data);
-int nmea_gpgga_parse(char *value, int val_index, nmea_s *nmea_data);
+extern int nmea_gpgga_init(nmea_sentence_parser_s *parser);
+extern void nmea_gpgga_default(nmea_s *nmea_data);
+extern void nmea_gpgga_free(nmea_s *nmea_data);
+extern int nmea_gpgga_parse(char *value, int val_index, nmea_s *nmea_data);
 
 #endif  /* INC_NMEA_GPGGA_H */

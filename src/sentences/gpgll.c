@@ -1,10 +1,10 @@
 #include "gpgll.h"
 
-int
-nmea_gpgll_init(nmea_sentence_parser_s *parser)
+init_f
+init(nmea_sentence_parser_s *parser)
 {
-	parser->set_default = &nmea_gpgll_default;
-	parser->parse = &nmea_gpgll_parse;
+	/* Declare what type to parse */
+	parser->type = NMEA_GPGLL;
 
 	/* Allocate data struct */
 	nmea_s *data;
@@ -18,20 +18,21 @@ nmea_gpgll_init(nmea_sentence_parser_s *parser)
 	return 0;
 }
 
-void
-nmea_gpgll_default(nmea_s *data)
+set_default_f
+set_default(nmea_s *nmea_data)
 {
-	memset(data, 0, sizeof(nmea_gpgll_s));
+	printf("HEJSAN");
+	memset(nmea_data, 0, sizeof(nmea_gpgll_s));
 }
 
-void
-nmea_gpgll_free(nmea_s *nmea_data)
+free_data_f
+free_data(nmea_s *nmea_data)
 {
 	free(nmea_data);
 }
 
-int
-nmea_gpgll_parse(char *value, int val_index, nmea_s *nmea_data)
+parse_f
+parse(char *value, int val_index, nmea_s *nmea_data)
 {
 	nmea_gpgll_s *data = (nmea_gpgll_s *) nmea_data;
 

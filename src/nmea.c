@@ -1,6 +1,4 @@
 #include "nmea.h"
-#include "gpgll.h"
-#include "gpgga.h"
 
 nmea_t
 nmea_get_type(const char *sentence)
@@ -93,18 +91,43 @@ nmea_free(nmea_s *data)
 		return;
 	}
 
-	switch (data->type) {
-		case NMEA_GPGGA:
-			nmea_gpgga_free(data);
-			break;
+	//data->free_data(data);
+}
 
-		case NMEA_GPGLL:
-			nmea_gpgll_free(data);
-			break;
+int
+nmea_sentence_split(char *sentence, int length, char **values)
+{
+	char *cursor = sentence + 7; // skip type word
+	int i = 0;
 
-		default:
-			return;
+	values[i++] = cursor;
+	while (cursor != NULL && cursor - sentence < length) {
+		cursor = (char *) memchr(cursor, ',', length - (cursor - sentence));
+		if (NULL == cursor) {
+			break;
+		}
+
+		*cursor = '\0';
+		cursor++;
+		if (*cursor == ',') {
+		    	  values[i++] = NULL;
+		} else {
+		    	  values[i++] = cursor;
+		}
 	}
+
+	/* null terminate the last value */
+	cursor = values[i - 1];
+	cursor = (char *) memchr(cursor, '*', length - (cursor - sentence));
+	if (NULL != cursor) {
+		/* has checksum */
+		*cursor = '\0';
+	} else {
+		/* no checksum */
+		sentence[length - 2] = '\0';
+	}
+
+	return i;
 }
 
 nmea_s *

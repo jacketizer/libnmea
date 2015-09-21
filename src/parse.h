@@ -4,34 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "nmea.h"
+#include "types.h"
 
 #define NMEA_TIME_FORMAT	"%H%M%S"
 #define NMEA_TIME_FORMAT_LEN	6
-
-typedef struct {
-	int (*parse)(char *, int val_index, nmea_s *nmea_data);
-	void (*set_default)(nmea_s *nmea_data);
-	nmea_s *data;
-	int errors;
-} nmea_sentence_parser_s;
-
-/**
- * Get a parser struct.
- *
- * type is the NMEA sentence type to parse.
- */
-nmea_sentence_parser_s * nmea_create_parser(nmea_t type);
-
-/**
- * Splits an NMEA sentence by comma.
- *
- * sentence is the string to split, will be manipulated.
- * length is the char length of the sentence string.
- * values is a char pointer array that will be filled with pointers to the
- * splitted values in the sentence string.
- */
-int nmea_sentence_split(char *sentence, int length, char **values);
 
 /* Check if a value is supplied and set */
 int nmea_value_is_set(char *value);
