@@ -130,6 +130,16 @@ nmea_sentence_split(char *sentence, int length, char **values)
 	return i;
 }
 
+int
+nmea_init()
+{
+	if (1 > nmea_load_parsers()) {
+		return -1;
+	}
+
+	return 0;
+}
+
 nmea_s *
 nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 {
@@ -140,22 +150,34 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 	int n_vals;
 	int val_index = 0;
 	char *value;
-	char *values[200];
+	char *values[255];
 	nmea_sentence_parser_s *parser;
 
+	/* Validate */
 	if (-1 == nmea_validate(sentence, length, check_checksum)) {
 		return (nmea_s *) NULL;
 	}
 
+	/* Split the sentence into values */
 	n_vals = nmea_sentence_split(sentence, length, values);
 	if (0 == n_vals) {
 		return (nmea_s *) NULL;
 	}
 
-	parser = nmea_create_parser(type);
+	/* Get the right parser */
+	parser = nmea_get_parser(type);
 	if (NULL == parser) {
 		return (nmea_s *) NULL;
 	}
+
+	/* Allocate memory for parsed data */
+	parser->data = parser->allocate_data();
+	if (NULL == parser->data) {
+		return (nmea_s *) NULL;
+	}
+
+	/* Set default values */
+	parser->set_default(parser->data);
 
 	/* Loop through the values and parse them... */
 	while (val_index < n_vals) {

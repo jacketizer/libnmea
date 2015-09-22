@@ -40,70 +40,90 @@ _get_so_files(const char *path, char **files)
 }
 
 nmea_sentence_parser_s *
-nmea_create_parser(nmea_t type)
+nmea_init_parser(char *filename)
 {
 	nmea_sentence_parser_s *parser;
 
-	/* Get file list */
-	int n_files;
-	char *files[255];
-
-	n_files = _get_so_files("sentences/", files);
-	if (1 > n_files) {
-		return NULL;
-	}
-
-	while (n_files-- > 0) {
-		printf("%s\n", files[n_files]);
-	}
-
 	/* Allocate parser struct */
-	parser = malloc(sizeof(nmea_sentence_parser_s));
+	parser = malloc(sizeof (nmea_sentence_parser_s));
 	if (NULL == parser) {
 		return (nmea_sentence_parser_s *) NULL;
 	}
 
-	printf("Loading plugins...\n");
-	void *plugin = dlopen("sentences/libgpgll.so", RTLD_NOW);
+	void *plugin = dlopen(filename, RTLD_NOW);
 	if (NULL == plugin) {
 		printf("Cannot load: %s\n", dlerror());
-		return NULL;
+		return (nmea_sentence_parser_s *) NULL;
 	}
-	printf("OK\n");
 
 	init_f init = dlsym(plugin, "init");
 	if (NULL == init) {
 		printf("Cannot resolve init fn: %s\n", dlerror());
-		return NULL;
+		return (nmea_sentence_parser_s *) NULL;
 	}
-	init(parser);
-	if (NULL == parser) {
-		printf("Cannot init parser\n");
-		return NULL;
+
+	parser->allocate_data = dlsym(plugin, "allocate_data");
+	if (NULL == parser->allocate_data) {
+		printf("Cannot resolve allocate fn: %s\n", dlerror());
+		return (nmea_sentence_parser_s *) NULL;
 	}
 
 	parser->set_default = dlsym(plugin, "set_default");
 	if (NULL == parser->set_default) {
 		printf("Cannot resolve default fn: %s\n", dlerror());
-		return NULL;
+		return (nmea_sentence_parser_s *) NULL;
 	}
 
 	parser->free_data = dlsym(plugin, "free_data");
 	if (NULL == parser->free_data) {
 		printf("Cannot resolve free fn: %s\n", dlerror());
-		return NULL;
+		return (nmea_sentence_parser_s *) NULL;
 	}
 
 	parser->parse = dlsym(plugin, "parse");
 	if (NULL == parser->parse) {
 		printf("Cannot resolve parse fn: %s\n", dlerror());
-		return NULL;
+		return (nmea_sentence_parser_s *) NULL;
 	}
 
-
-	/* Set default values */
-	parser->set_default(parser->data);
+	if (-1 == init(parser)) {
+		printf("Could not init parser\n");
+		return (nmea_sentence_parser_s *) NULL;
+	}
 
 	return parser;
 }
 
+int
+nmea_load_parsers()
+{
+	int n_files, i;
+	char *files[255];
+	nmea_sentence_parser_s *parser;
+
+	memset(parsers, 0, sizeof parsers);
+
+	/* Get list of so files */
+	n_files = _get_so_files("parsers/", files);
+	if (1 > n_files) {
+		return -1;
+	}
+
+	i = n_files;
+	while (i-- > 0) {
+		parser = nmea_init_parser(files[i]);
+		if (NULL == parser) {
+			return -1;
+		}
+
+		parsers[(int) parser->type] = parser;
+	}
+
+	return n_files;
+}
+
+nmea_sentence_parser_s *
+nmea_get_parser(nmea_t type)
+{
+	return parsers[(int) type];
+}

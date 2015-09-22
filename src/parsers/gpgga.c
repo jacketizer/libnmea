@@ -1,36 +1,34 @@
 #include "gpgga.h"
 
-int
-nmea_gpgga_init(nmea_sentence_parser_s *parser)
+init_f
+init(nmea_sentence_parser_s *parser)
 {
-	parser->set_default = &nmea_gpgga_default;
-	parser->parse = &nmea_gpgga_parse;
-
-	/* Allocate data struct */
-	nmea_s *data;
-	data = malloc(sizeof(nmea_gpgga_s));
-	if (NULL == data) {
-		return -1;
-	}
-	parser->data = data;
+	/* Declare what sentence type to parse */
+	parser->type = NMEA_GPGGA;
 
 	return 0;
 }
 
-void
-nmea_gpgga_default(nmea_s *nmea_data)
+allocate_data_f
+allocate_data()
+{
+	return malloc(sizeof(nmea_gpgga_s));
+}
+
+set_default_f
+set_default(nmea_s *nmea_data)
 {
 	memset(nmea_data, 0, sizeof(nmea_gpgga_s));
 }
 
-void
-nmea_gpgga_free(nmea_s *nmea_data)
+free_data_f
+free_data(nmea_s *nmea_data)
 {
 	free(nmea_data);
 }
 
-int
-nmea_gpgga_parse(char *value, int val_index, nmea_s *nmea_data)
+parse_f
+parse(char *value, int val_index, nmea_s *nmea_data)
 {
 	nmea_gpgga_s *data = (nmea_gpgga_s *) nmea_data;
 

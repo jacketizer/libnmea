@@ -5,8 +5,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <nmea.h>
-#include <sentences/gpgll.h>
-#include <sentences/gpgga.h>
+#include <parsers/gpgll.h>
+#include <parsers/gpgga.h>
 
 int
 main(void)
@@ -25,6 +25,11 @@ main(void)
 	//gps_fd = open("/dev/ttyUSB0", O_RDONLY);
 	if (-1 == gps_fd) {
 		perror("open ttyUSB0");
+		exit(EXIT_FAILURE);
+	}
+
+	if (-1 == nmea_init()) {
+		printf("Could not init nmea parsers...\n");
 		exit(EXIT_FAILURE);
 	}
 

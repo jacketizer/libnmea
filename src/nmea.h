@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "types.h"
-#include "sentences/types.h"
-#include "sentences/parser.h"
+#include "parsers/types.h"
+#include "parsers/parser.h"
 
 /* nmea sentence max length */
 #define NMEA_MAX_LENGTH		50

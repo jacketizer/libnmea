@@ -3,25 +3,21 @@
 init_f
 init(nmea_sentence_parser_s *parser)
 {
-	/* Declare what type to parse */
+	/* Declare what sentence type to parse */
 	parser->type = NMEA_GPGLL;
 
-	/* Allocate data struct */
-	nmea_s *data;
-	data = malloc(sizeof(nmea_gpgll_s));
-	if (NULL == data) {
-		return -1;
-	}
-	memset(data, 0, sizeof(nmea_gpgll_s));
-	parser->data = data;
-
 	return 0;
+}
+
+allocate_data_f
+allocate_data()
+{
+	return malloc(sizeof(nmea_gpgll_s));
 }
 
 set_default_f
 set_default(nmea_s *nmea_data)
 {
-	printf("HEJSAN");
 	memset(nmea_data, 0, sizeof(nmea_gpgll_s));
 }
 
