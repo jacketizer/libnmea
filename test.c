@@ -22,11 +22,6 @@ main(void)
 	}
 
 	gps_fd = 0; // stdin
-	//gps_fd = open("/dev/ttyUSB0", O_RDONLY);
-	if (-1 == gps_fd) {
-		perror("open ttyUSB0");
-		exit(EXIT_FAILURE);
-	}
 
 	if (-1 == nmea_init()) {
 		printf("Could not init nmea parsers...\n");

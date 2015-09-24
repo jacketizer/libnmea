@@ -7,12 +7,12 @@ any sentence missing, please add it by contributing to the code.
 To build:
 
 ```sh
-$ make && make test
+$ make parser-libs && make nmea && make test
 ```
 
 To test:
 
 ```sh
 $ export LD_LIBRARY_PATH=./
-$ echo -ne "\$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\r\n" | ./test
+$ echo -ne "\$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n" | ./test
 ```
