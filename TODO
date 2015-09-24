@@ -1,11 +1,7 @@
 TODO
 ====
 
- * Fix checksum bug
- * Write a default function (memset).
  * Use int header files
- * Use sentence parsing as modules/shared libraries etc...
-     Should be able to be added as files without changing code in other files.
  * Look over header files and definitions.
  * Add the code from test.c to library to allow to get sentences from stream.
  * Tests

@@ -6,8 +6,8 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <dlfcn.h>
-#include "../types.h"
 #include "types.h"
+#include "parsers/types.h"
 
 nmea_sentence_parser_s *parsers[12];
 
