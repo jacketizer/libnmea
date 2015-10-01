@@ -33,12 +33,11 @@ src/parsers/<type>.c:
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "types.h"
-#include "../parse.h"
+#include <nmea.h>
 
 typedef struct {
 	nmea_s base;
-  /* sentence values */
+	/* sentence values */
 } nmea_<type>_s;
 
 /* Value indexes */
@@ -57,7 +56,9 @@ extern parse_f parse(char *value, int val_index, nmea_s *nmea_data);
 src/parsers/<type>.c:
 
 ```C
+#include "../nmea/parser_types.h"
 #include "<type>.h"
+#include "parse.h"
 
 init_f
 init(nmea_sentence_parser_s *parser)
@@ -71,13 +72,13 @@ init(nmea_sentence_parser_s *parser)
 allocate_data_f
 allocate_data()
 {
-	return malloc(sizeof(nmea_<type>_s));
+	return malloc(sizeof (nmea_<type>_s));
 }
 
 set_default_f
 set_default(nmea_s *nmea_data)
 {
-	memset(nmea_data, 0, sizeof (nmea_gpgga_s));
+	memset(nmea_data, 0, sizeof (nmea_<type>_s));
 }
 
 free_data_f
@@ -93,7 +94,7 @@ parse(char *value, int val_index, nmea_s *nmea_data)
 
 	switch (val_index) {
 		case NMEA_<TYPE>_XXX:
-			/* Parse some value */
+			/* Parse some value and save in data struct */
 			break;
 
 		default:
@@ -103,5 +104,3 @@ parse(char *value, int val_index, nmea_s *nmea_data)
 	return 0;
 }
 ```
-
-

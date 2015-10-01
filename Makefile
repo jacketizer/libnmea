@@ -22,9 +22,9 @@ parser-libs:	$(OBJ_PARSERS)
 	$(CC) $(CFLAGS) $< -o $@
 
 src/parsers/%:	$(OBJ_PARSER_DEP)
-	@mkdir -p parsers
+	@mkdir -p nmea
 	@echo Building $(patsubst src/parsers/%,lib%.so,$@)...
-	$(CC) -s -fPIC -Wall -g -shared -Isrc/nmea -L. -lnmea -Wl,--no-as-needed,-soname,$(patsubst src/parsers/%,lib%.so,$@) $@.c $(OBJ_PARSER_DEP) -o $(patsubst src/parsers/%,src/parsers/lib%.so,$@)
+	$(CC) -s -fPIC -Wall -g -shared -Isrc/nmea -L. -lnmea -Wl,--no-as-needed,-soname,$(patsubst src/parsers/%,lib%.so,$@) $@.c $(OBJ_PARSER_DEP) -o $(patsubst src/parsers/%,nmea/lib%.so,$@)
 
 test:	test.c
 	$(CC) test.c -I./src/ -L. -lnmea -o test
@@ -33,19 +33,17 @@ install:	all
 	mkdir -p /usr/lib/nmea
 	mkdir -p /usr/include/nmea
 	cp libnmea.so /usr/lib/
-	cp parsers/*.so /usr/lib/nmea/
-	cp src/nmea.h /usr/include/
+	cp nmea/*.so /usr/lib/nmea/
+	cp src/nmea/nmea.h /usr/include/
 	cp src/parsers/*.h /usr/include/nmea/
 	ldconfig -n /usr/lib
 
 clean:
 	@rm -f *.o
-	@rm -f parsers/*.o
-
-clean-all:
-	@rm -f *.o
 	@rm -f src/nmea/*.o
 	@rm -f src/parsers/*.o
-	@rm -f parsers/*
+
+clean-all:	clean
+	@rm -rf nmea
 	@rm -f libnmea.so
 	@rm -f test
