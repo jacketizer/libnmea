@@ -24,7 +24,7 @@ parser-libs: $(OBJ_PARSERS)
 
 parsers/%: $(OBJ_PARSER_DEP)
 	@echo Builing $(patsubst parsers/%,lib%.so,$@)...
-	$(CC) -s -shared -Wl,--no-as-needed,-soname,$(patsubst parsers/%,lib%.so,$@) -Wall -g $(OBJ_PARSER_DEP) -o $(patsubst parsers/%,parsers/lib%.so,$@)
+	$(CC) -s -fPIC -Wall -g -shared -Wl,--no-as-needed,-soname,$(patsubst parsers/%,lib%.so,$@) $(VPATH)/$@.c $(OBJ_PARSER_DEP) -o $(patsubst parsers/%,parsers/lib%.so,$@)
 
 test: test.c
 	$(CC) test.c -I./src/ -L. -lnmea -o test
