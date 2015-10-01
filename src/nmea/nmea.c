@@ -198,7 +198,7 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 	/* Loop through the values and parse them... */
 	while (val_index < n_vals) {
 		value = values[val_index];
-		if (-1 == nmea_value_is_set(value)) {
+		if (-1 == _nmea_value_is_set(value)) {
 			val_index++;
 			continue;
 		}

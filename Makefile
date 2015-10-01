@@ -27,7 +27,7 @@ src/parsers/%:	$(OBJ_PARSER_DEP)
 	$(CC) -s -fPIC -Wall -g -shared -Isrc/nmea -L. -lnmea -Wl,--no-as-needed,-soname,$(patsubst src/parsers/%,lib%.so,$@) $@.c $(OBJ_PARSER_DEP) -o $(patsubst src/parsers/%,nmea/lib%.so,$@)
 
 test:	test.c
-	$(CC) test.c -I./src/ -L. -lnmea -o test
+	$(CC) test.c -lnmea -o test
 
 install:	all
 	mkdir -p /usr/lib/nmea

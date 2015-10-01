@@ -7,7 +7,7 @@ any sentence missing, please add it by contributing to the code.
 To build:
 
 ```sh
-$ make && make test
+$ make && sudo make install && make test
 ```
 
 To test:
@@ -43,12 +43,6 @@ typedef struct {
 /* Value indexes */
 #define NMEA_<TYPE>_XXX			0
 /* more value indexes... */
-
-extern init_f init(nmea_sentence_parser_s *parser);
-extern allocate_data_f allocate_data();
-extern set_default_f set_default(nmea_s *nmea_data);
-extern free_data_f free_data(nmea_s *nmea_data);
-extern parse_f parse(char *value, int val_index, nmea_s *nmea_data);
 
 #endif  /* INC_NMEA_<TYPE>_H */
 ```
