@@ -1,5 +1,7 @@
 #include "parser.h"
 
+#define PARSER_PATH "/usr/lib/nmea/"
+
 int
 _get_so_files(const char *path, char **files)
 {
@@ -104,7 +106,7 @@ nmea_load_parsers()
 	memset(parsers, 0, sizeof parsers);
 
 	/* Get list of so files */
-	n_files = _get_so_files("parsers/", files);
+	n_files = _get_so_files(PARSER_PATH, files);
 	if (1 > n_files) {
 		return -1;
 	}
