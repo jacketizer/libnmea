@@ -1,6 +1,20 @@
 #include "nmea.h"
 #include "parser.h"
-#include "parsers/types.h"
+#include "parser_types.h"
+
+/* Check if a value is supplied and set */
+int _nmea_value_is_set(char *value);
+
+int
+_nmea_value_is_set(char *value)
+{
+	if (NULL == value || '\0' == *value) {
+		return -1;
+	}
+
+	return 0;
+}
+
 
 nmea_t
 nmea_get_type(const char *sentence)

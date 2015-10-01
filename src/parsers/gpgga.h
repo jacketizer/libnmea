@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <nmea.h>
 
 typedef struct {
 	nmea_s base;

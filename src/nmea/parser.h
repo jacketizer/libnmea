@@ -7,7 +7,7 @@
 #include <dirent.h>
 #include <dlfcn.h>
 #include "nmea.h"
-#include "parsers/types.h"
+#include "parser_types.h"
 
 nmea_sentence_parser_s *parsers[12];
 

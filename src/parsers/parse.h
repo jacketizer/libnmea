@@ -4,13 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "nmea.h"
+#include "../nmea/nmea.h"
 
 #define NMEA_TIME_FORMAT	"%H%M%S"
 #define NMEA_TIME_FORMAT_LEN	6
-
-/* Check if a value is supplied and set */
-int nmea_value_is_set(char *value);
 
 /* Return gps position longitude or latitude */
 int nmea_position_parse(char *s, nmea_position *pos);

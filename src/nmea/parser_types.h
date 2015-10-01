@@ -1,7 +1,7 @@
-#ifndef INC_NMEA_SENTENCE_H
-#define INC_NMEA_SENTENCE_H
+#ifndef INC_NMEA_PARSER_TYPES_H
+#define INC_NMEA_PARSER_TYPES_H
 
-#include "../nmea.h"
+#include "nmea.h"
 
 typedef nmea_s * (*allocate_data_f) ();
 typedef void (*set_default_f) (nmea_s *);
@@ -20,4 +20,4 @@ typedef struct {
 
 typedef int (*init_f) (nmea_sentence_parser_s *);
 
-#endif  /* INC_NMEA_SENTENCE_H */
+#endif  /* INC_NMEA_PARSER_TYPES_H */

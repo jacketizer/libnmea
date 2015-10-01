@@ -1,16 +1,6 @@
 #include "parse.h"
 
 int
-nmea_value_is_set(char *value)
-{
-	if (NULL == value || '\0' == *value) {
-		return -1;
-	}
-
-	return 0;
-}
-
-int
 nmea_position_parse(char *s, nmea_position *pos)
 {
 	pos->degrees = 0;

@@ -1,7 +1,6 @@
-#include "../nmea.h"
-#include "../parse.h"
-#include "types.h"
+#include "../nmea/parser_types.h"
 #include "gpgll.h"
+#include "parse.h"
 
 init_f
 init(nmea_sentence_parser_s *parser)
