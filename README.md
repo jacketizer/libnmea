@@ -7,7 +7,7 @@ any sentence missing, please add it by contributing to the code.
 To build:
 
 ```sh
-$ make parser-libs && make nmea && make test
+$ make && make test
 ```
 
 To test:
