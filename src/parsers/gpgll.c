@@ -1,3 +1,6 @@
+#include "../nmea.h"
+#include "../parse.h"
+#include "types.h"
 #include "gpgll.h"
 
 init_f

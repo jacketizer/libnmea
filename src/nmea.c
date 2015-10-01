@@ -1,4 +1,6 @@
 #include "nmea.h"
+#include "parser.h"
+#include "parsers/types.h"
 
 nmea_t
 nmea_get_type(const char *sentence)

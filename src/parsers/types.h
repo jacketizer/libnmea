@@ -1,7 +1,7 @@
 #ifndef INC_NMEA_SENTENCE_H
 #define INC_NMEA_SENTENCE_H
 
-#include "../types.h"
+#include "../nmea.h"
 
 typedef nmea_s * (*allocate_data_f) ();
 typedef void (*set_default_f) (nmea_s *);
