@@ -54,42 +54,35 @@ nmea_init_parser(const char *filename)
 
 	void *plugin = dlopen(filename, RTLD_NOW);
 	if (NULL == plugin) {
-		printf("Cannot load: %s\n", dlerror());
 		return (nmea_sentence_parser_s *) NULL;
 	}
 
 	init_f init = dlsym(plugin, "init");
 	if (NULL == init) {
-		printf("Cannot resolve init fn: %s\n", dlerror());
 		return (nmea_sentence_parser_s *) NULL;
 	}
 
 	parser->allocate_data = dlsym(plugin, "allocate_data");
 	if (NULL == parser->allocate_data) {
-		printf("Cannot resolve allocate fn: %s\n", dlerror());
 		return (nmea_sentence_parser_s *) NULL;
 	}
 
 	parser->set_default = dlsym(plugin, "set_default");
 	if (NULL == parser->set_default) {
-		printf("Cannot resolve default fn: %s\n", dlerror());
 		return (nmea_sentence_parser_s *) NULL;
 	}
 
 	parser->free_data = dlsym(plugin, "free_data");
 	if (NULL == parser->free_data) {
-		printf("Cannot resolve free fn: %s\n", dlerror());
 		return (nmea_sentence_parser_s *) NULL;
 	}
 
 	parser->parse = dlsym(plugin, "parse");
 	if (NULL == parser->parse) {
-		printf("Cannot resolve parse fn: %s\n", dlerror());
 		return (nmea_sentence_parser_s *) NULL;
 	}
 
 	if (-1 == init(parser)) {
-		printf("Could not init parser\n");
 		return (nmea_sentence_parser_s *) NULL;
 	}
 

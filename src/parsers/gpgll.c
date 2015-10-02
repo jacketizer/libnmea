@@ -8,13 +8,13 @@ init(nmea_sentence_parser_s *parser)
 	/* Declare what sentence type to parse */
 	parser->type = NMEA_GPGLL;
 
-	return 0;
+	return (init_f) 0;
 }
 
 allocate_data_f
 allocate_data()
 {
-	return malloc(sizeof(nmea_gpgll_s));
+	return (allocate_data_f) malloc(sizeof(nmea_gpgll_s));
 }
 
 set_default_f
@@ -38,14 +38,14 @@ parse(char *value, int val_index, nmea_s *nmea_data)
 		case NMEA_GPGLL_TIME:
 			/* Parse time */
 			if (-1 == nmea_time_parse(value, &data->time)) {
-				return -1;
+				return (parse_f) -1;
 			}
 			break;
 
 		case NMEA_GPGLL_LATITUDE:
 			/* Parse latitude */
 			if (-1 == nmea_position_parse(value, &data->latitude)) {
-				return -1;
+				return (parse_f) -1;
 			}
 			break;
 
@@ -53,14 +53,14 @@ parse(char *value, int val_index, nmea_s *nmea_data)
 			/* Parse cardinal direction */
 			data->latitude.cardinal = nmea_cardinal_direction_parse(value);
 			if (NMEA_CARDINAL_DIR_UNKNOWN == data->latitude.cardinal) {
-				return -1;
+				return (parse_f) -1;
 			}
 			break;
 
 		case NMEA_GPGLL_LONGITUDE:
 			/* Parse longitude */
 			if (-1 == nmea_position_parse(value, &data->longitude)) {
-				return -1;
+				return (parse_f) -1;
 			}
 			break;
 
@@ -68,7 +68,7 @@ parse(char *value, int val_index, nmea_s *nmea_data)
 			/* Parse cardinal direction */
 			data->longitude.cardinal = nmea_cardinal_direction_parse(value);
 			if (NMEA_CARDINAL_DIR_UNKNOWN == data->longitude.cardinal) {
-				return -1;
+				return (parse_f) -1;
 			}
 			break;
 
@@ -76,5 +76,5 @@ parse(char *value, int val_index, nmea_s *nmea_data)
 			break;
 	}
 
-	return 0;
+	return (parse_f) 0;
 }
