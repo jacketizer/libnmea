@@ -199,13 +199,13 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 	}
 
 	/* Allocate memory for parsed data */
-	parser->parser.data = parser->allocate_data();
+	parser->allocate_data((nmea_parser_s *) parser);
 	if (NULL == parser->parser.data) {
 		return (nmea_s *) NULL;
 	}
 
 	/* Set default values */
-	parser->set_default(parser->parser.data);
+	parser->set_default((nmea_parser_s *) parser);
   parser->errors = 0;
 
 	/* Loop through the values and parse them... */
@@ -216,7 +216,7 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 			continue;
 		}
 
-		if (-1 == parser->parse(value, val_index, parser->parser.data)) {
+		if (-1 == parser->parse((nmea_parser_s *) parser, value, val_index)) {
 			parser->errors++;
 		}
 

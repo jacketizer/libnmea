@@ -7,32 +7,34 @@ init(nmea_parser_s *parser)
 {
 	/* Declare what sentence type to parse */
 	parser->type = NMEA_GPGGA;
-
 	return 0;
 }
 
-nmea_s *
-allocate_data()
+int
+allocate_data(nmea_parser_s *parser)
 {
-	return malloc(sizeof (nmea_gpgga_s));
-}
-
-void
-set_default(nmea_s *nmea_data)
-{
-	memset(nmea_data, 0, sizeof (nmea_gpgga_s));
-}
-
-void
-free_data(nmea_s *nmea_data)
-{
-	free(nmea_data);
+	parser->data = malloc(sizeof (nmea_gpgga_s));
+  return 0;
 }
 
 int
-parse(char *value, int val_index, nmea_s *nmea_data)
+set_default(nmea_parser_s *parser)
 {
-	nmea_gpgga_s *data = (nmea_gpgga_s *) nmea_data;
+	memset(parser->data, 0, sizeof (nmea_gpgga_s));
+  return 0;
+}
+
+int
+free_data(nmea_parser_s *parser)
+{
+	free(parser->data);
+  return 0;
+}
+
+int
+parse(nmea_parser_s *parser, char *value, int val_index)
+{
+	nmea_gpgga_s *data = (nmea_gpgga_s *) parser->data;
 
 	switch (val_index) {
 		case NMEA_GPGGA_TIME:

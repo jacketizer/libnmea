@@ -9,9 +9,9 @@ typedef struct {
 } nmea_parser_s;
 
 extern int init(nmea_parser_s *parser);
-extern nmea_s * allocate_data();
-extern void set_default(nmea_s *nmea_data);
-extern void free_data(nmea_s *nmea_data);
-extern int parse(char *value, int val_index, nmea_s *nmea_data);
+extern int allocate_data(nmea_parser_s *parser);
+extern int set_default(nmea_parser_s *parser);
+extern int free_data(nmea_parser_s *parser);
+extern int parse(nmea_parser_s *parser, char *value, int val_index);
 
 #endif  /* INC_NMEA_PARSER_TYPES_H */
