@@ -23,7 +23,7 @@ int nmea_load_parsers();
  *
  * Returns a sentence parser struct, or (nmea_sentence_parser_s *) NULL if an error occurs.
  */
-nmea_sentence_parser_s * nmea_init_parser(char *filename);
+nmea_sentence_parser_s * nmea_init_parser(const char *filename);
 
 /**
  * Get a parser for a sentence type.

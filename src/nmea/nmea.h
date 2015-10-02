@@ -2,6 +2,7 @@
 #define INC_NMEA_H
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 /* NMEA sentence types */
@@ -65,7 +66,7 @@ extern nmea_t nmea_get_type(const char *sentence);
  *
  * Returns the calculated checksum (uint8).
  */
-extern char nmea_get_checksum(const char *sentence);
+extern uint8_t nmea_get_checksum(const char *sentence);
 
 /**
  * Check if the sentence has a precalculated checksum.

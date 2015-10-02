@@ -1,7 +1,5 @@
 TODO
 ====
 
- * Use int header files
- * Look over header files and definitions.
  * Add the code from test.c to library to allow to get sentences from stream.
  * Tests

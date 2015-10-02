@@ -42,7 +42,7 @@ _get_so_files(const char *path, char **files)
 }
 
 nmea_sentence_parser_s *
-nmea_init_parser(char *filename)
+nmea_init_parser(const char *filename)
 {
 	nmea_sentence_parser_s *parser;
 

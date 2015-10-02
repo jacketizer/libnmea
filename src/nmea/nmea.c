@@ -8,7 +8,7 @@
  * Returns 0 if set, otherwise -1.
  */
 static inline int
-_is_value_set(char *value)
+_is_value_set(const char *value)
 {
 	if (NULL == value || '\0' == *value) {
 		return -1;
@@ -87,11 +87,11 @@ nmea_get_type(const char *sentence)
 	return NMEA_UNKNOWN;
 }
 
-char
+uint8_t
 nmea_get_checksum(const char *sentence)
 {
 	const char *n = sentence + 1;
-	char chk = 0;
+	uint8_t chk = 0;
 
 	while (*n != '*' && n - sentence < NMEA_MAX_LENGTH) {
 		chk ^= *n;
@@ -140,16 +140,16 @@ nmea_validate(const char *sentence, int length, int check_checksum)
 
 	/* check for checksum */
 	if (1 == check_checksum && 0 == nmea_has_checksum(sentence, length)) {
-		char actual_chk;
-		long int expected_chk;
+		uint8_t actual_chk;
+		uint8_t expected_chk;
 		char checksum[3];
 
 		checksum[0] = sentence[length - 4];
 		checksum[1] = sentence[length - 3];
 		checksum[2] = '\0';
 		actual_chk = nmea_get_checksum(sentence);
-		expected_chk = strtol(checksum, NULL, 16);
-		if (expected_chk != (long int) actual_chk) {
+		expected_chk = (uint8_t) strtol(checksum, NULL, 16);
+		if (expected_chk != actual_chk) {
 			return -1;
 		}
 	}

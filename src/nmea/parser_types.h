@@ -12,6 +12,8 @@ typedef struct {
 	nmea_t type;
 	nmea_s *data;
 	int errors;
+
+  /* Functions */
 	allocate_data_f allocate_data;
 	set_default_f set_default;
 	free_data_f free_data;
