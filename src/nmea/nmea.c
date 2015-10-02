@@ -179,7 +179,7 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 	int val_index = 0;
 	char *value;
 	char *values[255];
-	nmea_sentence_parser_s *parser;
+	nmea_parser_module_s *parser;
 
 	/* Validate */
 	if (-1 == nmea_validate(sentence, length, check_checksum)) {

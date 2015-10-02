@@ -23,11 +23,11 @@ typedef struct {
 	set_default_f set_default;
 	free_data_f free_data;
 	parse_f parse;
-} nmea_sentence_parser_s;
+} nmea_parser_module_s;
 
 typedef int (*init_f) (nmea_parser_s *);
 
-nmea_sentence_parser_s *parsers[12];
+nmea_parser_module_s *parsers[12];
 
 /**
  * Load the parser libs into array.
@@ -39,15 +39,15 @@ int nmea_load_parsers();
 /**
  * Initiate a parser.
  *
- * Returns a sentence parser struct, or (nmea_sentence_parser_s *) NULL if an error occurs.
+ * Returns a sentence parser struct, or (nmea_parser_module_s *) NULL if an error occurs.
  */
-nmea_sentence_parser_s * nmea_init_parser(const char *filename);
+nmea_parser_module_s * nmea_init_parser(const char *filename);
 
 /**
  * Get a parser for a sentence type.
  *
  * Returns the sentence parser struct, should be checked for NULL.
  */
-nmea_sentence_parser_s * nmea_get_parser(nmea_t type);
+nmea_parser_module_s * nmea_get_parser(nmea_t type);
 
 #endif  /* INC_NMEA_PARSER_H */

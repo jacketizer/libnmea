@@ -41,49 +41,49 @@ _get_so_files(const char *path, char **files)
 	return i;
 }
 
-nmea_sentence_parser_s *
+nmea_parser_module_s *
 nmea_init_parser(const char *filename)
 {
-	nmea_sentence_parser_s *parser;
+	nmea_parser_module_s *parser;
 
 	/* Allocate parser struct */
-	parser = malloc(sizeof (nmea_sentence_parser_s));
+	parser = malloc(sizeof (nmea_parser_module_s));
 	if (NULL == parser) {
-		return (nmea_sentence_parser_s *) NULL;
+		return (nmea_parser_module_s *) NULL;
 	}
 
 	void *plugin = dlopen(filename, RTLD_NOW);
 	if (NULL == plugin) {
-		return (nmea_sentence_parser_s *) NULL;
+		return (nmea_parser_module_s *) NULL;
 	}
 
 	init_f init = dlsym(plugin, "init");
 	if (NULL == init) {
-		return (nmea_sentence_parser_s *) NULL;
+		return (nmea_parser_module_s *) NULL;
 	}
 
 	parser->allocate_data = dlsym(plugin, "allocate_data");
 	if (NULL == parser->allocate_data) {
-		return (nmea_sentence_parser_s *) NULL;
+		return (nmea_parser_module_s *) NULL;
 	}
 
 	parser->set_default = dlsym(plugin, "set_default");
 	if (NULL == parser->set_default) {
-		return (nmea_sentence_parser_s *) NULL;
+		return (nmea_parser_module_s *) NULL;
 	}
 
 	parser->free_data = dlsym(plugin, "free_data");
 	if (NULL == parser->free_data) {
-		return (nmea_sentence_parser_s *) NULL;
+		return (nmea_parser_module_s *) NULL;
 	}
 
 	parser->parse = dlsym(plugin, "parse");
 	if (NULL == parser->parse) {
-		return (nmea_sentence_parser_s *) NULL;
+		return (nmea_parser_module_s *) NULL;
 	}
 
 	if (-1 == init((nmea_parser_s *) parser)) {
-		return (nmea_sentence_parser_s *) NULL;
+		return (nmea_parser_module_s *) NULL;
 	}
 
 	return parser;
@@ -94,7 +94,7 @@ nmea_load_parsers()
 {
 	int n_files, i;
 	char *files[255];
-	nmea_sentence_parser_s *parser;
+	nmea_parser_module_s *parser;
 
 	memset(parsers, 0, sizeof parsers);
 
@@ -117,7 +117,7 @@ nmea_load_parsers()
 	return n_files;
 }
 
-nmea_sentence_parser_s *
+nmea_parser_module_s *
 nmea_get_parser(nmea_t type)
 {
 	return parsers[(int) type];
