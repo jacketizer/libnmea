@@ -15,11 +15,13 @@ typedef char nmea_cardinal_t;
 #define NMEA_CARDINAL_DIR_WEST		(nmea_cardinal_t) 'W'
 #define NMEA_CARDINAL_DIR_UNKNOWN	(nmea_cardinal_t) '\0'
 
+/* NMEA data base struct */
 typedef struct {
 	nmea_t type;
 	int errors;
 } nmea_s;
 
+/* GPS position struct */
 typedef struct {
 	double minutes;
 	int degrees;
@@ -39,19 +41,20 @@ typedef struct {
 #define NMEA_PREFIX_GPGLL	"GPGLL"	// Geographic Position, Latitude/Longitude/Time
 
 /**
- * Splits an NMEA sentence by comma.
+ * Initiate the NMEA library.
  *
- * sentence is the string to split, will be manipulated.
- * length is the char length of the sentence string.
- * values is a char pointer array that will be filled with pointers to the
- * splitted values in the sentence string.
+ * This function should be called once before starting to use the library.
+ *
+ * Returns 0 on success, otherwise -1.
  */
-int nmea_sentence_split(char *sentence, int length, char **values);
+extern int nmea_init();
 
 /**
  * Get the type of the sentence.
  *
  * sentence needs to be a validated NMEA sentence string.
+ *
+ * Returns nmea_t (int).
  */
 extern nmea_t nmea_get_type(const char *sentence);
 
@@ -59,6 +62,8 @@ extern nmea_t nmea_get_type(const char *sentence);
  * Calculate the checksum of the sentence.
  *
  * sentence needs to be a validated NMEA sentence string.
+ *
+ * Returns the calculated checksum (uint8).
  */
 extern char nmea_get_checksum(const char *sentence);
 
@@ -67,6 +72,8 @@ extern char nmea_get_checksum(const char *sentence);
  *
  * sentence needs to be a validated NMEA sentence string.
  * length is the byte length of the sentence string.
+ *
+ * Return 0 if checksum exists, otherwise -1.
  */
 extern int nmea_has_checksum(const char *sentence, int length);
 
@@ -79,6 +86,8 @@ extern int nmea_has_checksum(const char *sentence, int length);
  * - Ends with \r\n (<CR><LF>).
  *
  * length is the byte length of the sentence string.
+ *
+ * Returns 0 if sentence is valid, otherwise -1.
  */
 extern int nmea_validate(const char *sentence, int length, int check_checksum);
 
@@ -88,6 +97,8 @@ extern int nmea_validate(const char *sentence, int length, int check_checksum);
  * sentence needs to be a validated NMEA sentence string.
  * length is the byte length of the sentence string.
  * check_checksum, if 1 and there is a checksum, validate it.
+ *
+ * Returns a pointer to a nmea data struct, or (nmea_s *) NULL if an error occurs.
  */
 extern nmea_s *nmea_parse(char *sentence, int length, nmea_t type, int check_checksum);
 

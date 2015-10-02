@@ -2,7 +2,7 @@
 
 #define PARSER_PATH "/usr/lib/nmea/"
 
-int
+static inline int
 _get_so_files(const char *path, char **files)
 {
 	int len, i = 0;

@@ -2,11 +2,13 @@
 #include "parser.h"
 #include "parser_types.h"
 
-/* Check if a value is supplied and set */
-int _nmea_value_is_set(char *value);
-
-int
-_nmea_value_is_set(char *value)
+/**
+ * Check if a value is supplied and set.
+ *
+ * Returns 0 if set, otherwise -1.
+ */
+static inline int
+_is_value_set(char *value)
 {
 	if (NULL == value || '\0' == *value) {
 		return -1;
@@ -15,6 +17,61 @@ _nmea_value_is_set(char *value)
 	return 0;
 }
 
+/**
+ * Splits an NMEA sentence by comma.
+ *
+ * sentence is the string to split, will be manipulated.
+ * length is the char length of the sentence string.
+ * values is a char pointer array that will be filled with pointers to the
+ * splitted values in the sentence string.
+ *
+ * Returns the number of values found in sentence.
+ */
+static inline int
+_split_sentence(char *sentence, int length, char **values)
+{
+	char *cursor = sentence + 7; // skip type word
+	int i = 0;
+
+	values[i++] = cursor;
+	while (cursor != NULL && cursor - sentence < length) {
+		cursor = (char *) memchr(cursor, ',', length - (cursor - sentence));
+		if (NULL == cursor) {
+			break;
+		}
+
+		*cursor = '\0';
+		cursor++;
+		if (*cursor == ',') {
+		    	  values[i++] = NULL;
+		} else {
+		    	  values[i++] = cursor;
+		}
+	}
+
+	/* null terminate the last value */
+	cursor = values[i - 1];
+	cursor = (char *) memchr(cursor, '*', length - (cursor - sentence));
+	if (NULL != cursor) {
+		/* has checksum */
+		*cursor = '\0';
+	} else {
+		/* no checksum */
+		sentence[length - 2] = '\0';
+	}
+
+	return i;
+}
+
+int
+nmea_init()
+{
+	if (1 > nmea_load_parsers()) {
+		return -1;
+	}
+
+	return 0;
+}
 
 nmea_t
 nmea_get_type(const char *sentence)
@@ -108,52 +165,7 @@ nmea_free(nmea_s *data)
 	}
 
 	//data->free_data(data);
-}
-
-int
-nmea_sentence_split(char *sentence, int length, char **values)
-{
-	char *cursor = sentence + 7; // skip type word
-	int i = 0;
-
-	values[i++] = cursor;
-	while (cursor != NULL && cursor - sentence < length) {
-		cursor = (char *) memchr(cursor, ',', length - (cursor - sentence));
-		if (NULL == cursor) {
-			break;
-		}
-
-		*cursor = '\0';
-		cursor++;
-		if (*cursor == ',') {
-		    	  values[i++] = NULL;
-		} else {
-		    	  values[i++] = cursor;
-		}
-	}
-
-	/* null terminate the last value */
-	cursor = values[i - 1];
-	cursor = (char *) memchr(cursor, '*', length - (cursor - sentence));
-	if (NULL != cursor) {
-		/* has checksum */
-		*cursor = '\0';
-	} else {
-		/* no checksum */
-		sentence[length - 2] = '\0';
-	}
-
-	return i;
-}
-
-int
-nmea_init()
-{
-	if (1 > nmea_load_parsers()) {
-		return -1;
-	}
-
-	return 0;
+	free(data);
 }
 
 nmea_s *
@@ -175,7 +187,7 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 	}
 
 	/* Split the sentence into values */
-	n_vals = nmea_sentence_split(sentence, length, values);
+	n_vals = _split_sentence(sentence, length, values);
 	if (0 == n_vals) {
 		return (nmea_s *) NULL;
 	}
@@ -194,11 +206,12 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 
 	/* Set default values */
 	parser->set_default(parser->data);
+  parser->errors = 0;
 
 	/* Loop through the values and parse them... */
 	while (val_index < n_vals) {
 		value = values[val_index];
-		if (-1 == _nmea_value_is_set(value)) {
+		if (-1 == _is_value_set(value)) {
 			val_index++;
 			continue;
 		}

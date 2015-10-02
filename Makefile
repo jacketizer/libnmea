@@ -8,7 +8,7 @@ OBJ_PARSERS=$(patsubst %.c, %, $(SRC_PARSERS))
 
 CC=gcc
 CFLAGS=-c -fPIC -g -Wall
-LDFLAGS=-s -shared -Wl,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
+LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
 
 all: 	nmea parser-libs
 
