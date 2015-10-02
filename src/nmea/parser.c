@@ -82,7 +82,7 @@ nmea_init_parser(const char *filename)
 		return (nmea_sentence_parser_s *) NULL;
 	}
 
-	if (-1 == init(parser)) {
+	if (-1 == init((nmea_parser_s *) parser)) {
 		return (nmea_sentence_parser_s *) NULL;
 	}
 
@@ -111,7 +111,7 @@ nmea_load_parsers()
 			return -1;
 		}
 
-		parsers[(int) parser->type] = parser;
+		parsers[(int) parser->parser.type] = parser;
 	}
 
 	return n_files;

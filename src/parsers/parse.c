@@ -54,7 +54,7 @@ int
 nmea_time_parse(char *s, struct tm *time)
 {
 	char *rv;
-	memset(time, 0, sizeof(struct tm));
+	memset(time, 0, sizeof (struct tm));
 
 	if (s == NULL || *s == '\0') {
 		return -1;
