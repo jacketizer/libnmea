@@ -36,10 +36,8 @@ typedef struct {
 #define NMEA_END_CHAR_1		'\n'
 #define NMEA_END_CHAR_2		'\n'
 
-/* NMEA sentence prefixes */
+/* NMEA sentence prefix length */
 #define NMEA_PREFIX_LENGTH	5
-#define NMEA_PREFIX_GPGGA	"GPGGA"	// Global Positioning System Fix Data
-#define NMEA_PREFIX_GPGLL	"GPGLL"	// Geographic Position, Latitude/Longitude/Time
 
 /**
  * Initiate the NMEA library.

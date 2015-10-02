@@ -5,6 +5,7 @@
 
 typedef struct {
 	nmea_t type;
+  char type_word[5];
 	nmea_s *data;
 } nmea_parser_s;
 

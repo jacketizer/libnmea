@@ -118,7 +118,27 @@ nmea_load_parsers()
 }
 
 nmea_parser_module_s *
-nmea_get_parser(nmea_t type)
+nmea_get_parser_by_type(nmea_t type)
 {
 	return parsers[(int) type];
+}
+
+nmea_parser_module_s *
+nmea_get_parser_by_sentence(const char *sentence)
+{
+  int i = 0;
+  nmea_parser_module_s *parser;
+
+  while (i < NMEA_NUM_PARSERS) {
+    parser = parsers[i++];
+    if (NULL == parser) {
+      continue;
+    }
+
+	  if (0 == strncmp(sentence + 1, parser->parser.type_word, NMEA_PREFIX_LENGTH)) {
+	  	return parser;
+	  }
+  }
+
+	return (nmea_parser_module_s *) NULL; 
 }

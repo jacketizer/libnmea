@@ -7,6 +7,7 @@ init(nmea_parser_s *parser)
 {
 	/* Declare what sentence type to parse */
 	parser->type = NMEA_GPGLL;
+  strncpy(parser->type_word, "GPGLL", NMEA_PREFIX_LENGTH);
 	return 0;
 }
 

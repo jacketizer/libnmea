@@ -76,15 +76,12 @@ nmea_init()
 nmea_t
 nmea_get_type(const char *sentence)
 {
-	if (0 == strncmp(sentence + 1, NMEA_PREFIX_GPGLL, NMEA_PREFIX_LENGTH)) {
-		return NMEA_GPGLL;
-	}
+	nmea_parser_module_s *parser = nmea_get_parser_by_sentence(sentence);
+  if (NULL == parser) {
+	  return NMEA_UNKNOWN;
+  }
 
-	if (0 == strncmp(sentence + 1, NMEA_PREFIX_GPGGA, NMEA_PREFIX_LENGTH)) {
-		return NMEA_GPGGA;
-	}
-
-	return NMEA_UNKNOWN;
+  return parser->parser.type;
 }
 
 uint8_t
@@ -193,7 +190,7 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 	}
 
 	/* Get the right parser */
-	parser = nmea_get_parser(type);
+	parser = nmea_get_parser_by_type(type);
 	if (NULL == parser) {
 		return (nmea_s *) NULL;
 	}

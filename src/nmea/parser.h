@@ -27,7 +27,8 @@ typedef struct {
 
 typedef int (*init_f) (nmea_parser_s *);
 
-nmea_parser_module_s *parsers[12];
+#define NMEA_NUM_PARSERS  12
+nmea_parser_module_s *parsers[NMEA_NUM_PARSERS];
 
 /**
  * Load the parser libs into array.
@@ -48,6 +49,13 @@ nmea_parser_module_s * nmea_init_parser(const char *filename);
  *
  * Returns the sentence parser struct, should be checked for NULL.
  */
-nmea_parser_module_s * nmea_get_parser(nmea_t type);
+nmea_parser_module_s * nmea_get_parser_by_type(nmea_t type);
+
+/**
+ * Get a parser for a sentence type by a sentence string.
+ *
+ * Returns the sentence parser struct, should be checked for NULL.
+ */
+nmea_parser_module_s * nmea_get_parser_by_sentence(const char *sentence);
 
 #endif  /* INC_NMEA_PARSER_H */
