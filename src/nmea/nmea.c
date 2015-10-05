@@ -77,11 +77,11 @@ nmea_t
 nmea_get_type(const char *sentence)
 {
 	nmea_parser_module_s *parser = nmea_get_parser_by_sentence(sentence);
-  if (NULL == parser) {
-	  return NMEA_UNKNOWN;
-  }
+	if (NULL == parser) {
+	return NMEA_UNKNOWN;
+	}
 
-  return parser->parser.type;
+	return parser->parser.type;
 }
 
 uint8_t
@@ -203,7 +203,7 @@ nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
 
 	/* Set default values */
 	parser->set_default((nmea_parser_s *) parser);
-  parser->errors = 0;
+	parser->errors = 0;
 
 	/* Loop through the values and parse them... */
 	while (val_index < n_vals) {

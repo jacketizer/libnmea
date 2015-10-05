@@ -19,70 +19,97 @@ $ echo -ne "\$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n" | ./test
 How to use it
 -------------
 
-Include ´nmea.h´ and compile with ´-lnmea´.
+First, include `nmea.h` and the header files for the desired sentence types:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#include <nmea.h>
+#include <nmea/gpgll.h>
+#include <nmea/gpgga.h>
+
+int
+main(void)
+{
+	...
+	return 0;
+}
+```
+
+Then, load the parsers by calling `nmea_init()`:
+
+```c
+if (-1 == nmea_init()) {
+	exit(EXIT_FAILURE);
+}
+```
+
+When the library is initiated, it can start parsing NMEA sentences. To parse a
+sentence string, use `nmea_parse()`:
+
+```c
+// Sentence string to be parsed
+char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n");
+
+// Pointer to struct containing the parsed data
+nmea_s *data;
+
+// Get the type of the sentence
+nmea_t type = nmea_get_type(sentence);
+
+// Parse it...
+data = nmea_parse(sentence, strlen(sentence), type, 0);
+if (NULL == data) {
+	exit(EXIT_FAILURE);
+}
+```
+
+The parsed data can be found in the data variable and for example printed to
+screen:
+
+```c
+if (NMEA_GPGGA == data->type) {
+	nmea_gpgga_s *gpgga = (nmea_gpgga_s *) data;
+
+	printf("GPGGA Sentence\n");
+	printf("Number of satellites: %d\n", gpgga->n_satellites);
+	printf("Altitude: %d %c\n", gpgga->altitude, gpgga->altitude_unit);
+}
+
+if (NMEA_GPGLL == data->type) {
+	nmea_gpgll_s *gpgll = (nmea_gpgll_s *) data;
+
+	printf("GPGLL Sentence\n");
+	printf("Longitude:\n");
+	printf("  Degrees: %d\n", gpgll->longitude.degrees);
+	printf("  Minutes: %f\n", gpgll->longitude.minutes);
+	printf("  Cardinal: %c\n", (char) gpgll->longitude.cardinal);
+	printf("Latitude:\n");
+	printf("  Degrees: %d\n", gpgll->latitude.degrees);
+	printf("  Minutes: %f\n", gpgll->latitude.minutes);
+	printf("  Cardinal: %c\n", (char) gpgll->latitude.cardinal);
+}
+```
+
+Free the memory used by the data variable:
+
+```c
+nmea_free(data);
+```
+
+Compile with `-lnmea`:
+
+```sh
+$ gcc test.c -lnmea -o test
+```
 
 Library functions
 -----------------
 
-### `int nmea_init(void);`
-
-Initiate the NMEA parser library. This function should be called once before
-starting to use the library.
-
-**Returns:** `int`, `0`, if successfull, otherwise `-1`.
-
-### `nmea_t nmea_get_type(const char *sentence);`
-
-Get the type of a sentence.
-
-`sentence`: a validated NMEA sentence string.
-
-**Returns:** `nmea_t`.
-
-
-/**
- * Calculate the checksum of the sentence.
- *
- * sentence needs to be a validated NMEA sentence string.
- *
- * Returns the calculated checksum (uint8).
- */
-extern uint8_t nmea_get_checksum(const char *sentence);
-
-/**
- * Check if the sentence has a precalculated checksum.
- *
- * sentence needs to be a validated NMEA sentence string.
- * length is the byte length of the sentence string.
- *
- * Return 0 if checksum exists, otherwise -1.
- */
-extern int nmea_has_checksum(const char *sentence, int length);
-
-/**
- * Validate the sentence according to NMEA 0183.
- *
- * - Should start with a dollar sign.
- * - The next five chars should be uppercase letters.
- * - If it has a checksum, it checks it.
- * - Ends with \r\n (<CR><LF>).
- *
- * length is the byte length of the sentence string.
- *
- * Returns 0 if sentence is valid, otherwise -1.
- */
-extern int nmea_validate(const char *sentence, int length, int check_checksum);
-
-/**
- * Parses an NMEA sentence string.
- *
- * sentence needs to be a validated NMEA sentence string.
- * length is the byte length of the sentence string.
- * check_checksum, if 1 and there is a checksum, validate it.
- *
- * Returns a pointer to a nmea data struct, or (nmea_s *) NULL if an error occurs.
- */
-extern nmea_s *nmea_parse(char *sentence, int length, nmea_t type, int check_checksum);
+Check `nmea.h` for more detailed info about functions. The header files for the
+sentences (ex: `nmea/gpgll.h`) contains the struct definitions.
 
 Implement a new sentence type
 -----------------------------

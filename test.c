@@ -53,6 +53,7 @@ main(void)
 		nmea_t type = nmea_get_type(start);
 		nmea_s *data;
 		char buf[255];
+
 		switch (type) {
 			case NMEA_UNKNOWN:
 				break;
