@@ -24,23 +24,21 @@ Include ´nmea.h´ and compile with ´-lnmea´.
 Library functions
 -----------------
 
-### ´extern int nmea_init();´
+### `int nmea_init(void);`
 
-Initiate the NMEA library.
+Initiate the NMEA parser library. This function should be called once before
+starting to use the library.
 
-This function should be called once before starting to use the library.
+**Returns:** `int`, `0`, if successfull, otherwise `-1`.
 
-Returns 0 on success, otherwise -1.
+### `nmea_t nmea_get_type(const char *sentence);`
 
+Get the type of a sentence.
 
-/**
- * Get the type of the sentence.
- *
- * sentence needs to be a validated NMEA sentence string.
- *
- * Returns nmea_t (int).
- */
-extern nmea_t nmea_get_type(const char *sentence);
+`sentence`: a validated NMEA sentence string.
+
+**Returns:** `nmea_t`.
+
 
 /**
  * Calculate the checksum of the sentence.
