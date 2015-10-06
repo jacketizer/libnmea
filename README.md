@@ -38,16 +38,7 @@ main(void)
 }
 ```
 
-Then, load the parsers by calling `nmea_init()`:
-
-```c
-if (-1 == nmea_init()) {
-	exit(EXIT_FAILURE);
-}
-```
-
-When the library is initiated, it can start parsing NMEA sentences. To parse a
-sentence string, use `nmea_parse()`:
+To parse an NMEA sentence string, use `nmea_parse()`:
 
 ```c
 // Sentence string to be parsed

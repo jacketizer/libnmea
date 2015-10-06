@@ -63,14 +63,16 @@ _split_sentence(char *sentence, int length, char **values)
 	return i;
 }
 
-int
+/**
+ * Initiate the NMEA library and load the parser modules.
+ *
+ * This function will be called before the main() function.
+ */
+void __attribute__ ((constructor)) nmea_init(void);
+void
 nmea_init()
 {
-	if (1 > nmea_load_parsers()) {
-		return -1;
-	}
-
-	return 0;
+	nmea_load_parsers();
 }
 
 nmea_t

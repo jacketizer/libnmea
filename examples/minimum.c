@@ -19,9 +19,6 @@ main(void)
 	// Pointer to struct containing the parsed data. Should be freed manually.
 	nmea_s *data;
 
-	// Load the parser
-	nmea_init();
-
 	// Parse...
 	data = nmea_parse(sentence, strlen(sentence), NMEA_GPGLL, 0);
 

@@ -40,15 +40,6 @@ typedef struct {
 #define NMEA_PREFIX_LENGTH	5
 
 /**
- * Initiate the NMEA library.
- *
- * This function should be called once before starting to use the library.
- *
- * Returns 0 on success, otherwise -1.
- */
-extern int nmea_init();
-
-/**
  * Get the type of the sentence.
  *
  * sentence needs to be a validated NMEA sentence string.

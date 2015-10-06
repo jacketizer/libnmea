@@ -23,11 +23,6 @@ main(void)
 
 	gps_fd = 0; // stdin
 
-	if (-1 == nmea_init()) {
-		printf("Could not init nmea parsers...\n");
-		exit(EXIT_FAILURE);
-	}
-
 	while (1) {
 		read_bytes = read(gps_fd, buffer + total_bytes, 20);
 		if (-1 == read_bytes) {
