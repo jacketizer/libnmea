@@ -26,9 +26,9 @@ set_default(nmea_parser_s *parser)
 }
 
 int
-free_data(nmea_parser_s *parser)
+free_data(nmea_s *data)
 {
-	free(parser->data);
+	free(data);
   return 0;
 }
 

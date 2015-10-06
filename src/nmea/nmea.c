@@ -163,8 +163,12 @@ nmea_free(nmea_s *data)
 		return;
 	}
 
-	//data->free_data(data);
-	free(data);
+	nmea_parser_module_s *parser = nmea_get_parser_by_type(data->type);
+	if (NULL == parser) {
+		return;
+	}
+
+	parser->free_data(data);
 }
 
 nmea_s *

@@ -12,7 +12,7 @@ typedef struct {
 extern int init(nmea_parser_s *parser);
 extern int allocate_data(nmea_parser_s *parser);
 extern int set_default(nmea_parser_s *parser);
-extern int free_data(nmea_parser_s *parser);
+extern int free_data(nmea_s *data);
 extern int parse(nmea_parser_s *parser, char *value, int val_index);
 
 #define NMEA_PARSER_PREFIX(parser, type_prefix) strncpy(parser->type_word, type_prefix, NMEA_PREFIX_LENGTH)
