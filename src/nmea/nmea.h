@@ -90,6 +90,6 @@ extern int nmea_validate(const char *sentence, int length, int check_checksum);
  *
  * Returns a pointer to a nmea data struct, or (nmea_s *) NULL if an error occurs.
  */
-extern nmea_s *nmea_parse(char *sentence, int length, nmea_t type, int check_checksum);
+extern nmea_s *nmea_parse(char *sentence, int length, int check_checksum);
 
 #endif  /* INC_NMEA_H */

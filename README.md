@@ -47,9 +47,6 @@ char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n");
 // Pointer to struct containing the parsed data
 nmea_s *data;
 
-// Get the type of the sentence
-nmea_t type = nmea_get_type(sentence);
-
 // Parse it...
 data = nmea_parse(sentence, strlen(sentence), type, 0);
 if (NULL == data) {

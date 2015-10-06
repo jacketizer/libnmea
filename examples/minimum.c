@@ -20,7 +20,7 @@ main(void)
 	nmea_s *data;
 
 	// Parse...
-	data = nmea_parse(sentence, strlen(sentence), NMEA_GPGLL, 0);
+	data = nmea_parse(sentence, strlen(sentence), 0);
 
 	if (NMEA_GPGLL == data->type) {
 		nmea_gpgll_s *gpgll = (nmea_gpgll_s *) data;

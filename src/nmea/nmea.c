@@ -168,8 +168,9 @@ nmea_free(nmea_s *data)
 }
 
 nmea_s *
-nmea_parse(char *sentence, int length, nmea_t type, int check_checksum)
+nmea_parse(char *sentence, int length, int check_checksum)
 {
+	nmea_t type = nmea_get_type(sentence);
 	if (NMEA_UNKNOWN == type) {
 		return (nmea_s *) NULL;
 	}
