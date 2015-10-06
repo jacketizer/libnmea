@@ -69,10 +69,20 @@ _split_sentence(char *sentence, int length, char **values)
  * This function will be called before the main() function.
  */
 void __attribute__ ((constructor)) nmea_init(void);
-void
-nmea_init()
+void nmea_init()
 {
 	nmea_load_parsers();
+}
+
+/**
+ * Unload the parser modules.
+ *
+ * This function will be called after the exit() function.
+ */
+void __attribute__ ((destructor)) nmea_cleanup(void);
+void nmea_cleanup()
+{
+  nmea_unload_parsers();
 }
 
 nmea_t

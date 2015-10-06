@@ -37,6 +37,7 @@ main(void)
 	}
 
 	nmea_free(data);
+  free(sentence);
 	
 	return 0;
 }

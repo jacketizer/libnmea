@@ -57,6 +57,8 @@ nmea_init_parser(const char *filename)
 		return (nmea_parser_module_s *) NULL;
 	}
 
+  parser->handle = plugin;
+
 	init_f init = dlsym(plugin, "init");
 	if (NULL == init) {
 		return (nmea_parser_module_s *) NULL;
@@ -107,6 +109,8 @@ nmea_load_parsers()
 	i = n_files;
 	while (i-- > 0) {
 		parser = nmea_init_parser(files[i]);
+    free(files[i]);
+
 		if (NULL == parser) {
 			return -1;
 		}
@@ -115,6 +119,23 @@ nmea_load_parsers()
 	}
 
 	return n_files;
+}
+
+void
+nmea_unload_parsers()
+{
+  int i = 0;
+  nmea_parser_module_s *parser;
+
+  while (i < NMEA_NUM_PARSERS) {
+    parser = parsers[i++];
+    if (NULL == parser) {
+      continue;
+    }
+
+    dlclose(parser->handle);
+    free(parser);
+  }
 }
 
 nmea_parser_module_s *

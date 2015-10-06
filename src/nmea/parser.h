@@ -17,6 +17,7 @@ typedef int (*parse_f) (nmea_parser_s *, char *, int);
 typedef struct {
   nmea_parser_s parser;
 	int errors;
+  void *handle;
 
   /* Functions */
 	allocate_data_f allocate_data;
@@ -36,6 +37,11 @@ nmea_parser_module_s *parsers[NMEA_NUM_PARSERS];
  * Returns 0 on success, or -1 if an error occurs.
  */
 int nmea_load_parsers();
+
+/**
+ * Unload all the parser libs.
+ */
+void nmea_unload_parsers();
 
 /**
  * Initiate a parser.
