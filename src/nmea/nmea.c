@@ -30,7 +30,8 @@ _is_value_set(const char *value)
 static inline int
 _split_sentence(char *sentence, int length, char **values)
 {
-	char *cursor = sentence + 7; // skip type word
+  sentence += 7; // skip type word
+	char *cursor = sentence;
 	int i = 0;
 
 	values[i++] = cursor;
