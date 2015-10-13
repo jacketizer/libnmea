@@ -29,6 +29,9 @@ src/parsers/%:	$(OBJ_PARSER_DEP)
 test:	test.c
 	$(CC) test.c -lnmea -o test
 
+unit-tests:	tests/test_nmea.c
+	gcc -lnmea tests/test_nmea.c -o utests && ./utests
+
 install:	all
 	mkdir -p /usr/lib/nmea
 	mkdir -p /usr/include/nmea
@@ -47,3 +50,4 @@ clean-all:	clean
 	@rm -rf nmea
 	@rm -f libnmea.so
 	@rm -f test
+	@rm -f utests
