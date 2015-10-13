@@ -6,8 +6,8 @@ int
 init(nmea_parser_s *parser)
 {
 	/* Declare what sentence type to parse */
-  NMEA_PARSER_TYPE(parser, NMEA_GPGLL);
-  NMEA_PARSER_PREFIX(parser, "GPGLL");
+	NMEA_PARSER_TYPE(parser, NMEA_GPGLL);
+	NMEA_PARSER_PREFIX(parser, "GPGLL");
 	return 0;
 }
 
@@ -15,21 +15,21 @@ int
 allocate_data(nmea_parser_s *parser)
 {
 	parser->data = malloc(sizeof (nmea_gpgll_s));
-  return 0;
+	return 0;
 }
 
 int
 set_default(nmea_parser_s *parser)
 {
 	memset(parser->data, 0, sizeof (nmea_gpgll_s));
-  return 0;
+	return 0;
 }
 
 int
 free_data(nmea_s *data)
 {
 	free(data);
-  return 0;
+	return 0;
 }
 
 int

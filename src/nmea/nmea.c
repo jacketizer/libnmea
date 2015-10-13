@@ -30,7 +30,7 @@ _is_value_set(const char *value)
 static inline int
 _split_sentence(char *sentence, int length, char **values)
 {
-  sentence += 7; // skip type word
+	sentence += 7; // skip type word
 	char *cursor = sentence;
 	int i = 0;
 
@@ -91,7 +91,7 @@ nmea_get_type(const char *sentence)
 {
 	nmea_parser_module_s *parser = nmea_get_parser_by_sentence(sentence);
 	if (NULL == parser) {
-	return NMEA_UNKNOWN;
+		return NMEA_UNKNOWN;
 	}
 
 	return parser->parser.type;

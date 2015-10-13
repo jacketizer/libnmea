@@ -15,11 +15,11 @@ typedef int (*free_data_f) (nmea_parser_s *);
 typedef int (*parse_f) (nmea_parser_s *, char *, int);
 
 typedef struct {
-  nmea_parser_s parser;
+	nmea_parser_s parser;
 	int errors;
-  void *handle;
+	void *handle;
 
-  /* Functions */
+	/* Functions */
 	allocate_data_f allocate_data;
 	set_default_f set_default;
 	free_data_f free_data;

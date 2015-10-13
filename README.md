@@ -33,7 +33,7 @@ First, include `nmea.h` and the header files for the desired sentence types:
 int
 main(void)
 {
-	...
+	/* ... */
 	return 0;
 }
 ```
@@ -48,7 +48,7 @@ char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n");
 nmea_s *data;
 
 // Parse it...
-data = nmea_parse(sentence, strlen(sentence), type, 0);
+data = nmea_parse(sentence, strlen(sentence), 0);
 if (NULL == data) {
 	exit(EXIT_FAILURE);
 }
@@ -90,7 +90,7 @@ nmea_free(data);
 Compile with `-lnmea`:
 
 ```sh
-$ gcc test.c -lnmea -o test
+$ gcc example.c -lnmea -o example
 ```
 
 Library functions
@@ -104,9 +104,9 @@ Implement a new sentence type
 
 To create a new sentence parser, create the following files and replace
 the `<TYPE>` with the sentence type word in uppercase letters and `<type>` in
-lowercase. Make sure that the sentence type is defined in *src/types.h*.
+lowercase. Make sure that the sentence type is defined in *src/nmea.h*.
 
-src/parsers/<type>.c:
+src/parsers/<type>.h:
 
 ```C
 #ifndef INC_NMEA_<TYPE>_H
@@ -123,7 +123,7 @@ typedef struct {
 } nmea_<type>_s;
 
 /* Value indexes */
-#define NMEA_<TYPE>_XXX			0
+#define NMEA_<TYPE>_<index>	0
 /* more value indexes... */
 
 #endif  /* INC_NMEA_<TYPE>_H */
@@ -136,41 +136,45 @@ src/parsers/<type>.c:
 #include "<type>.h"
 #include "parse.h"
 
-init_f
-init(nmea_sentence_parser_s *parser)
+int
+init(nmea_parser_s *parser)
 {
 	/* Declare what sentence type to parse */
-	parser->type = NMEA_<TYPE>;
-
+	NMEA_PARSER_TYPE(parser, NMEA_<TYPE>);
+	NMEA_PARSER_PREFIX(parser, "<TYPE>");
 	return 0;
 }
 
-allocate_data_f
-allocate_data()
+int
+allocate_data(nmea_parser_s *parser)
 {
-	return malloc(sizeof (nmea_<type>_s));
+	parser->data = malloc(sizeof (nmea_<type>_s));
+	return 0;
 }
 
-set_default_f
-set_default(nmea_s *nmea_data)
+int
+set_default(nmea_parser_s *parser)
 {
-	memset(nmea_data, 0, sizeof (nmea_<type>_s));
+	memset(parser->data, 0, sizeof (nmea_<type>_s));
+	return 0;
 }
 
-free_data_f
-free_data(nmea_s *nmea_data)
+int
+free_data(nmea_s *data)
 {
-	free(nmea_data);
+	free(data);
+	return 0;
 }
 
-parse_f
-parse(char *value, int val_index, nmea_s *nmea_data)
+int
+parse(nmea_parser_s *parser, char *value, int val_index)
 {
-	nmea_<type>_s *data = (nmea_<type>_s *) nmea_data;
+	nmea_gpgll_s *data = (nmea_<type>_s *) parser->data;
 
 	switch (val_index) {
-		case NMEA_<TYPE>_XXX:
-			/* Parse some value and save in data struct */
+		case NMEA_<TYPE>_<index>:
+			/* Parse some value */
+			data->some_value = value;
 			break;
 
 		default:

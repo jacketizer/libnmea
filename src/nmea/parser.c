@@ -109,7 +109,7 @@ nmea_load_parsers()
 	i = n_files;
 	while (i-- > 0) {
 		parser = nmea_init_parser(files[i]);
-    free(files[i]);
+		free(files[i]);
 
 		if (NULL == parser) {
 			return -1;
@@ -124,18 +124,18 @@ nmea_load_parsers()
 void
 nmea_unload_parsers()
 {
-  int i = 0;
-  nmea_parser_module_s *parser;
+	int i = 0;
+	nmea_parser_module_s *parser;
 
-  while (i < NMEA_NUM_PARSERS) {
-    parser = parsers[i++];
-    if (NULL == parser) {
-      continue;
-    }
+	while (i < NMEA_NUM_PARSERS) {
+		parser = parsers[i++];
+		if (NULL == parser) {
+			continue;
+		}
 
-    dlclose(parser->handle);
-    free(parser);
-  }
+		dlclose(parser->handle);
+		free(parser);
+	}
 }
 
 nmea_parser_module_s *
@@ -147,19 +147,19 @@ nmea_get_parser_by_type(nmea_t type)
 nmea_parser_module_s *
 nmea_get_parser_by_sentence(const char *sentence)
 {
-  int i = 0;
-  nmea_parser_module_s *parser;
+	int i = 0;
+	nmea_parser_module_s *parser;
 
-  while (i < NMEA_NUM_PARSERS) {
-    parser = parsers[i++];
-    if (NULL == parser) {
-      continue;
-    }
+	while (i < NMEA_NUM_PARSERS) {
+		parser = parsers[i++];
+		if (NULL == parser) {
+			continue;
+		}
 
-	  if (0 == strncmp(sentence + 1, parser->parser.type_word, NMEA_PREFIX_LENGTH)) {
-	  	return parser;
-	  }
-  }
+		if (0 == strncmp(sentence + 1, parser->parser.type_word, NMEA_PREFIX_LENGTH)) {
+			return parser;
+		}
+	}
 
 	return (nmea_parser_module_s *) NULL; 
 }
