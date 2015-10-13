@@ -51,7 +51,7 @@ main(void)
 		data = nmea_parse(start, end - start + 1, 0);
 		if (NULL == data) {
 			printf("Could not parse sentence\n");
-      continue;
+			continue;
 		}
 
 		if (0 < data->errors) {

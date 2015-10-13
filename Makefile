@@ -11,32 +11,33 @@ CC=gcc
 CFLAGS=-c -fPIC -g -Wall
 LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
 
-all: 	nmea parser-libs
+all:  nmea parser-libs
 
-nmea:	$(OBJ_FILES)
+nmea: $(OBJ_FILES)
 	@mkdir -p $(BUILD_PATH)
 	@echo "Building libnmea.so..."
 	$(CC) $(LDFLAGS) $(OBJ_FILES) -o $(BUILD_PATH)libnmea.so
 	cp src/nmea/nmea.h $(BUILD_PATH)
 
-parser-libs:	$(OBJ_PARSERS)
+parser-libs: $(OBJ_PARSERS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $< -o $@
 
-src/parsers/%:	$(OBJ_PARSER_DEP)
+src/parsers/%: $(OBJ_PARSER_DEP)
 	@mkdir -p $(BUILD_PATH)nmea
 	@echo Building $(patsubst src/parsers/%,lib%.so,$@)...
 	$(CC) -s -fPIC -Wall -g -shared -Isrc/nmea -L$(BUILD_PATH) -I$(BUILD_PATH) -Wl,--no-as-needed,-soname,$(patsubst src/parsers/%,lib%.so,$@) $@.c $(OBJ_PARSER_DEP) -o $(patsubst src/parsers/%,$(BUILD_PATH)nmea/lib%.so,$@)
 	cp $@.h $(BUILD_PATH)nmea/
 
-test:	test.c
-	$(CC) test.c -lnmea -o test
+examples: all
+	$(CC) examples/minimum.c -lnmea -o $(BUILD_PATH)min
+	$(CC) examples/parse_stdin.c -lnmea -o $(BUILD_PATH)nmea-parser
 
-unit-tests:	tests/test_nmea.c
+unit-tests: tests/test_nmea.c
 	gcc tests/test_nmea.c -lnmea -o utests && ./utests
 
-install:	all
+install: all
 	mkdir -p /usr/lib/nmea
 	mkdir -p /usr/include/nmea
 	cp $(BUILD_PATH)libnmea.so /usr/lib/
@@ -51,7 +52,7 @@ clean:
 	@rm -f src/nmea/*.o
 	@rm -f src/parsers/*.o
 
-clean-all:	clean
+clean-all: clean
 	@rm -rf build
 	@rm -f test
 	@rm -f utests

@@ -9,13 +9,14 @@ any sentence missing, please add it by contributing to the code.
 To build:
 
 ```sh
-$ make && sudo make install && make test
+$ make && sudo make install && make unit-tests
 ```
 
 Try it:
 
 ```sh
-$ echo -ne "\$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n" | ./test
+$ make examples
+$ echo -ne "\$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n" | build/nmea-parser
 ```
 
 How to use it
