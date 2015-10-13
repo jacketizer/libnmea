@@ -34,8 +34,6 @@ test:	test.c
 	$(CC) test.c -lnmea -o test
 
 unit-tests:	tests/test_nmea.c
-	export C_INCLUDE_PATH=$(BUILD_PATH)
-	export LD_LIBRARY_PATH=$(BUILD_PATH)
 	gcc tests/test_nmea.c -lnmea -o utests && ./utests
 
 install:	all
