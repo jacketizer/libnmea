@@ -83,7 +83,7 @@ void nmea_init()
 void __attribute__ ((destructor)) nmea_cleanup(void);
 void nmea_cleanup()
 {
-  nmea_unload_parsers();
+	nmea_unload_parsers();
 }
 
 nmea_t
@@ -103,12 +103,12 @@ nmea_get_checksum(const char *sentence)
 	const char *n = sentence + 1;
 	uint8_t chk = 0;
 
-  /* While current char isn't '*' or sentence ending (newline) */
+	/* While current char isn't '*' or sentence ending (newline) */
 	while ('*' != *n && NMEA_END_CHAR_1 != *n) {
-    if ('\0' == *n || n - sentence > NMEA_MAX_LENGTH) {
-      /* Sentence too long or short */
-      return 0;
-    }
+		if ('\0' == *n || n - sentence > NMEA_MAX_LENGTH) {
+		/* Sentence too long or short */
+			return 0;
+		}
 		chk ^= (uint8_t) *n;
 		n++;
 	}
