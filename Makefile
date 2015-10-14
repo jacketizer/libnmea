@@ -7,11 +7,14 @@ OBJ_PARSER_DEP=$(patsubst %.c, %.o, $(SRC_PARSER_DEP))
 SRC_PARSERS=$(shell find src/parsers/ -type f -name "*.c" | grep -v "parse.c")
 OBJ_PARSERS=$(patsubst %.c, %, $(SRC_PARSERS))
 
+SRC_EXAMPLES=$(shell find examples/ -type f -name "*.c")
+BIN_EXAMPLES=$(patsubst %.c, %, $(SRC_EXAMPLES))
+
 CC=gcc
 CFLAGS=-c -fPIC -g -Wall
 LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
 
-all:  nmea parser-libs
+all: nmea parser-libs examples
 
 nmea: $(OBJ_FILES)
 	@mkdir -p $(BUILD_PATH)
@@ -30,12 +33,13 @@ src/parsers/%: $(OBJ_PARSER_DEP)
 	$(CC) -s -fPIC -Wall -g -shared -Isrc/nmea -L$(BUILD_PATH) -I$(BUILD_PATH) -Wl,--no-as-needed,-soname,$(patsubst src/parsers/%,lib%.so,$@) $@.c $(OBJ_PARSER_DEP) -o $(patsubst src/parsers/%,$(BUILD_PATH)nmea/lib%.so,$@)
 	cp $@.h $(BUILD_PATH)nmea/
 
-examples: all
-	$(CC) examples/minimum.c -lnmea -o $(BUILD_PATH)min
-	$(CC) examples/parse_stdin.c -lnmea -o $(BUILD_PATH)nmea-parser
+examples/%: examples/%.c
+	$(CC) $< -lnmea -o $(BUILD_PATH)$(patsubst examples/%,%,$@)
+
+examples: nmea parser-libs $(BIN_EXAMPLES)
 
 unit-tests: tests/test_nmea.c
-	gcc tests/test_nmea.c -lnmea -o utests && ./utests
+	$(CC) tests/test_nmea.c -lnmea -o utests && ./utests
 
 install: all
 	mkdir -p /usr/lib/nmea

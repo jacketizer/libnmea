@@ -16,7 +16,7 @@ Try it:
 
 ```sh
 $ make examples
-$ echo -ne "\$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n" | build/nmea-parser
+$ echo -ne "\$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n" | build/parse_stdin
 ```
 
 How to use it
