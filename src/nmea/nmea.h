@@ -61,7 +61,7 @@ extern nmea_t nmea_get_type(const char *sentence);
  *
  * sentence needs to be a validated NMEA sentence string.
  *
- * Returns the calculated checksum (uint8) on success. If the sentence is long,
+ * Returns the calculated checksum (uint8_t) on success. If the sentence is long,
  *         0 is returned.
  */
 extern uint8_t nmea_get_checksum(const char *sentence);
