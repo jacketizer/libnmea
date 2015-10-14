@@ -14,7 +14,7 @@ CC=gcc
 CFLAGS=-c -fPIC -g -Wall
 LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
 
-all: nmea parser-libs examples
+all: nmea parser-libs
 
 nmea: $(OBJ_FILES)
 	@mkdir -p $(BUILD_PATH)
