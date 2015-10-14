@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include <nmea.h>
-#include <nmea/gpgll.h>
 
 #include "minunit.h"
 
