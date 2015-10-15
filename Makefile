@@ -39,7 +39,8 @@ examples/%: examples/%.c
 examples: nmea parser-libs $(BIN_EXAMPLES)
 
 unit-tests: tests/test_nmea.c
-	$(CC) tests/test_nmea.c -lnmea -o utests && ./utests
+	@$(CC) tests/test_nmea.c -lnmea -o utests
+	@./utests
 
 install: all
 	mkdir -p /usr/lib/nmea

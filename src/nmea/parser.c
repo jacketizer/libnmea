@@ -1,6 +1,9 @@
 #include "parser.h"
 
-/* Where to find the parser modules. Can be overridden by NMEA_PARSER_PATH */
+/**
+ * Where to find the parser modules.
+ * Can be overridden by env variable NMEA_PARSER_PATH
+ */
 #define PARSER_PATH "/usr/lib/nmea/"
 
 static inline int
@@ -97,19 +100,23 @@ nmea_load_parsers()
 {
 	int n_files, i;
 	char *files[255];
+  char *parser_path;
 	nmea_parser_module_s *parser;
 
 	memset(parsers, 0, sizeof parsers);
 
 	/* Get list of so files */
-	char *path = getenv("NMEA_PARSER_PATH");
-	if (NULL != path) {
-		n_files = _get_so_files(path, files);
+	parser_path = getenv("NMEA_PARSER_PATH");
+	if (NULL == parser_path) {
+    /* Use default path */
+		parser_path = strdup(PARSER_PATH);
 	} else {
-		n_files = _get_so_files(PARSER_PATH, files);
-	}
+    parser_path = strdup(parser_path);
+  }
 
+	n_files = _get_so_files(parser_path, files);
 	if (1 > n_files) {
+    free(parser_path);
 		return -1;
 	}
 
@@ -119,12 +126,14 @@ nmea_load_parsers()
 		free(files[i]);
 
 		if (NULL == parser) {
+			free(parser_path);
 			return -1;
 		}
 
 		parsers[(int) parser->parser.type] = parser;
 	}
 
+	free(parser_path);
 	return n_files;
 }
 

@@ -96,6 +96,12 @@ Compile with `-lnmea`:
 $ gcc example.c -lnmea -o example
 ```
 
+Environment variables
+---------------------
+
+`NMEA_PARSER_PATH` - The path where the parser libraries are located. Default
+is `/usr/lib/nmea/`.
+
 Library functions
 -----------------
 
