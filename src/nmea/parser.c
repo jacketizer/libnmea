@@ -100,7 +100,7 @@ nmea_load_parsers()
 {
 	int n_files, i;
 	char *files[255];
-  char *parser_path;
+	char *parser_path;
 	nmea_parser_module_s *parser;
 
 	memset(parsers, 0, sizeof parsers);
@@ -108,15 +108,15 @@ nmea_load_parsers()
 	/* Get list of so files */
 	parser_path = getenv("NMEA_PARSER_PATH");
 	if (NULL == parser_path) {
-    /* Use default path */
+		/* Use default path */
 		parser_path = strdup(PARSER_PATH);
 	} else {
-    parser_path = strdup(parser_path);
-  }
+		parser_path = strdup(parser_path);
+	}
 
 	n_files = _get_so_files(parser_path, files);
 	if (1 > n_files) {
-    free(parser_path);
+		free(parser_path);
 		return -1;
 	}
 
