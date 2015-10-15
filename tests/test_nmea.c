@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include <nmea.h>
-
 #include "minunit.h"
 
 int tests_run = 0;
@@ -189,7 +188,7 @@ test_parse_ok()
 	char *sentence;
   nmea_s *res;
 
-  // With crc
+  // With crc\n
   sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47\n\n");
   res = nmea_parse(sentence, strlen(sentence), 1);
   mu_assert("nmea_parse() should be able to parse a GPGGA sentence", NULL != res);
@@ -270,9 +269,9 @@ main(void)
 {
   char *result = all_tests();
   if (result != 0) {
-    printf("%s\n", result);
+    printf("\n%s\n", result);
   } else {
-    printf("ALL TESTS PASSED\n");
+    printf("\n\nALL TESTS PASSED\n");
   }
   printf("Tests run: %d\n", tests_run);
 
