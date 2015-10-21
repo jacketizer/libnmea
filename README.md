@@ -6,6 +6,8 @@ C Library for Parsing NMEA 0183 Sentences
 The library can validate and parse NMEA sentences into C structs. If you find
 any sentence missing, please add it by contributing to the code.
 
+Home page: [nmea.io](http://nmea.io/).
+
 To build:
 
 ```sh
