@@ -1,7 +1,7 @@
 C Library for Parsing NMEA 0183 Sentences
 =========================================
 
-![Travis-CI Build and Test Status](https://api.travis-ci.org/jacketizer/libnmea.svg)
+[![Build Status](https://travis-ci.org/jacketizer/libnmea.svg?branch=master)](https://travis-ci.org/jacketizer/libnmea)
 
 The library can validate and parse NMEA sentences into C structs. If you find
 any sentence missing, please add it by contributing to the code.
