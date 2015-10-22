@@ -276,18 +276,8 @@ main(void)
 
   char *result = all_tests();
   if (result != 0) {
-    printf(KERR "\n");
-    printf("╔═╗╔═╗╦╦  ╔═╗╔╦╗\n");
-    printf("╠╣ ╠═╣║║  ║╣  ║║\n");
-    printf("╚  ╩ ╩╩╩═╝╚═╝═╩╝\n" KNRM);
-    printf("All tests did not pass!\n\n");
     exit(EXIT_FAILURE);
   }
 
-  printf(KGRN "\n");
-  printf("╔═╗╔═╗╔═╗╔═╗╔═╗╔╦╗\n");
-  printf("╠═╝╠═╣╚═╗╚═╗║╣  ║║\n");
-  printf("╩  ╩ ╩╚═╝╚═╝╚═╝═╩╝\n" KNRM);
-  printf("All %d tests passed!\n\n", tests_run);
   exit(EXIT_SUCCESS);
 }

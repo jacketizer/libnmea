@@ -40,9 +40,8 @@ examples: nmea parser-libs $(BIN_EXAMPLES)
 
 unit-tests: tests/test_nmea.c
 	@$(CC) tests/test_nmea.c -lnmea -o utests
-	@./utests
 	@$(CC) src/parsers/parse.c tests/test_parse.c -o utests-parse
-	@./utests-parse
+	@./utests && ./utests-parse && (echo "All tests passed!")
 
 install: all
 	mkdir -p /usr/lib/nmea
