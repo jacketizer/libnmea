@@ -43,11 +43,7 @@ _split_sentence(char *sentence, int length, char **values)
 
 		*cursor = '\0';
 		cursor++;
-		if (*cursor == ',') {
-		    	  values[i++] = NULL;
-		} else {
-		    	  values[i++] = cursor;
-		}
+		values[i++] = cursor;
 	}
 
 	/* null terminate the last value */

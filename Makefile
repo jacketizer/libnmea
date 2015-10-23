@@ -38,10 +38,11 @@ examples/%: examples/%.c
 
 examples: nmea parser-libs $(BIN_EXAMPLES)
 
-unit-tests: tests/test_nmea.c
-	@$(CC) tests/test_nmea.c -lnmea -o utests
+unit-tests: clean-all tests/test_lib.c tests/test_parse.c tests/test_nmea_helpers.c
+	@$(CC) tests/test_lib.c -lnmea -o utests
 	@$(CC) src/parsers/parse.c tests/test_parse.c -o utests-parse
-	@./utests && ./utests-parse && (echo "All tests passed!")
+	@$(CC) src/nmea/parser.c tests/test_nmea_helpers.c -ldl -o utests-nmea
+	@./utests && ./utests-parse && ./utests-nmea && (echo "All tests passed!")
 
 install: all
 	mkdir -p /usr/lib/nmea
@@ -57,8 +58,8 @@ clean:
 	@rm -f tests/*.o
 	@rm -f src/nmea/*.o
 	@rm -f src/parsers/*.o
+	@rm -f utests utests-parse utests-nmea
 
 clean-all: clean
 	@rm -rf build
 	@rm -f test
-	@rm -f utests
