@@ -38,7 +38,7 @@ examples/%: examples/%.c
 
 examples: nmea parser-libs $(BIN_EXAMPLES)
 
-unit-tests: clean-all tests/test_lib.c tests/test_parse.c tests/test_nmea_helpers.c
+unit-tests: clean tests/test_lib.c tests/test_parse.c tests/test_nmea_helpers.c
 	@$(CC) tests/test_lib.c -lnmea -o utests
 	@$(CC) src/parsers/parse.c tests/test_parse.c -o utests-parse
 	@$(CC) src/nmea/parser.c tests/test_nmea_helpers.c -ldl -o utests-nmea
@@ -62,4 +62,3 @@ clean:
 
 clean-all: clean
 	@rm -rf build
-	@rm -f test
