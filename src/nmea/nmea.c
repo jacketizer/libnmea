@@ -17,6 +17,22 @@ _is_value_set(const char *value)
 	return 0;
 }
 
+static inline char *
+_crop_sentence(char *sentence, int length)
+{
+	char *cursor = sentence + 7; // skip type word
+  cursor[length - 8] = '\0';
+
+	cursor = (char *) memchr(cursor, '*', length - (cursor - sentence));
+	if (NULL != cursor) {
+		/* has checksum */
+		*cursor = '\0';
+	} else {
+		/* no checksum */
+		sentence[length - 2] = '\0';
+	}
+}
+
 /**
  * Splits an NMEA sentence by comma.
  *
@@ -202,8 +218,14 @@ nmea_parse(char *sentence, int length, int check_checksum)
 		return (nmea_s *) NULL;
 	}
 
+  /* Crop sentence from type word and checksum */
+  char *val_string = _crop_sentence(sentence, length);
+  if (NULL == val_string) {
+		return (nmea_s *) NULL;
+  }
+
 	/* Split the sentence into values */
-	n_vals = _split_sentence(sentence, length, values);
+	n_vals = _split_sentence(val_string, values);
 	if (0 == n_vals) {
 		return (nmea_s *) NULL;
 	}
