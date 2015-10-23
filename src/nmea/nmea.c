@@ -17,42 +17,62 @@ _is_value_set(const char *value)
 	return 0;
 }
 
+/**
+ * Crop a sentence from the type word and checksum.
+ *
+ * The type word at the beginning along with the dollar sign ($) will be
+ * removed. If there is a checksum, it will also be removed. The two end
+ * characters (usually <CR><LF>) will not be included in the new string.
+ *
+ * sentence is a validated NMEA sentence string.
+ * length is the char length of the sentence string.
+ *
+ * Returns pointer (char *) to the new string.
+ */
 static inline char *
 _crop_sentence(char *sentence, int length)
 {
-	char *cursor = sentence + 7; // skip type word
-  cursor[length - 8] = '\0';
+	char *start, *cursor;
 
-	cursor = (char *) memchr(cursor, '*', length - (cursor - sentence));
+	/* Skip type word, 7 characters */
+	start = sentence + 7;
+
+	/* Null terminate before end of line/sentence, 2 characters */
+	start[length - 9] = '\0';
+
+	/* Remove checksum, if there is one */
+	cursor = (char *) memrchr(start, '*', length - (start - sentence));
 	if (NULL != cursor) {
-		/* has checksum */
+		/* Has checksum */
 		*cursor = '\0';
-	} else {
-		/* no checksum */
-		sentence[length - 2] = '\0';
 	}
+
+	return start;
 }
 
 /**
- * Splits an NMEA sentence by comma.
+ * Splits a string by comma.
  *
- * sentence is the string to split, will be manipulated.
- * length is the char length of the sentence string.
+ * string is the string to split, will be manipulated. Needs to be
+ *        null-terminated.
  * values is a char pointer array that will be filled with pointers to the
- * splitted values in the sentence string.
+ *        splitted values in the string.
  *
- * Returns the number of values found in sentence.
+ * Returns the number of values found in string.
  */
 static inline int
-_split_sentence(char *sentence, int length, char **values)
+_split_string(char *string, char **values)
 {
-	sentence += 7; // skip type word
-	char *cursor = sentence;
 	int i = 0;
+	char *cursor = string;
+	char *end;
+
+	/* Get end of string */
+	end = rawmemchr(cursor, '\0');
 
 	values[i++] = cursor;
-	while (cursor != NULL && cursor - sentence < length) {
-		cursor = (char *) memchr(cursor, ',', length - (cursor - sentence));
+	while (cursor != NULL && end - cursor > 0) {
+		cursor = (char *) memchr(cursor, ',', end - cursor);
 		if (NULL == cursor) {
 			break;
 		}
@@ -60,17 +80,6 @@ _split_sentence(char *sentence, int length, char **values)
 		*cursor = '\0';
 		cursor++;
 		values[i++] = cursor;
-	}
-
-	/* null terminate the last value */
-	cursor = values[i - 1];
-	cursor = (char *) memchr(cursor, '*', length - (cursor - sentence));
-	if (NULL != cursor) {
-		/* has checksum */
-		*cursor = '\0';
-	} else {
-		/* no checksum */
-		sentence[length - 2] = '\0';
 	}
 
 	return i;
@@ -218,14 +227,14 @@ nmea_parse(char *sentence, int length, int check_checksum)
 		return (nmea_s *) NULL;
 	}
 
-  /* Crop sentence from type word and checksum */
-  char *val_string = _crop_sentence(sentence, length);
-  if (NULL == val_string) {
-		return (nmea_s *) NULL;
-  }
+	/* Crop sentence from type word and checksum */
+	char *val_string = _crop_sentence(sentence, length);
+	if (NULL == val_string) {
+	      	return (nmea_s *) NULL;
+	}
 
 	/* Split the sentence into values */
-	n_vals = _split_sentence(val_string, values);
+	n_vals = _split_string(val_string, values);
 	if (0 == n_vals) {
 		return (nmea_s *) NULL;
 	}
