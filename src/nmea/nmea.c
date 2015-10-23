@@ -68,7 +68,7 @@ _split_string(char *string, char **values)
 	char *end;
 
 	/* Get end of string */
-	end = rawmemchr(cursor, '\0');
+	end = (char *) rawmemchr(cursor, '\0');
 
 	values[i++] = cursor;
 	while (cursor != NULL && end - cursor > 0) {
