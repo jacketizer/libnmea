@@ -93,7 +93,7 @@ _split_string(char *string, char **values)
 void __attribute__ ((constructor)) nmea_init(void);
 void nmea_init()
 {
-	nmea_load_parsers();
+	(void) nmea_load_parsers();
 }
 
 /**

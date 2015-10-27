@@ -98,12 +98,10 @@ nmea_init_parser(const char *filename)
 int
 nmea_load_parsers()
 {
-	int n_files, i;
+	int i;
 	char *files[255];
 	char *parser_path;
 	nmea_parser_module_s *parser;
-
-	memset(parsers, 0, sizeof parsers);
 
 	/* Get list of so files */
 	parser_path = getenv("NMEA_PARSER_PATH");
@@ -114,27 +112,32 @@ nmea_load_parsers()
 		parser_path = strdup(parser_path);
 	}
 
-	n_files = _get_so_files(parser_path, files);
-	if (1 > n_files) {
-		free(parser_path);
+	n_parsers = _get_so_files(parser_path, files);
+	free(parser_path);
+	if (1 > n_parsers) {
 		return -1;
 	}
 
-	i = n_files;
+	/* Allocate parsers array */
+	parsers = malloc((sizeof (nmea_parser_module_s *)) * n_parsers);
+	if (NULL == parsers) {
+		return (nmea_parser_module_s *) NULL;
+	}
+	memset(parsers, 0, (sizeof (nmea_parser_module_s *)) * n_parsers);
+
+	i = n_parsers;
 	while (i-- > 0) {
 		parser = nmea_init_parser(files[i]);
 		free(files[i]);
 
 		if (NULL == parser) {
-			free(parser_path);
 			return -1;
 		}
 
-		parsers[(int) parser->parser.type] = parser;
+		parsers[(int) parser->parser.type - 1] = parser;
 	}
 
-	free(parser_path);
-	return n_files;
+	return n_parsers;
 }
 
 void
@@ -143,7 +146,7 @@ nmea_unload_parsers()
 	int i = 0;
 	nmea_parser_module_s *parser;
 
-	while (i < NMEA_NUM_PARSERS) {
+	while (i < n_parsers) {
 		parser = parsers[i++];
 		if (NULL == parser) {
 			continue;
@@ -157,7 +160,7 @@ nmea_unload_parsers()
 nmea_parser_module_s *
 nmea_get_parser_by_type(nmea_t type)
 {
-	return parsers[(int) type];
+	return parsers[(int) type - 1];
 }
 
 nmea_parser_module_s *
@@ -166,7 +169,7 @@ nmea_get_parser_by_sentence(const char *sentence)
 	int i = 0;
 	nmea_parser_module_s *parser;
 
-	while (i < NMEA_NUM_PARSERS) {
+	while (i < n_parsers) {
 		parser = parsers[i++];
 		if (NULL == parser) {
 			continue;

@@ -28,8 +28,8 @@ typedef struct {
 
 typedef int (*init_f) (nmea_parser_s *);
 
-#define NMEA_NUM_PARSERS  12
-nmea_parser_module_s *parsers[NMEA_NUM_PARSERS];
+nmea_parser_module_s **parsers;
+int n_parsers;
 
 /**
  * Load the parser libs into array.
