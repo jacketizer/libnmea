@@ -20,6 +20,7 @@ test_position_parse_ok()
   mu_assert("should return return 0 when successfull", 0 == res);
   mu_assert("pos->degrees should be 123", 123 == pos->degrees);
   mu_assert("pos->minutes should be 11.12", 11.12 == pos->minutes);
+  free(s);
 
   /* 2 digit degrees */
   s = strdup("2621.44");
@@ -27,6 +28,7 @@ test_position_parse_ok()
   mu_assert("should return return 0 when successfull", 0 == res);
   mu_assert("pos->degrees should be 123", 26 == pos->degrees);
   mu_assert("pos->minutes should be 11.12", 21.44 == pos->minutes);
+  free(s);
 
   /* 1 digit degrees */
   s = strdup("901.01");
@@ -34,6 +36,7 @@ test_position_parse_ok()
   mu_assert("should return return 0 when successfull", 0 == res);
   mu_assert("pos->degrees should be 123", 9 == pos->degrees);
   mu_assert("pos->minutes should be 11.12", 1.01 == pos->minutes);
+  free(s);
 
   /* 0 decimals in minutes */
   s = strdup("901.");
@@ -41,7 +44,9 @@ test_position_parse_ok()
   mu_assert("should return return 0 when successfull", 0 == res);
   mu_assert("pos->degrees should be 123", 9 == pos->degrees);
   mu_assert("pos->minutes should be 11.12", 1.0 == pos->minutes);
+  free(s);
 
+  free(pos);
   return 0;
 }
 
@@ -56,16 +61,19 @@ test_position_parse_fail()
   s = strdup("123");
   res = nmea_position_parse(s, pos);
   mu_assert("should return return -1 on failure", -1 == res);
+  free(s);
 
   /* empty string */
   s = strdup("");
   res = nmea_position_parse(s, pos);
   mu_assert("should return return -1 on empty string", -1 == res);
+  free(s);
 
   /* NULL */
   res = nmea_position_parse(NULL, pos);
   mu_assert("should return return -1 on NULL", -1 == res);
 
+  free(pos);
   return 0;
 }
 
