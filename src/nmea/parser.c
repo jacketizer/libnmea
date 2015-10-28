@@ -180,7 +180,7 @@ nmea_unload_parsers()
 		free(parser);
 	}
 
-  free(parsers);
+	free(parsers);
 }
 
 nmea_parser_module_s *
