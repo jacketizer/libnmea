@@ -9,8 +9,8 @@
 static inline int
 _get_so_files(const char *path, char **files)
 {
-	int len, i = 0;
-	DIR *d;
+	int len, j, i = 0;
+	DIR *d = NULL;
 	struct dirent *dir;
 
 	d = opendir(path);
@@ -24,6 +24,16 @@ _get_so_files(const char *path, char **files)
 		}
 
 		len = strlen(dir->d_name);
+
+		#ifdef __APPLE__
+		if (len < 6) {
+			continue;
+		}
+
+		if (0 != strncmp(dir->d_name + len - 6, ".dylib", 6)) {
+			continue;
+		}
+		#else
 		if (len < 3) {
 			continue;
 		}
@@ -31,10 +41,11 @@ _get_so_files(const char *path, char **files)
 		if (0 != strncmp(dir->d_name + len - 3, ".so", 3)) {
 			continue;
 		}
+		#endif
 
 		char *name = malloc(255);
 		if (NULL == name) {
-			return -1;
+			goto fail;
 		}
 
 		strcpy(name, path);
@@ -42,7 +53,19 @@ _get_so_files(const char *path, char **files)
 		files[i++] = name;
 	}
 
+	if (d) {
+		closedir(d);
+	}
+
 	return i;
+fail:
+	for (j = 0; j < i; i++) {
+		free(files[j]);
+	}
+	if (d) {
+		closedir(d);
+	}
+	return -1;
 }
 
 nmea_parser_module_s *
@@ -105,6 +128,7 @@ nmea_load_parsers()
 
 	/* Get list of so files */
 	parser_path = getenv("NMEA_PARSER_PATH");
+
 	if (NULL == parser_path) {
 		/* Use default path */
 		parser_path = strdup(PARSER_PATH);
@@ -121,7 +145,7 @@ nmea_load_parsers()
 	/* Allocate parsers array */
 	parsers = malloc((sizeof (nmea_parser_module_s *)) * n_parsers);
 	if (NULL == parsers) {
-		return (nmea_parser_module_s *) NULL;
+		return -1;
 	}
 	memset(parsers, 0, (sizeof (nmea_parser_module_s *)) * n_parsers);
 
