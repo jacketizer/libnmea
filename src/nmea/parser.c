@@ -179,6 +179,8 @@ nmea_unload_parsers()
 		dlclose(parser->handle);
 		free(parser);
 	}
+
+  free(parsers);
 }
 
 nmea_parser_module_s *
