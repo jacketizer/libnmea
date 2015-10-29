@@ -85,6 +85,10 @@ main(void)
 			perror("read stdin");
 			exit(EXIT_FAILURE);
 		}
+    if (0 == read_bytes) {
+      sig_quit(SIGINT);
+    }
+
 		total_bytes += read_bytes;
 
 		/* Block signal */
@@ -108,38 +112,35 @@ main(void)
 		nmea_s *data;
 
 		data = nmea_parse(start, end - start + 1, 0);
-		if (NULL == data) {
-			printf("Could not parse sentence\n");
-			continue;
-		}
+		if (NULL != data) {
+		  if (0 < data->errors) {
+		  	printf("WARN: The sentence struct contains parse errors!\n");
+		  }
 
-		if (0 < data->errors) {
-			printf("WARN: The sentence struct contains parse errors!\n");
-		}
+		  if (NMEA_GPGGA == data->type) {
+		  	printf("GPGGA sentence\n");
+		  	nmea_gpgga_s *gpgga = (nmea_gpgga_s *) data;
+		  	printf("Number of satellites: %d\n", gpgga->n_satellites);
+		  	printf("Altitude: %d %c\n", gpgga->altitude, gpgga->altitude_unit);
+		  }
 
-		if (NMEA_GPGGA == data->type) {
-			printf("GPGGA sentence\n");
-			nmea_gpgga_s *gpgga = (nmea_gpgga_s *) data;
-			printf("Number of satellites: %d\n", gpgga->n_satellites);
-			printf("Altitude: %d %c\n", gpgga->altitude, gpgga->altitude_unit);
-		}
+		  if (NMEA_GPGLL == data->type) {
+		  	printf("GPGLL sentence\n");
+		  	nmea_gpgll_s *pos = (nmea_gpgll_s *) data;
+		  	printf("Longitude:\n");
+		  	printf("  Degrees: %d\n", pos->longitude.degrees);
+		  	printf("  Minutes: %f\n", pos->longitude.minutes);
+		  	printf("  Cardinal: %c\n", (char) pos->longitude.cardinal);
+		  	printf("Latitude:\n");
+		  	printf("  Degrees: %d\n", pos->latitude.degrees);
+		  	printf("  Minutes: %f\n", pos->latitude.minutes);
+		  	printf("  Cardinal: %c\n", (char) pos->latitude.cardinal);
+		  	strftime(buf, sizeof(buf), "%H:%M:%S", &pos->time);
+		  	printf("Time: %s\n", buf);
+		  }
 
-		if (NMEA_GPGLL == data->type) {
-			printf("GPGLL sentence\n");
-			nmea_gpgll_s *pos = (nmea_gpgll_s *) data;
-			printf("Longitude:\n");
-			printf("  Degrees: %d\n", pos->longitude.degrees);
-			printf("  Minutes: %f\n", pos->longitude.minutes);
-			printf("  Cardinal: %c\n", (char) pos->longitude.cardinal);
-			printf("Latitude:\n");
-			printf("  Degrees: %d\n", pos->latitude.degrees);
-			printf("  Minutes: %f\n", pos->latitude.minutes);
-			printf("  Cardinal: %c\n", (char) pos->latitude.cardinal);
-			strftime(buf, sizeof(buf), "%H:%M:%S", &pos->time);
-			printf("Time: %s\n", buf);
+		  nmea_free(data);
 		}
-
-		nmea_free(data);
 
 		/* buffer empty? */
 		if (end == buffer + total_bytes) {
