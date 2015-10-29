@@ -44,7 +44,8 @@ unit-tests: tests/test_lib.c tests/test_parse.c tests/test_nmea_helpers.c
 	@$(CC) src/nmea/parser.c tests/test_nmea_helpers.c -ldl -o utests-nmea
 	@./utests && ./utests-parse && ./utests-nmea && (echo "All tests passed!")
 
-check-memory-leaks: examples tests/memory-leaks.sh
+check-memory-leaks: tests/memory-leaks.sh
+	@$(CC) tests/memcheck.c -lnmea -o memcheck
 	@tests/memory-leaks.sh
 
 install: all
@@ -61,7 +62,7 @@ clean:
 	@rm -f tests/*.o
 	@rm -f src/nmea/*.o
 	@rm -f src/parsers/*.o
-	@rm -f utests utests-parse utests-nmea
+	@rm -f utests utests-parse utests-nmea memcheck
 
 clean-all: clean
 	@rm -rf build
