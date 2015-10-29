@@ -5,6 +5,7 @@
  * Can be overridden by env variable NMEA_PARSER_PATH
  */
 #define PARSER_PATH "/usr/lib/nmea/"
+#define FILENAME_MAX 255
 
 static inline int
 _get_so_files(const char *path, char **files)
@@ -43,7 +44,7 @@ _get_so_files(const char *path, char **files)
 		}
 		#endif
 
-		char *name = malloc(255);
+		char *name = malloc(FILENAME_MAX);
 		if (NULL == name) {
 			goto fail;
 		}
@@ -53,18 +54,20 @@ _get_so_files(const char *path, char **files)
 		files[i++] = name;
 	}
 
-	if (d) {
+	if (NULL != d) {
 		closedir(d);
 	}
 
 	return i;
+
 fail:
 	for (j = 0; j < i; i++) {
 		free(files[j]);
 	}
-	if (d) {
+	if (NULL != d) {
 		closedir(d);
 	}
+
 	return -1;
 }
 
