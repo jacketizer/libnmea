@@ -3,17 +3,59 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <signal.h>
 #include <fcntl.h>
 #include <nmea.h>
 #include <nmea/gpgll.h>
 #include <nmea/gpgga.h>
 
+char *buffer;
+int gps_fd;
+
+/**
+ * Callback function when receiving SIGINT signal. Frees memory and quits
+ * the application.
+ *
+ * signum The current signal invoked, always SIGINT.
+ */
+void
+sig_quit(int signum)
+{
+	close(gps_fd);
+	free(buffer);
+	exit(EXIT_SUCCESS);
+}
+
+/**
+ * Register the signal callback function.
+ *
+ * Returns RETURN_SUCCESS on success and RETURN_FAILURE on error.
+ */
+int
+register_signals()
+{
+	struct sigaction kill_action;
+	kill_action.sa_handler = sig_quit;
+
+	if (-1 == sigemptyset(&kill_action.sa_mask)) {
+		perror("sigemptyset");
+		return -1;
+	}
+	kill_action.sa_flags = 0;
+	if (-1 == sigaction(SIGINT, &kill_action, NULL)) {
+		perror("sigaction");
+		return -1;
+	}
+
+	return 0;
+}
+
 int
 main(void)
 {
-	int gps_fd;
 	int read_bytes, total_bytes = 0;
-	char *buffer, *start, *end;
+	char *start, *end;
+	sigset_t block_mask;
 
 	buffer = malloc(4096);
 	if (NULL == buffer) {
@@ -23,13 +65,30 @@ main(void)
 
 	gps_fd = 0; // stdin
 
+	/* Register signal handler for SIGINT */
+	if (-1 == register_signals()) {
+		exit(EXIT_FAILURE);
+	}
+
+	/* Prepare signal blocking */
+	if (-1 == sigemptyset(&block_mask) || -1 == sigaddset(&block_mask, SIGINT)) {
+		perror("prepare signal blocking");
+		exit(EXIT_FAILURE);
+	}
+
 	while (1) {
+		/* Unlock signal */
+		sigprocmask(SIG_UNBLOCK, &block_mask, NULL);
+
 		read_bytes = read(gps_fd, buffer + total_bytes, 20);
 		if (-1 == read_bytes) {
-			perror("read ttyUSB0");
+			perror("read stdin");
 			exit(EXIT_FAILURE);
 		}
 		total_bytes += read_bytes;
+
+		/* Block signal */
+		sigprocmask(SIG_BLOCK, &block_mask, NULL);
 
 		/* find start (a dollar $ign) */
 		start = memchr(buffer, '$', total_bytes);
