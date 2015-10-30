@@ -5,10 +5,12 @@ C Library for Parsing NMEA 0183 Sentences
 [![Memory Leaks](https://img.shields.io/badge/memory%20leaks-0%20bytes-brightgreen.svg)](https://travis-ci.org/jacketizer/libnmea)
 [![License](https://img.shields.io/npm/l/express.svg)](https://raw.githubusercontent.com/jacketizer/libnmea/master/LICENSE)
 
-The library can validate and parse NMEA sentences into C structs. If you find
+The library can validate and parse NMEA 0183 sentences into C structs. If you find
 any sentence missing, please add it by contributing to the code.
 
 Home page: [nmea.io](http://nmea.io/).
+
+Supported sentences: `GPGLL`, `GPGAA`.
 
 To build:
 
@@ -105,6 +107,31 @@ Environment variables
 
 `NMEA_PARSER_PATH` - The path where the parser libraries are located. Default
 is `/usr/lib/nmea/`.
+
+Run tests
+---------
+
+To run the unit tests, run the following command:
+
+```sh
+$ make unit-tests
+```
+
+To check for memory leaks, run the following command:
+
+```sh
+$ make check-memory-leaks
+```
+
+The tests will run against /usr/lib by default. To run the tests without
+running `sudo make install`, export the following environment variables:
+
+```sh
+export LIBRARY_PATH="build/"
+export C_INCLUDE_PATH="build/"
+export LD_LIBRARY_PATH="build/"
+export NMEA_PARSER_PATH="build/nmea/"
+```
 
 Library functions
 -----------------
