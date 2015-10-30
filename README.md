@@ -117,14 +117,14 @@ To run the unit tests, run the following command:
 $ make unit-tests
 ```
 
-To check for memory leaks, run the following command:
+To check for memory leaks:
 
 ```sh
 $ make check-memory-leaks
 ```
 
-The tests will run against /usr/lib by default. To run the tests without
-running `sudo make install`, export the following environment variables:
+The tests will run against /usr/lib by default. To run the tests against the
+local build, export the following environment variables:
 
 ```sh
 export LIBRARY_PATH="build/"
