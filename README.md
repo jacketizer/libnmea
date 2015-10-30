@@ -123,7 +123,7 @@ To check for memory leaks:
 $ make check-memory-leaks
 ```
 
-The tests will run against /usr/lib by default. To run the tests against the
+The tests will run against `/usr/lib` by default. To run the tests against the
 local build, export the following environment variables:
 
 ```sh
