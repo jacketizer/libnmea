@@ -15,6 +15,10 @@ int
 allocate_data(nmea_parser_s *parser)
 {
 	parser->data = malloc(sizeof (nmea_gpgll_s));
+	if (NULL == parser->data) {
+		return -1;
+	}
+
 	return 0;
 }
 
