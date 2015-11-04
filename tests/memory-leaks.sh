@@ -3,7 +3,7 @@
 # NMEA sentences.
 # To run: tests/memory-leaks.sh
 
-tests/output-nmea.sh | valgrind --leak-check=full --error-exitcode=1 ./memcheck > /dev/null 2>&1
+tests/output-nmea.sh | valgrind --leak-check=full --track-origins=yes --error-exitcode=1 ./memcheck
 
 if [ $? -eq 0 ]; then
   echo "No memory leaks found!"

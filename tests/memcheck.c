@@ -14,8 +14,9 @@ int
 main(void)
 {
 	char *buffer;
-	int gps_fd;
-	int read_bytes, total_bytes = 0;
+	int gps_fd = 0; // stdin
+	int read_bytes = 0;
+	int total_bytes = 0;
 	char *start, *end;
 	sigset_t block_mask;
 
@@ -24,8 +25,6 @@ main(void)
 		perror("malloc buffer");
 		exit(EXIT_FAILURE);
 	}
-
-	gps_fd = 0; // stdin
 
 	while (1) {
 		read_bytes = read(gps_fd, buffer + total_bytes, 20);
@@ -76,8 +75,6 @@ main(void)
 		total_bytes -= end - buffer;
 	}
 
-cleanup:
-	close(gps_fd);
 	free(buffer);
 	return 0;
 }
