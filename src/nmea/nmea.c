@@ -79,7 +79,7 @@ _split_string(char *string, char **values)
 	end = (char *) rawmemchr(cursor, '\0');
 
 	values[i++] = cursor;
-	while (cursor != NULL && end - cursor > 0) {
+	while (*cursor != NULL && end - cursor > 0) {
 		cursor = (char *) memchr(cursor, ',', end - cursor);
 		if (NULL == cursor) {
 			break;
