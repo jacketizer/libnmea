@@ -8,6 +8,7 @@
 #include <nmea.h>
 #include <nmea/gpgll.h>
 #include <nmea/gpgga.h>
+#include <nmea/gprmc.h>
 
 char *buffer;
 int gps_fd;
@@ -127,6 +128,21 @@ main(void)
 		  if (NMEA_GPGLL == data->type) {
 		  	printf("GPGLL sentence\n");
 		  	nmea_gpgll_s *pos = (nmea_gpgll_s *) data;
+		  	printf("Longitude:\n");
+		  	printf("  Degrees: %d\n", pos->longitude.degrees);
+		  	printf("  Minutes: %f\n", pos->longitude.minutes);
+		  	printf("  Cardinal: %c\n", (char) pos->longitude.cardinal);
+		  	printf("Latitude:\n");
+		  	printf("  Degrees: %d\n", pos->latitude.degrees);
+		  	printf("  Minutes: %f\n", pos->latitude.minutes);
+		  	printf("  Cardinal: %c\n", (char) pos->latitude.cardinal);
+		  	strftime(buf, sizeof(buf), "%H:%M:%S", &pos->time);
+		  	printf("Time: %s\n", buf);
+		  }
+
+		  if (NMEA_GPRMC == data->type) {
+		  	printf("GPRMC sentence\n");
+		  	nmea_gprmc_s *pos = (nmea_gprmc_s *) data;
 		  	printf("Longitude:\n");
 		  	printf("  Degrees: %d\n", pos->longitude.degrees);
 		  	printf("  Minutes: %f\n", pos->longitude.minutes);

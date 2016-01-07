@@ -6,7 +6,6 @@
 
 #include <nmea.h>
 #include <nmea/gpgll.h>
-#include <nmea/gpgga.h>
 
 int
 main(void)
