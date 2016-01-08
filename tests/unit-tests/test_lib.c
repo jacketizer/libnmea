@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include <nmea.h>
-#include "minunit.h"
+#include "../minunit.h"
 
 int tests_run = 0;
 

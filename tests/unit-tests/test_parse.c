@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../src/parsers/parse.h"
-#include "minunit.h"
+#include "../../src/parsers/parse.h"
+#include "../minunit.h"
 
 int tests_run = 0;
 

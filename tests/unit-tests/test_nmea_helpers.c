@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../src/nmea/nmea.c"
-#include "minunit.h"
+#include "../../src/nmea/nmea.c"
+#include "../minunit.h"
 
 int tests_run;
 
