@@ -48,7 +48,12 @@ check-memory-leaks: tests/memory-leaks.sh
 	@$(CC) tests/memcheck.c -lnmea -o memcheck
 	@tests/memory-leaks.sh
 
-check: unit-tests check-memory-leaks
+check:
+	export LIBRARY_PATH="build/";
+	export C_INCLUDE_PATH="build/";
+	export LD_LIBRARY_PATH="build/";
+	export NMEA_PARSER_PATH="build/nmea/"
+	make unit-tests
 
 install: all
 	mkdir -p /usr/lib/nmea
