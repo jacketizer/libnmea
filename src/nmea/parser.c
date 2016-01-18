@@ -20,7 +20,7 @@ _get_so_files(const char *path, char **files)
 	}
 
 	while (NULL != (dir = readdir(d))) {
-		if (dir->d_name == NULL || dir->d_name[0] == '.') {
+		if (dir->d_name[0] == '.') {
 			continue;
 		}
 
