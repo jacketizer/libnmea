@@ -8,15 +8,15 @@
 
 /* macro for asserting a statement */
 #define mu_assert(message, test) do { \
-                                   if (!(test)) { \
-                                     printf("\t%s× %s%s\n", KERR, message, KNRM); \
-                                     return message; \
-                                   } \
-                                   printf("\t%s• %s%s\n", KGRN, message, KNRM); \
-                                 } while (0)
+		if (!(test)) { \
+			printf("\t%s× %s%s\n", KERR, message, KNRM); \
+			return message; \
+		} \
+		printf("\t%s• %s%s\n", KGRN, message, KNRM); \
+	} while (0)
 
 /* run a test function and return result */
 #define mu_run_test(test) do { \
-                            char *message = test(); tests_run++; \
-                            if (message) { return message; } \
-                          } while (0)
+		char *message = test(); tests_run++; \
+		if (message) { return message; } \
+	} while (0)

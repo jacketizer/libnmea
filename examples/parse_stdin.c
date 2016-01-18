@@ -86,9 +86,9 @@ main(void)
 			perror("read stdin");
 			exit(EXIT_FAILURE);
 		}
-    if (0 == read_bytes) {
-      sig_quit(SIGINT);
-    }
+		if (0 == read_bytes) {
+			sig_quit(SIGINT);
+		}
 
 		total_bytes += read_bytes;
 

@@ -36,7 +36,7 @@ test_split_string_ok()
 
 	char *expected[4] = { "JACK", "ENGQVIST", "JOHANSSON", "89" };
 	mu_assert("should be able to split a comma seperated string", 0 == verify_values(values, expected, rv));
-  free(test_str);
+	free(test_str);
 
 	/* Empty values */
 	test_str = strdup(",SOME,EMPTY,VALUES,,");
@@ -45,7 +45,7 @@ test_split_string_ok()
 
 	char *expected2[6] = { "", "SOME", "EMPTY", "VALUES", "", "" };
 	mu_assert("should be able to split empty values (,,)", 0 == verify_values(values, expected2, rv));
-  free(test_str);
+	free(test_str);
 
 	return 0;
 }
@@ -60,25 +60,25 @@ test_crop_sentence_ok()
 	test_str = strdup("$GPGGA,ENGQVIST,JOHANSSON,89*D1\r\n");
 	rv = _crop_sentence(test_str, strlen(test_str));
 	mu_assert("should return a cropped string", 0 == strcmp(rv, strdup("ENGQVIST,JOHANSSON,89")));
-  free(test_str);
+	free(test_str);
 
 	/* Without checksum */
 	test_str = strdup("$GPGGA,ENGQVIST,JOHANSSON,89\r\n");
 	rv = _crop_sentence(test_str, strlen(test_str));
 	mu_assert("should return a cropped string without checksum", 0 == strcmp(rv, strdup("ENGQVIST,JOHANSSON,89")));
-  free(test_str);
+	free(test_str);
 
 	/* Empty values */
 	test_str = strdup("$GPGGA,,ENGQVIST,,JOHANSSON,,89,,\r\n");
 	rv = _crop_sentence(test_str, strlen(test_str));
 	mu_assert("should work with empty values", 0 == strcmp(rv, strdup(",ENGQVIST,,JOHANSSON,,89,,")));
-  free(test_str);
+	free(test_str);
 
 	/* Empty values and checksum */
 	test_str = strdup("$GPGGA,,ENGQVIST,,JOHANSSON,,89,,*1D\r\n");
 	rv = _crop_sentence(test_str, strlen(test_str));
 	mu_assert("should work with empty values and checksum", 0 == strcmp(rv, strdup(",ENGQVIST,,JOHANSSON,,89,,")));
-  free(test_str);
+	free(test_str);
 
 	return 0;
 }
