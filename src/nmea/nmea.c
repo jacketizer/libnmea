@@ -1,14 +1,7 @@
 #include "nmea.h"
 #include "parser.h"
 #include "parser_types.h"
-
-
-#ifdef __APPLE__
-
-#include <limits.h>
 #include "../memchr.c"
-
-#endif /* __APPLE__ */
 
 /**
  * Check if a value is supplied and set.
@@ -79,7 +72,7 @@ _split_string(char *string, char **values)
 	end = (char *) rawmemchr(cursor, '\0');
 
 	values[i++] = cursor;
-	while (*cursor != NULL && end - cursor > 0) {
+	while (*cursor != '\0' && end - cursor > 0) {
 		cursor = (char *) memchr(cursor, ',', end - cursor);
 		if (NULL == cursor) {
 			break;

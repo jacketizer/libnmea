@@ -16,7 +16,7 @@
  *
  * $FreeBSD: head/lib/libc/string/memrchr.c 178051 2008-04-10 00:12:44Z delphij $
  */
-
+#include <limits.h>
 
 /*
  * Reverse memchr()
