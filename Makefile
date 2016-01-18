@@ -48,6 +48,8 @@ check-memory-leaks: tests/memory-leaks.sh
 	@$(CC) tests/memcheck.c -lnmea -o memcheck
 	@tests/memory-leaks.sh
 
+check: unit-tests check-memory-leaks
+
 install: all
 	mkdir -p /usr/lib/nmea
 	mkdir -p /usr/include/nmea
