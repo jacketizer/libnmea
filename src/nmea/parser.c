@@ -7,7 +7,7 @@
 #define PARSER_PATH "/usr/lib/nmea/"
 #define FILENAME_MAX 255
 
-static inline int
+static int
 _get_so_files(const char *path, char **files)
 {
 	int len, j, i = 0;

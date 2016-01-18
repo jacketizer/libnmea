@@ -15,7 +15,7 @@
  *
  * Returns 0 if set, otherwise -1.
  */
-static inline int
+static int
 _is_value_set(const char *value)
 {
 	if (NULL == value || '\0' == *value) {
@@ -37,7 +37,7 @@ _is_value_set(const char *value)
  *
  * Returns pointer (char *) to the new string.
  */
-static inline char *
+static char *
 _crop_sentence(char *sentence, int length)
 {
 	char *start, *cursor;
@@ -68,7 +68,7 @@ _crop_sentence(char *sentence, int length)
  *
  * Returns the number of values found in string.
  */
-static inline int
+static int
 _split_string(char *string, char **values)
 {
 	int i = 0;

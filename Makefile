@@ -11,7 +11,7 @@ SRC_EXAMPLES=$(shell find examples/ -type f -name "*.c")
 BIN_EXAMPLES=$(patsubst %.c, %, $(SRC_EXAMPLES))
 
 CC=gcc
-CFLAGS=-c -fPIC -g -Wall
+CFLAGS=-c -fPIC -finline-functions -g -Wall
 LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
 
 all: nmea parser-libs

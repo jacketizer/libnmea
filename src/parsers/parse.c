@@ -10,17 +10,18 @@ nmea_position_parse(char *s, nmea_position *pos)
 		return -1;
 	}
 
-	// decimal minutes
+	/* decimal minutes */
 	char *cursor = memchr(s, '.', strlen(s));
 	if (NULL == cursor) {
 		return -1;
 	}
 
-	cursor -= 2; // minutes starts 2 digits before dot
+	/* minutes starts 2 digits before dot */
+	cursor -= 2;
 	pos->minutes = atof(cursor);
 	*cursor = '\0';
 
-	// integer degrees
+	/* integer degrees */
 	cursor = s;
 	pos->degrees = atoi(cursor);
 
