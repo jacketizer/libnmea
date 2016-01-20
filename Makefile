@@ -56,12 +56,12 @@ check:
 	make unit-tests
 
 install: all
-	mkdir -p /usr/lib/nmea
-	mkdir -p /usr/include/nmea
-	cp $(BUILD_PATH)libnmea.so /usr/lib/
-	cp $(BUILD_PATH)nmea/*.so /usr/lib/nmea/
-	cp $(BUILD_PATH)*.h /usr/include/
-	cp $(BUILD_PATH)nmea/*.h /usr/include/nmea/
+	install --directory /usr/lib/nmea
+	install --directory /usr/include/nmea
+	install $(BUILD_PATH)libnmea.so /usr/lib/
+	install $(BUILD_PATH)nmea/*.so /usr/lib/nmea/
+	install $(BUILD_PATH)*.h /usr/include/
+	install $(BUILD_PATH)nmea/*.h /usr/include/nmea/
 	ldconfig -n /usr/lib
 
 clean:
