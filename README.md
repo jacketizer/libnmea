@@ -137,7 +137,8 @@ Environment variables
 ---------------------
 
 `NMEA_PARSER_PATH` - The path where the parser libraries are located. Default
-is `/usr/lib/nmea/`.
+is `/usr/lib/nmea`. If a custom prefix was used when installing, they will be
+located in PREFIX/lib/nmea
 
 Run tests
 ---------
