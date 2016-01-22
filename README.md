@@ -254,3 +254,19 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 	return 0;
 }
 ```
+
+Contributing
+------------
+
+Contributions are more than welcome. Be sure to read this chapter before
+submitting a merge request.
+
+### Coding style
+
+The code should conform to the
+[KNF](https://en.wikipedia.org/wiki/Indent_style#Variant:_BSD_KNF)
+formatting guidelines.
+
+### Testing
+
+Every commit must pass all the tests with success.
