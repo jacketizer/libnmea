@@ -47,14 +47,13 @@ $ make examples
 $ echo -ne "\$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n" | build/parse_stdin
 ```
 
-If the library was installed with a custom prefix, set the following
-environment variables before running make:
+If the library was installed with a custom prefix, you may have to set the
+following environment variables before running make:
 
 ```sh
 export LIBRARY_PATH="<prefix>/lib"
 export C_INCLUDE_PATH="<prefix>/include"
 export LD_LIBRARY_PATH="<prefix>/lib"
-export NMEA_PARSER_PATH="<prefix>/lib/nmea"
 ```
 
 How to use it

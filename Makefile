@@ -29,7 +29,7 @@ nmea: $(OBJ_FILES)
 parser-libs: $(OBJ_PARSERS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) -DPARSER_PATH=$(PREFIX)/lib/nmea/ $< -o $@
 
 src/parsers/%: $(OBJ_PARSER_DEP)
 	@mkdir -p $(BUILD_PATH)/nmea
