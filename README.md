@@ -10,19 +10,51 @@ any sentence missing, please add it by contributing to the code.
 
 Home page: [nmea.io](http://nmea.io/).
 
-Supported sentences: `GPGLL`, `GPGGA`, `GPRMC`.
+Supported sentences: `GPGLL`, `GPGGA` and `GPRMC`.
 
-To build:
+To build
+--------
 
 ```sh
-$ make && sudo make install && make unit-tests
+$ make
 ```
 
-Try it:
+When running `make`, the library will be built to a local build directory
+(`build`).
+
+Installation
+------------
+
+Run `make install` to install libnmea. The files will be installed in `/usr/`
+by default. Use the environment variable `PREFIX` to set a different
+installation prefix.
+
+Ex. to build and install the library and header files locally, in the `target`
+directory, run the following commands:
+
+```
+$ make
+$ PREFIX=target make install
+```
+
+Try it
+------
+
+When the library is built and installed, you can compile the example programs:
 
 ```sh
 $ make examples
 $ echo -ne "\$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n" | build/parse_stdin
+```
+
+If the library was installed with a custom prefix, set the following
+environment variables before running make:
+
+```sh
+export LIBRARY_PATH="<prefix>/lib"
+export C_INCLUDE_PATH="<prefix>/include"
+export LD_LIBRARY_PATH="<prefix>/lib"
+export NMEA_PARSER_PATH="<prefix>/lib/nmea"
 ```
 
 How to use it
@@ -111,33 +143,31 @@ is `/usr/lib/nmea/`.
 Run tests
 ---------
 
-To run the unit tests, run the following command:
+After `make`, run the tests against the `build` directory:
+
+```sh
+$ make check
+```
+
+To run the unit tests against the installation directory, run the following
+command:
 
 ```sh
 $ make unit-tests
 ```
 
-To check for memory leaks:
+To check for memory leaks, run:
 
 ```sh
 $ make check-memory-leaks
-```
-
-The tests will run against `/usr/lib` by default. To run the tests against the
-local build, export the following environment variables:
-
-```sh
-export LIBRARY_PATH="build/"
-export C_INCLUDE_PATH="build/"
-export LD_LIBRARY_PATH="build/"
-export NMEA_PARSER_PATH="build/nmea/"
 ```
 
 Library functions
 -----------------
 
 Check `nmea.h` for more detailed info about functions. The header files for the
-sentences (ex: `nmea/gpgll.h`) contains the struct definitions.
+sentences (ex: `nmea/gpgll.h`) contains the struct definitions for each
+sentence.
 
 Implement a new sentence type
 -----------------------------
