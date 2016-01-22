@@ -14,14 +14,17 @@ CC=gcc
 CFLAGS=-c -fPIC -finline-functions -g -Wall
 LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
 
+.PHONY: all
 all: nmea parser-libs
 
+.PHONY: nmea
 nmea: $(OBJ_FILES)
 	@mkdir -p $(BUILD_PATH)
 	@echo "Building libnmea.so..."
 	$(CC) $(LDFLAGS) $(OBJ_FILES) -o $(BUILD_PATH)libnmea.so
 	cp src/nmea/nmea.h $(BUILD_PATH)
 
+.PHONY: parser-libs
 parser-libs: $(OBJ_PARSERS)
 
 %.o: %.c
@@ -36,18 +39,22 @@ src/parsers/%: $(OBJ_PARSER_DEP)
 examples/%: examples/%.c
 	$(CC) $< -lnmea -o $(BUILD_PATH)$(patsubst examples/%,%,$@)
 
+.PHONY: examples
 examples: nmea parser-libs $(BIN_EXAMPLES)
 
+.PHONY: unit-tests
 unit-tests: tests/unit-tests/test_lib.c tests/unit-tests/test_parse.c tests/unit-tests/test_nmea_helpers.c
 	@$(CC) tests/unit-tests/test_lib.c -lnmea -o utests
 	@$(CC) src/parsers/parse.c tests/unit-tests/test_parse.c -o utests-parse
 	@$(CC) src/nmea/parser.c tests/unit-tests/test_nmea_helpers.c -ldl -o utests-nmea
 	@./utests && ./utests-parse && ./utests-nmea && (echo "All tests passed!")
 
+.PHONY: check-memory-leaks
 check-memory-leaks: tests/memory-leaks.sh
 	@$(CC) tests/memcheck.c -lnmea -o memcheck
 	@tests/memory-leaks.sh
 
+.PHONY: check
 check:
 	export LIBRARY_PATH="build/";
 	export C_INCLUDE_PATH="build/";
@@ -55,6 +62,7 @@ check:
 	export NMEA_PARSER_PATH="build/nmea/"
 	make unit-tests
 
+.PHONY: install
 install: all
 	install --directory /usr/lib/nmea
 	install --directory /usr/include/nmea
@@ -64,6 +72,7 @@ install: all
 	install $(BUILD_PATH)nmea/*.h /usr/include/nmea/
 	ldconfig -n /usr/lib
 
+.PHONY: clean
 clean:
 	@rm -f *.o
 	@rm -f tests/*.o
@@ -71,5 +80,6 @@ clean:
 	@rm -f src/parsers/*.o
 	@rm -f utests utests-parse utests-nmea memcheck
 
+.PHONY: clean-all
 clean-all: clean
 	@rm -rf build
