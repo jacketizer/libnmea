@@ -20,19 +20,19 @@ $ make
 ```
 
 When running `make`, the library will be built to a local build directory
-(`build`).
+(*./build*).
 
 Installation
 ------------
 
-Run `make install` to install libnmea. The files will be installed in `/usr/`
+Run `make install` to install *libnmea*. The files will be installed in `/usr/`
 by default. Use the environment variable `PREFIX` to set a different
 installation prefix.
 
-Ex. to build and install the library and header files locally, in the `target`
+Ex. to build and install the library and header files locally, in the *target*
 directory, run the following commands:
 
-```
+```sh
 $ make
 $ PREFIX=target make install
 ```
@@ -48,7 +48,7 @@ $ echo -ne "\$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n" | build/parse_stdin
 ```
 
 If the library was installed with a custom prefix, you may have to set the
-following environment variables before running make:
+following environment variables before running `make`:
 
 ```sh
 export LIBRARY_PATH="<prefix>/lib"
@@ -59,9 +59,9 @@ export LD_LIBRARY_PATH="<prefix>/lib"
 How to use it
 -------------
 
-First, include `nmea.h` and the header files for the desired sentence types:
+First, include *nmea.h* and the header files for the desired sentence types:
 
-```c
+```C
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -80,7 +80,7 @@ main(void)
 
 To parse an NMEA sentence string, use `nmea_parse()`:
 
-```c
+```C
 // Sentence string to be parsed
 char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n");
 
@@ -97,7 +97,7 @@ if (NULL == data) {
 The parsed data can be found in the data variable and for example printed to
 screen:
 
-```c
+```C
 if (NMEA_GPGGA == data->type) {
 	nmea_gpgga_s *gpgga = (nmea_gpgga_s *) data;
 
@@ -123,7 +123,7 @@ if (NMEA_GPGLL == data->type) {
 
 Free the memory used by the data variable:
 
-```c
+```C
 nmea_free(data);
 ```
 
@@ -138,12 +138,12 @@ Environment variables
 
 `NMEA_PARSER_PATH` - The path where the parser libraries are located. Default
 is `/usr/lib/nmea`. If a custom prefix was used when installing, they will be
-located in PREFIX/lib/nmea
+located in *PREFIX/lib/nmea*
 
 Run tests
 ---------
 
-After `make`, run the tests against the `build` directory:
+After `make`, run the tests against the *build* directory:
 
 ```sh
 $ make check
@@ -165,8 +165,8 @@ $ make check-memory-leaks
 Library functions
 -----------------
 
-Check `nmea.h` for more detailed info about functions. The header files for the
-sentences (ex: `nmea/gpgll.h`) contains the struct definitions for each
+Check *nmea.h* for more detailed info about functions. The header files for the
+sentences (ex: *nmea/gpgll.h*) contains the struct definitions for each
 sentence.
 
 Implement a new sentence type
@@ -176,7 +176,7 @@ To create a new sentence parser, create the following files and replace
 the `<TYPE>` with the sentence type word in uppercase letters and `<type>` in
 lowercase. Make sure that the sentence type is defined in *src/nmea.h*.
 
-src/parsers/<type>.h:
+*src/parsers/<type>.h*:
 
 ```C
 #ifndef INC_NMEA_<TYPE>_H
@@ -199,7 +199,7 @@ typedef struct {
 #endif  /* INC_NMEA_<TYPE>_H */
 ```
 
-src/parsers/<type>.c:
+*src/parsers/<type>.c*:
 
 ```C
 #include "../nmea/parser_types.h"
@@ -266,6 +266,12 @@ submitting a merge request.
 The code should conform to the
 [KNF](https://en.wikipedia.org/wiki/Indent_style#Variant:_BSD_KNF)
 formatting guidelines.
+
+Example `indent` command:
+
+```sh
+$ indent -st -bad -bap -bbb -bc -blf -bli0 -br -brs -bs -cbi0 -ce -cli0 -cs -nbfda -npcs -nprs -nsob -saf -saw -sai src/nmea/nmea.c
+```
 
 ### Testing
 
