@@ -25,11 +25,11 @@ When running `make`, the library will be built to a local build directory
 Installation
 ------------
 
-Run `make install` to install *libnmea*. The files will be installed in `/usr/`
+Run `make install` to install *libnmea*. The files will be installed in */usr/*
 by default. Use the environment variable `PREFIX` to set a different
 installation prefix.
 
-Ex. to build and install the library and header files locally, in the *target*
+Ex. to build and install the library and header files locally, in the *./target*
 directory, run the following commands:
 
 ```sh
@@ -143,7 +143,7 @@ located in *PREFIX/lib/nmea*
 Run tests
 ---------
 
-After `make`, run the tests against the *build* directory:
+After `make`, run the tests against the build directory:
 
 ```sh
 $ make check
