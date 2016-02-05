@@ -72,15 +72,14 @@ _split_string(char *string, char **values)
 	end = (char *) rawmemchr(cursor, '\0');
 
 	values[i++] = cursor;
-	while (*cursor != '\0' && end - cursor > 0) {
+	while ('\0' != *cursor && end - cursor > 0) {
 		cursor = (char *) memchr(cursor, ',', end - cursor);
 		if (NULL == cursor) {
 			break;
 		}
 
 		*cursor = '\0';
-		cursor++;
-		values[i++] = cursor;
+		values[i++] = ++cursor;
 	}
 
 	return i;
@@ -94,7 +93,7 @@ _split_string(char *string, char **values)
 void __attribute__ ((constructor)) nmea_init(void);
 void nmea_init()
 {
-	(void) nmea_load_parsers();
+	nmea_load_parsers();
 }
 
 /**
@@ -128,7 +127,7 @@ nmea_get_checksum(const char *sentence)
 	/* While current char isn't '*' or sentence ending (newline) */
 	while ('*' != *n && NMEA_END_CHAR_1 != *n) {
 		if ('\0' == *n || n - sentence > NMEA_MAX_LENGTH) {
-		/* Sentence too long or short */
+			/* Sentence too long or short */
 			return 0;
 		}
 		chk ^= (uint8_t) *n;
@@ -151,6 +150,8 @@ nmea_has_checksum(const char *sentence, int length)
 int
 nmea_validate(const char *sentence, int length, int check_checksum)
 {
+	const char *n;
+
 	/* should start with $ */
 	if ('$' != *sentence) {
 		return -1;
@@ -162,9 +163,9 @@ nmea_validate(const char *sentence, int length, int check_checksum)
 	}
 
 	/* should have a 5 letter, uppercase word */
-	const char *n = sentence;
+	n = sentence;
 	while (++n < sentence + 6) {
-		if (*n < 65 || *n > 90) {
+		if (*n < 'A' || *n > 'Z') {
 			/* not uppercase letter */
 			return -1;
 		}
@@ -197,11 +198,13 @@ nmea_validate(const char *sentence, int length, int check_checksum)
 void
 nmea_free(nmea_s *data)
 {
+	nmea_parser_module_s *parser;
+
 	if (NULL == data) {
 		return;
 	}
 
-	nmea_parser_module_s *parser = nmea_get_parser_by_type(data->type);
+	parser = nmea_get_parser_by_type(data->type);
 	if (NULL == parser) {
 		return;
 	}
@@ -212,16 +215,16 @@ nmea_free(nmea_s *data)
 nmea_s *
 nmea_parse(char *sentence, int length, int check_checksum)
 {
-	nmea_t type = nmea_get_type(sentence);
+	int n_vals, val_index = 0;
+	char *value, *val_string;
+	char *values[255];
+	nmea_parser_module_s *parser;
+	nmea_t type;
+
+	type = nmea_get_type(sentence);
 	if (NMEA_UNKNOWN == type) {
 		return (nmea_s *) NULL;
 	}
-
-	int n_vals;
-	int val_index = 0;
-	char *value;
-	char *values[255];
-	nmea_parser_module_s *parser;
 
 	/* Validate */
 	if (-1 == nmea_validate(sentence, length, check_checksum)) {
@@ -229,7 +232,7 @@ nmea_parse(char *sentence, int length, int check_checksum)
 	}
 
 	/* Crop sentence from type word and checksum */
-	char *val_string = _crop_sentence(sentence, length);
+	val_string = _crop_sentence(sentence, length);
 	if (NULL == val_string) {
 	      	return (nmea_s *) NULL;
 	}

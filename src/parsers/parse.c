@@ -3,6 +3,8 @@
 int
 nmea_position_parse(char *s, nmea_position *pos)
 {
+	char *cursor;
+
 	pos->degrees = 0;
 	pos->minutes = 0;
 
@@ -11,7 +13,7 @@ nmea_position_parse(char *s, nmea_position *pos)
 	}
 
 	/* decimal minutes */
-	char *cursor = memchr(s, '.', strlen(s));
+	cursor = memchr(s, '.', strlen(s));
 	if (NULL == cursor) {
 		return -1;
 	}
@@ -31,21 +33,21 @@ nmea_position_parse(char *s, nmea_position *pos)
 nmea_cardinal_t
 nmea_cardinal_direction_parse(char *s)
 {
-	if (s == NULL || *s == '\0') {
+	if (NULL == s || '\0'== *s) {
 		return NMEA_CARDINAL_DIR_UNKNOWN;
 	}
 
 	switch (*s) {
-		case NMEA_CARDINAL_DIR_NORTH:
-			return NMEA_CARDINAL_DIR_NORTH;
-		case NMEA_CARDINAL_DIR_EAST:
-			return NMEA_CARDINAL_DIR_EAST;
-		case NMEA_CARDINAL_DIR_SOUTH:
-			return NMEA_CARDINAL_DIR_SOUTH;
-		case NMEA_CARDINAL_DIR_WEST:
-			return NMEA_CARDINAL_DIR_WEST;
-		default:
-			break;
+	case NMEA_CARDINAL_DIR_NORTH:
+		return NMEA_CARDINAL_DIR_NORTH;
+	case NMEA_CARDINAL_DIR_EAST:
+		return NMEA_CARDINAL_DIR_EAST;
+	case NMEA_CARDINAL_DIR_SOUTH:
+		return NMEA_CARDINAL_DIR_SOUTH;
+	case NMEA_CARDINAL_DIR_WEST:
+		return NMEA_CARDINAL_DIR_WEST;
+	default:
+		break;
 	}
 
 	return NMEA_CARDINAL_DIR_UNKNOWN;
@@ -55,6 +57,7 @@ int
 nmea_time_parse(char *s, struct tm *time)
 {
 	char *rv;
+
 	memset(time, 0, sizeof (struct tm));
 
 	if (s == NULL || *s == '\0') {

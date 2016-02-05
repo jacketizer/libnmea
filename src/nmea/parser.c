@@ -11,6 +11,7 @@ static int
 _get_so_files(const char *path, char **files)
 {
 	int len, j, i = 0;
+	char *name;
 	DIR *d = NULL;
 	struct dirent *dir;
 
@@ -20,7 +21,7 @@ _get_so_files(const char *path, char **files)
 	}
 
 	while (NULL != (dir = readdir(d))) {
-		if (dir->d_name[0] == '.') {
+		if ('.' == dir->d_name[0]) {
 			continue;
 		}
 
@@ -44,7 +45,7 @@ _get_so_files(const char *path, char **files)
 		}
 		#endif
 
-		char *name = malloc(FILENAME_MAX);
+		name = malloc(FILENAME_MAX);
 		if (NULL == name) {
 			goto fail;
 		}
@@ -75,6 +76,8 @@ nmea_parser_module_s *
 nmea_init_parser(const char *filename)
 {
 	nmea_parser_module_s *parser;
+	void *plugin;
+	init_f init;
 
 	/* Allocate parser struct */
 	parser = malloc(sizeof (nmea_parser_module_s));
@@ -82,14 +85,14 @@ nmea_init_parser(const char *filename)
 		return (nmea_parser_module_s *) NULL;
 	}
 
-	void *plugin = dlopen(filename, RTLD_NOW);
+	plugin = dlopen(filename, RTLD_NOW);
 	if (NULL == plugin) {
 		return (nmea_parser_module_s *) NULL;
 	}
 
  	parser->handle = plugin;
 
-	init_f init = dlsym(plugin, "init");
+	init = dlsym(plugin, "init");
 	if (NULL == init) {
 		return (nmea_parser_module_s *) NULL;
 	}

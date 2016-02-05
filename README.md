@@ -242,13 +242,13 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 	nmea_gpgll_s *data = (nmea_<type>_s *) parser->data;
 
 	switch (val_index) {
-		case NMEA_<TYPE>_<index>:
-			/* Parse some value */
-			data->some_value = value;
-			break;
+	case NMEA_<TYPE>_<index>:
+		/* Parse some value */
+		data->some_value = value;
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 
 	return 0;
