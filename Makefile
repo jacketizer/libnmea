@@ -50,10 +50,10 @@ unit-tests: tests/unit-tests/test_lib.c tests/unit-tests/test_parse.c tests/unit
 	@$(CC) src/nmea/parser.c tests/unit-tests/test_nmea_helpers.c -ldl -o utests-nmea
 	@./utests && ./utests-parse && ./utests-nmea && (echo "All tests passed!")
 
-.PHONY: check-memory-leaks
-check-memory-leaks: tests/memory-leaks.sh
-	@$(CC) tests/memcheck.c -lnmea -o memcheck
-	@tests/memory-leaks.sh
+.PHONY: system-tests
+system-tests: tests/systests.sh
+	$(CC) tests/systest.c -lnmea -o systest
+	@tests/systests.sh
 
 .PHONY: check
 check:

@@ -9,6 +9,7 @@
 #include <nmea.h>
 #include <nmea/gpgll.h>
 #include <nmea/gpgga.h>
+#include <nmea/gprmc.h>
 
 int
 main(void)
@@ -57,6 +58,33 @@ main(void)
 
 		data = nmea_parse(start, end - start + 1, 0);
 		if (NULL != data) {
+			if (0 < data->errors) {
+				printf("{ type: 'GPWRN', data: { message:'The following sentence contains parse errors!' } }\n");
+			}
+
+			if (NMEA_GPGGA == data->type) {
+				nmea_gpgga_s *gpgga = (nmea_gpgga_s *) data;
+				printf("{ type: 'GPGGA', data: { satellites: %d, altitude: '%d%c' } }\n", gpgga->n_satellites, gpgga->altitude, gpgga->altitude_unit);
+			}
+
+			if (NMEA_GPGLL == data->type) {
+				nmea_gpgll_s *pos = (nmea_gpgll_s *) data;
+				strftime(buf, sizeof(buf), "%H:%M:%S", &pos->time);
+				printf("{ type: 'GPGLL', data: { long: '%c%d:%f', lat: '%c%d:%f', time: '%s' } }\n",\
+					(char) pos->longitude.cardinal, pos->longitude.degrees, pos->longitude.minutes,\
+					(char) pos->latitude.cardinal, pos->latitude.degrees, pos->latitude.minutes,\
+					buf);
+			}
+
+			if (NMEA_GPRMC == data->type) {
+				nmea_gprmc_s *pos = (nmea_gprmc_s *) data;
+				strftime(buf, sizeof(buf), "%H:%M:%S", &pos->time);
+				printf("{ type: 'GPRMC', data: { long: '%c%d:%f', lat: '%c%d:%f', time: '%s' } }\n",\
+					(char) pos->longitude.cardinal, pos->longitude.degrees, pos->longitude.minutes,\
+					(char) pos->latitude.cardinal, pos->latitude.degrees, pos->latitude.minutes,\
+					buf);
+			}
+
 			nmea_free(data);
 		}
 
