@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # This script tests all the NMEA sentences by piping in a NMEA stream to stdin
 # and then verifies the output.
 # To run: tests/systests.sh

@@ -1,7 +1,7 @@
 language: c
 install: make
 script:
-  - make check-memory-leaks
+  - make system-tests
   - make unit-tests
 before_install:
   - sudo apt-get update -qq
