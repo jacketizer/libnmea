@@ -33,22 +33,22 @@ _is_value_set(const char *value)
 static char *
 _crop_sentence(char *sentence, int length)
 {
-	char *start, *cursor;
+	char *cursor;
 
 	/* Skip type word, 7 characters */
-	start = sentence + 7;
+	sentence += NMEA_PREFIX_LENGTH + 2;
 
 	/* Null terminate before end of line/sentence, 2 characters */
-	start[length - 9] = '\0';
+	sentence[length - 9] = '\0';
 
 	/* Remove checksum, if there is one */
-	cursor = (char *) memrchr(start, '*', length - (start - sentence));
+	cursor = (char *) memrchr(sentence, '*', length - (NMEA_PREFIX_LENGTH + 2));
 	if (NULL != cursor) {
 		/* Has checksum */
 		*cursor = '\0';
 	}
 
-	return start;
+	return sentence;
 }
 
 /**
@@ -65,21 +65,20 @@ static int
 _split_string(char *string, char **values)
 {
 	int i = 0;
-	char *cursor = string;
 	char *end;
 
 	/* Get end of string */
-	end = (char *) rawmemchr(cursor, '\0');
+	end = (char *) rawmemchr(string, '\0');
 
-	values[i++] = cursor;
-	while ('\0' != *cursor && end - cursor > 0) {
-		cursor = (char *) memchr(cursor, ',', end - cursor);
-		if (NULL == cursor) {
+	values[i++] = string;
+	while ('\0' != *string && end - string > 0) {
+		string = (char *) memchr(string, ',', end - string);
+		if (NULL == string) {
 			break;
 		}
 
-		*cursor = '\0';
-		values[i++] = ++cursor;
+		*string = '\0';
+		values[i++] = ++string;
 	}
 
 	return i;
@@ -215,7 +214,7 @@ nmea_free(nmea_s *data)
 nmea_s *
 nmea_parse(char *sentence, int length, int check_checksum)
 {
-	int n_vals, val_index = 0;
+	int n_vals, val_index;
 	char *value, *val_string;
 	char *values[255];
 	nmea_parser_module_s *parser;
@@ -260,18 +259,15 @@ nmea_parse(char *sentence, int length, int check_checksum)
 	parser->errors = 0;
 
 	/* Loop through the values and parse them... */
-	while (val_index < n_vals) {
+	for (val_index = 0; val_index < n_vals; val_index++) {
 		value = values[val_index];
 		if (-1 == _is_value_set(value)) {
-			val_index++;
 			continue;
 		}
 
 		if (-1 == parser->parse((nmea_parser_s *) parser, value, val_index)) {
 			parser->errors++;
 		}
-
-		val_index++;
 	}
 
 	parser->parser.data->type = type;

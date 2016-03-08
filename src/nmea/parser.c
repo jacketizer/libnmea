@@ -173,12 +173,11 @@ nmea_load_parsers()
 void
 nmea_unload_parsers()
 {
-	int i = 0;
+	int i;
 	nmea_parser_module_s *parser;
 
-	while (i < n_parsers) {
-		parser = parsers[i++];
-		if (NULL == parser) {
+	for (i = 0; i < n_parsers; i++) {
+		if (NULL == (parser = parsers[i])) {
 			continue;
 		}
 
@@ -198,11 +197,11 @@ nmea_get_parser_by_type(nmea_t type)
 nmea_parser_module_s *
 nmea_get_parser_by_sentence(const char *sentence)
 {
-	int i = 0;
+	int i;
 	nmea_parser_module_s *parser;
 
-	while (i < n_parsers) {
-		parser = parsers[i++];
+	for (i = 0; i < n_parsers; i++) {
+		parser = parsers[i];
 		if (NULL == parser) {
 			continue;
 		}

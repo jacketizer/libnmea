@@ -45,7 +45,7 @@ typedef struct {
 #define NMEA_END_CHAR_1		'\n'
 #define NMEA_END_CHAR_2		'\n'
 
-/* NMEA sentence prefix length (chars) */
+/* NMEA sentence prefix length (num chars), Ex: GPGLL */
 #define NMEA_PREFIX_LENGTH	5
 
 /**

@@ -16,7 +16,7 @@ To build
 --------
 
 ```sh
-$ make
+$ make && make check
 ```
 
 When running `make`, the library will be built to a local build directory
