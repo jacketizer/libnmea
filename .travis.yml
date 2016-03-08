@@ -3,6 +3,3 @@ install: make
 script:
   - make system-tests
   - make unit-tests
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq valgrind
