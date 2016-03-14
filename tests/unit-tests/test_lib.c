@@ -180,7 +180,7 @@ test_validate_fail_end()
 	free(sentence);
 
 	// Too short sentence
-	sentence = strdup("$");
+	sentence = strdup("$GP");
 	res = nmea_validate(sentence, strlen(sentence), 1);
 	mu_assert("should return -1 when sentence is too short", -1 == res);
 	free(sentence);

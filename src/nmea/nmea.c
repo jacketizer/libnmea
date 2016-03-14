@@ -151,6 +151,11 @@ nmea_validate(const char *sentence, size_t length, int check_checksum)
 {
 	const char *n;
 
+	/* should have atleast 9 characters */
+	if (9 > length) {
+		return -1;
+	}
+
 	/* should start with $ */
 	if ('$' != *sentence) {
 		return -1;
@@ -220,13 +225,13 @@ nmea_parse(char *sentence, size_t length, int check_checksum)
 	nmea_parser_module_s *parser;
 	nmea_t type;
 
-	type = nmea_get_type(sentence);
-	if (NMEA_UNKNOWN == type) {
+	/* Validate sentence string */
+	if (-1 == nmea_validate(sentence, length, check_checksum)) {
 		return (nmea_s *) NULL;
 	}
 
-	/* Validate */
-	if (-1 == nmea_validate(sentence, length, check_checksum)) {
+	type = nmea_get_type(sentence);
+	if (NMEA_UNKNOWN == type) {
 		return (nmea_s *) NULL;
 	}
 
