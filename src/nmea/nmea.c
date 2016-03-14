@@ -31,7 +31,7 @@ _is_value_set(const char *value)
  * Returns pointer (char *) to the new string.
  */
 static char *
-_crop_sentence(char *sentence, int length)
+_crop_sentence(char *sentence, size_t length)
 {
 	char *cursor;
 
@@ -137,7 +137,7 @@ nmea_get_checksum(const char *sentence)
 }
 
 int
-nmea_has_checksum(const char *sentence, int length)
+nmea_has_checksum(const char *sentence, size_t length)
 {
 	if ('*' == sentence[length - 5]) {
 		return 0;
@@ -147,7 +147,7 @@ nmea_has_checksum(const char *sentence, int length)
 }
 
 int
-nmea_validate(const char *sentence, int length, int check_checksum)
+nmea_validate(const char *sentence, size_t length, int check_checksum)
 {
 	const char *n;
 
@@ -212,9 +212,9 @@ nmea_free(nmea_s *data)
 }
 
 nmea_s *
-nmea_parse(char *sentence, int length, int check_checksum)
+nmea_parse(char *sentence, size_t length, int check_checksum)
 {
-	int n_vals, val_index;
+	unsigned int n_vals, val_index;
 	char *value, *val_string;
 	char *values[255];
 	nmea_parser_module_s *parser;

@@ -10,7 +10,8 @@
 static int
 _get_so_files(const char *path, char **files)
 {
-	int len, j, i = 0;
+	int j, i = 0;
+	size_t len;
 	char *name;
 	DIR *d = NULL;
 	struct dirent *dir;

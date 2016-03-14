@@ -75,7 +75,7 @@ extern uint8_t nmea_get_checksum(const char *sentence);
  *
  * Return 0 if checksum exists, otherwise -1.
  */
-extern int nmea_has_checksum(const char *sentence, int length);
+extern int nmea_has_checksum(const char *sentence, size_t length);
 
 /**
  * Validate the sentence according to NMEA 0183.
@@ -90,7 +90,7 @@ extern int nmea_has_checksum(const char *sentence, int length);
  *
  * Returns 0 if sentence is valid, otherwise -1.
  */
-extern int nmea_validate(const char *sentence, int length, int check_checksum);
+extern int nmea_validate(const char *sentence, size_t length, int check_checksum);
 
 /**
  * Parse an NMEA sentence string to a struct.
@@ -101,6 +101,6 @@ extern int nmea_validate(const char *sentence, int length, int check_checksum);
  *
  * Returns a pointer to an NMEA data struct, or (nmea_s *) NULL if an error occurs.
  */
-extern nmea_s *nmea_parse(char *sentence, int length, int check_checksum);
+extern nmea_s *nmea_parse(char *sentence, size_t length, int check_checksum);
 
 #endif  /* INC_NMEA_H */
