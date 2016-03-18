@@ -93,6 +93,13 @@ extern int nmea_has_checksum(const char *sentence, size_t length);
 extern int nmea_validate(const char *sentence, size_t length, int check_checksum);
 
 /**
+ * Free an nmea data struct.
+ *
+ * data should be a pointer to a struct of type nmea_s.
+ */
+extern void nmea_free(nmea_s *data);
+
+/**
  * Parse an NMEA sentence string to a struct.
  *
  * sentence needs to be a validated NMEA sentence string.
