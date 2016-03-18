@@ -82,7 +82,7 @@ To parse an NMEA sentence string, use `nmea_parse()`:
 
 ```C
 // Sentence string to be parsed
-char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n");
+char sentence[] = "$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n";
 
 // Pointer to struct containing the parsed data
 nmea_s *data;

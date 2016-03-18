@@ -11,7 +11,7 @@ int
 main(void)
 {
 	// Sentence string to be parsed
-	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A\n\n");
+	char sentence[] = "$GPGLL,4916.45,N,12311.12,W,225444,A\n\n";
 
 	printf("Parsing NMEA sentence: %s", sentence);
 
@@ -36,7 +36,6 @@ main(void)
 	}
 
 	nmea_free(data);
-	free(sentence);
 
 	return 0;
 }

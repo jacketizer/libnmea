@@ -2,6 +2,7 @@
 // Should be used together with valgrind to check for memory leaks.
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -14,20 +15,17 @@
 int
 main(void)
 {
-	char *buffer;
+	char buffer[4096];
 	int gps_fd = 0; // stdin
 	int read_bytes = 0;
 	int total_bytes = 0;
 	char *start, *end;
 	sigset_t block_mask;
 
-	buffer = malloc(4096);
-	if (NULL == buffer) {
-		perror("malloc buffer");
-		exit(EXIT_FAILURE);
-	}
-
 	while (1) {
+		char buf[255];
+		nmea_s *data;
+
 		read_bytes = read(gps_fd, buffer + total_bytes, 20);
 		if (-1 == read_bytes) {
 			perror("read stdin");
@@ -53,9 +51,6 @@ main(void)
 		}
 
 		/* handle data */
-		char buf[255];
-		nmea_s *data;
-
 		data = nmea_parse(start, end - start + 1, 0);
 		if (NULL != data) {
 			if (0 < data->errors) {
@@ -103,6 +98,5 @@ main(void)
 		total_bytes -= end - buffer;
 	}
 
-	free(buffer);
 	return 0;
 }
