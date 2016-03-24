@@ -201,8 +201,7 @@ nmea_get_parser_by_sentence(const char *sentence)
 	nmea_parser_module_s *parser;
 
 	for (i = 0; i < n_parsers; i++) {
-		parser = parsers[i];
-		if (NULL == parser) {
+		if (NULL == (parser = parsers[i])) {
 			continue;
 		}
 

@@ -13,8 +13,7 @@ nmea_position_parse(char *s, nmea_position *pos)
 	}
 
 	/* decimal minutes */
-	cursor = strchr(s, '.');
-	if (NULL == cursor) {
+	if (NULL == (cursor = strchr(s, '.'))) {
 		return -1;
 	}
 
