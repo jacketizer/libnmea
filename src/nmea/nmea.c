@@ -1,7 +1,6 @@
 #include "nmea.h"
 #include "parser.h"
 #include "parser_types.h"
-#include "../memchr.c"
 
 #define ARRAY_LENGTH(a) (sizeof a / sizeof (a[0]))
 
@@ -35,8 +34,6 @@ _is_value_set(const char *value)
 static char *
 _crop_sentence(char *sentence, size_t length)
 {
-	char *cursor;
-
 	/* Skip type word, 7 characters (including $ and ,) */
 	sentence += NMEA_PREFIX_LENGTH + 2;
 
@@ -44,10 +41,8 @@ _crop_sentence(char *sentence, size_t length)
 	sentence[length - 9] = '\0';
 
 	/* Remove checksum, if there is one */
-	cursor = (char *) memrchr(sentence, '*', length - (NMEA_PREFIX_LENGTH + 2));
-	if (NULL != cursor) {
-		/* Has checksum */
-		*cursor = '\0';
+	if ('*' == sentence[length - 12]) {
+		sentence[length - 12] = '\0';
 	}
 
 	return sentence;
