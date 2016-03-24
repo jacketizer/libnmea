@@ -20,3 +20,5 @@
 		char *message = test(); tests_run++; \
 		if (message) { return message; } \
 	} while (0)
+
+#define ARRAY_LENGTH(a) (sizeof a / sizeof (a[0]))

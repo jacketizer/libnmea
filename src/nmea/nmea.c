@@ -3,8 +3,10 @@
 #include "parser_types.h"
 #include "../memchr.c"
 
+#define ARRAY_LENGTH(a) (sizeof a / sizeof (a[0]))
+
 /**
- * Check if a value is supplied and set.
+ * Check if a value is not NULL and not empty.
  *
  * Returns 0 if set, otherwise -1.
  */
@@ -35,7 +37,7 @@ _crop_sentence(char *sentence, size_t length)
 {
 	char *cursor;
 
-	/* Skip type word, 7 characters */
+	/* Skip type word, 7 characters (including $ and ,) */
 	sentence += NMEA_PREFIX_LENGTH + 2;
 
 	/* Null terminate before end of line/sentence, 2 characters */
@@ -58,27 +60,23 @@ _crop_sentence(char *sentence, size_t length)
  *        null-terminated.
  * values is a char pointer array that will be filled with pointers to the
  *        splitted values in the string.
+ *  max_values is the maximum number of values to be parsed.
  *
  * Returns the number of values found in string.
  */
 static int
-_split_string(char *string, char **values)
+_split_string_by_comma(char *string, char **values, int max_values)
 {
 	int i = 0;
-	char *end;
-
-	/* Get end of string */
-	end = (char *) rawmemchr(string, '\0');
 
 	values[i++] = string;
-	while ('\0' != *string && end - string > 0) {
-		string = (char *) memchr(string, ',', end - string);
-		if (NULL == string) {
-			break;
-		}
-
+	while (NULL != (string = (char *) strchr(string, ','))) {
 		*string = '\0';
 		values[i++] = ++string;
+
+		if (i == max_values) {
+			return i;
+		}
 	}
 
 	return i;
@@ -242,7 +240,7 @@ nmea_parse(char *sentence, size_t length, int check_checksum)
 	}
 
 	/* Split the sentence into values */
-	n_vals = _split_string(val_string, values);
+	n_vals = _split_string_by_comma(val_string, values, ARRAY_LENGTH(values));
 	if (0 == n_vals) {
 		return (nmea_s *) NULL;
 	}

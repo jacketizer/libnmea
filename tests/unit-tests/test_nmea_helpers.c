@@ -23,27 +23,27 @@ verify_values(char **values, char **expected, int n)
 }
 
 static char *
-test_split_string_ok()
+test_split_string_by_comma_ok()
 {
 	int rv;
 	char *test_str;
-	char **values = malloc((sizeof (char *)) * 24);
+	char *values[24];
 
 	/* Normal test */
 	test_str = strdup("JACK,ENGQVIST,JOHANSSON,89");
-	rv = _split_string(test_str, values);
+	rv = _split_string_by_comma(test_str, values, ARRAY_LENGTH(values));
 	mu_assert("should return the correct number of values", 4 == rv);
 
-	char *expected[4] = { "JACK", "ENGQVIST", "JOHANSSON", "89" };
+	char *expected[] = { "JACK", "ENGQVIST", "JOHANSSON", "89" };
 	mu_assert("should be able to split a comma seperated string", 0 == verify_values(values, expected, rv));
 	free(test_str);
 
 	/* Empty values */
 	test_str = strdup(",SOME,EMPTY,VALUES,,");
-	rv = _split_string(test_str, values);
+	rv = _split_string_by_comma(test_str, values, ARRAY_LENGTH(values));
 	mu_assert("should return the correct number of values even when there is empty values (,,)", 6 == rv);
 
-	char *expected2[6] = { "", "SOME", "EMPTY", "VALUES", "", "" };
+	char *expected2[] = { "", "SOME", "EMPTY", "VALUES", "", "" };
 	mu_assert("should be able to split empty values (,,)", 0 == verify_values(values, expected2, rv));
 	free(test_str);
 
@@ -106,8 +106,8 @@ test_is_value_set()
 static char *
 all_tests()
 {
-	mu_group("_split_string()");
-	mu_run_test(test_split_string_ok);
+	mu_group("_split_string_by_comma()");
+	mu_run_test(test_split_string_by_comma_ok);
 
 	mu_group("_crop_sentence()");
 	mu_run_test(test_crop_sentence_ok);
