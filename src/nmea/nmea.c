@@ -65,7 +65,7 @@ _split_string_by_comma(char *string, char **values, int max_values)
 	int i = 0;
 
 	values[i++] = string;
-	while (NULL != (string = (char *) strchr(string, ','))) {
+	while (NULL != (string = strchr(string, ','))) {
 		*string = '\0';
 		values[i++] = ++string;
 
