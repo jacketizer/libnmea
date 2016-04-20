@@ -1,3 +1,5 @@
+#include <ctype.h>
+
 #include "../nmea/parser_types.h"
 #include "gpgsa.h"
 #include "parse.h"
