@@ -26,6 +26,12 @@ foreach(p LIB BIN INCLUDE CMAKE)
   endif()
 endforeach()
 
+set (warning_flags "-Wall -pedantic")
+set (c_language_flags "-std=gnu11 -g")
+set (cxx_language_flags "-std=c++11 -g")
+set (CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${warning_flags} ${c_language_flags}" )
+set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${warning_flags} ${cxx_language_flags}" )
+
 option(NMEA_BUILD_STATIC_LIB "Build static libnmea" ON)
 option(NMEA_BUILD_SHARED_LIB "Build shared libnmea" ON)
 option(NMEA_BUILD_EXAMPLES "Build examples" ON)
