@@ -40,6 +40,8 @@ int
 parse(nmea_parser_s *parser, char *value, int val_index)
 {
 	nmea_gptxt_s *data = (nmea_gptxt_s *) parser->data;
+  
+  memset(data->text, 0, 64);
 
   switch (val_index)
   {
@@ -54,6 +56,7 @@ parse(nmea_parser_s *parser, char *value, int val_index)
       break;
     case NMEA_GPTXT_TEXT:
       strncpy(data->text, value, 64);
+      data->text[strlen(value)] = '\0';
       break;
     default:
       break;
