@@ -217,35 +217,41 @@ nmea_parse(char *sentence, size_t length, int check_checksum)
 
 	/* Validate sentence string */
 	if (-1 == nmea_validate(sentence, length, check_checksum)) {
+	  perror("INVALID");
 		return (nmea_s *) NULL;
 	}
 
 	type = nmea_get_type(sentence);
 	if (NMEA_UNKNOWN == type) {
+	  perror("BAD TYPE");
 		return (nmea_s *) NULL;
 	}
 
 	/* Crop sentence from type word and checksum */
 	val_string = _crop_sentence(sentence, length);
 	if (NULL == val_string) {
+	  perror("CROP");
 	      	return (nmea_s *) NULL;
 	}
 
 	/* Split the sentence into values */
 	n_vals = _split_string_by_comma(val_string, values, ARRAY_LENGTH(values));
 	if (0 == n_vals) {
+	  perror("SPLIT");
 		return (nmea_s *) NULL;
 	}
 
 	/* Get the right parser */
 	parser = nmea_get_parser_by_type(type);
 	if (NULL == parser) {
+	  perror("GET PARSER");
 		return (nmea_s *) NULL;
 	}
 
 	/* Allocate memory for parsed data */
 	parser->allocate_data((nmea_parser_s *) parser);
 	if (NULL == parser->parser.data) {
+	  perror("ALLOCATE");
 		return (nmea_s *) NULL;
 	}
 
