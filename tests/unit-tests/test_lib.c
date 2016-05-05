@@ -75,18 +75,6 @@ test_get_checksum_without_crc()
 }
 
 static char *
-test_get_checksum_too_long_sentence()
-{
-	// Sentence without correct ending (ex: \r\n)
-	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,");
-	uint8_t res = nmea_get_checksum(sentence);
-	mu_assert("should return 0 when sentence is too long", 0 == res);
-	free(sentence);
-
-	return 0;
-}
-
-static char *
 test_has_checksum_yes()
 {
 	// Sentence with checksum
@@ -280,7 +268,6 @@ all_tests()
 	mu_group("nmea_get_checksum()");
 	mu_run_test(test_get_checksum_with_crc);
 	mu_run_test(test_get_checksum_without_crc);
-	mu_run_test(test_get_checksum_too_long_sentence);
 
 	mu_group("nmea_has_checksum()");
 	mu_run_test(test_has_checksum_yes);

@@ -55,7 +55,7 @@ _crop_sentence(char *sentence, size_t length)
  *        null-terminated.
  * values is a char pointer array that will be filled with pointers to the
  *        splitted values in the string.
- *  max_values is the maximum number of values to be parsed.
+ * max_values is the maximum number of values to be parsed.
  *
  * Returns the number of values found in string.
  */
@@ -113,11 +113,7 @@ nmea_get_checksum(const char *sentence)
 	uint8_t chk = 0;
 
 	/* While current char isn't '*' or sentence ending (newline) */
-	while ('*' != *n && NMEA_END_CHAR_1 != *n) {
-		if ('\0' == *n || n - sentence > NMEA_MAX_LENGTH) {
-			/* Sentence too long or short */
-			return 0;
-		}
+	while ('*' != *n && NMEA_END_CHAR_1 != *n && '\0' != *n) {
 		chk ^= (uint8_t) *n;
 		n++;
 	}
@@ -142,6 +138,11 @@ nmea_validate(const char *sentence, size_t length, int check_checksum)
 
 	/* should have atleast 9 characters */
 	if (9 > length) {
+		return -1;
+	}
+
+	/* should be less or equal to 82 characters */
+	if (NMEA_MAX_LENGTH < length) {
 		return -1;
 	}
 

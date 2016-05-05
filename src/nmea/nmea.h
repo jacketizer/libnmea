@@ -38,8 +38,8 @@ typedef struct {
 	nmea_cardinal_t cardinal;
 } nmea_position;
 
-/* NMEA sentence max length (chars) */
-#define NMEA_MAX_LENGTH		255
+/* NMEA sentence max length, including \r\n (chars) */
+#define NMEA_MAX_LENGTH		82
 
 /* NMEA sentence endings, should be \r\n according the NMEA 0183 standard */
 #define NMEA_END_CHAR_1		'\n'
@@ -62,8 +62,7 @@ extern nmea_t nmea_get_type(const char *sentence);
  *
  * sentence needs to be a validated NMEA sentence string.
  *
- * Returns the calculated checksum (uint8_t) on success. If the sentence is long,
- *         0 is returned.
+ * Returns the calculated checksum (uint8_t).
  */
 extern uint8_t nmea_get_checksum(const char *sentence);
 
@@ -81,6 +80,7 @@ extern int nmea_has_checksum(const char *sentence, size_t length);
  * Validate the sentence according to NMEA 0183.
  *
  * Criterias:
+ *   - Should be between the correct length.
  *   - Should start with a dollar sign.
  *   - The next five characters should be uppercase letters.
  *   - If it has a checksum, check it.
