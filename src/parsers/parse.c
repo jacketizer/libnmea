@@ -70,3 +70,23 @@ nmea_time_parse(char *s, struct tm *time)
 
 	return 0;
 }
+
+int
+nmea_date_parse(char *s, struct tm *time)
+{
+	char *rv;
+
+	// Assume it has been already cleared
+	// memset(time, 0, sizeof (struct tm));
+
+	if (s == NULL || *s == '\0') {
+		return -1;
+	}
+
+	rv = strptime(s, NMEA_DATE_FORMAT, time);
+	if (NULL == rv || (int) (rv - s) != NMEA_DATE_FORMAT_LEN) {
+		return -1;
+	}
+
+	return 0;
+}
