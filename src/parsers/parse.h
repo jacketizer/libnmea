@@ -10,6 +10,9 @@
 #define NMEA_TIME_FORMAT	"%H%M%S"
 #define NMEA_TIME_FORMAT_LEN	6
 
+#define NMEA_DATE_FORMAT	"%d%m%y"
+#define NMEA_DATE_FORMAT_LEN	6
+
 /**
  * Parse GPS position longitude or latitude
  *
@@ -40,5 +43,15 @@ nmea_cardinal_t nmea_cardinal_direction_parse(char *s);
  * Returns 0 on success, otherwise -1.
  */
 int nmea_time_parse(char *s, struct tm *time);
+
+/**
+ * Parse date from a string
+ *
+ * s is a string containing the time in format "DDMMYY".
+ * time is a pointer to a tm struct where the parser date will be stored.
+ *
+ * Returns 0 on success, otherwise -1.
+ */
+int nmea_date_parse(char *s, struct tm *time);
 
 #endif  /* INC_NMEA_PARSE_H */
