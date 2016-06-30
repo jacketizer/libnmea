@@ -5,10 +5,13 @@ C Library for Parsing NMEA 0183 Sentences
 [![Memory Leaks](https://img.shields.io/badge/memory%20leaks-0%20bytes-brightgreen.svg)](https://travis-ci.org/jacketizer/libnmea)
 [![License](https://img.shields.io/npm/l/express.svg)](https://raw.githubusercontent.com/jacketizer/libnmea/master/LICENSE)
 
-The library can validate and parse NMEA 0183 sentences into C structs. If you find
-any sentence missing, please add it by contributing to the code.
+Libnmea is a lightweight C library that parses NMEA 0183 sentence strings into
+structs. It is written in a modular architecture that dynamically loads a parser
+module for each implemented sentence type. This way, new sentences can easily
+be added to the library without modifying the core code.
+If you find any sentence missing, please add it by contributing to the code.
 
-Home page: [http//nmea.io](http://nmea.io/).
+[http//nmea.io](http://nmea.io/)
 
 Supported sentences: `GPGLL`, `GPGGA` and `GPRMC`.
 
@@ -275,4 +278,4 @@ $ indent -st -bad -bap -bbb -bc -blf -bli0 -br -brs -bs -cbi0 -ce -cli0 -cs -nbf
 
 ### Testing
 
-Every commit must pass all the tests with success.
+Every merge request must pass all the tests.
