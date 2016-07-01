@@ -210,5 +210,5 @@ nmea_get_parser_by_sentence(const char *sentence)
 		}
 	}
 
-	return (nmea_parser_module_s *) NULL; 
+	return (nmea_parser_module_s *) NULL;
 }

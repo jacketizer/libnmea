@@ -9,7 +9,9 @@ Libnmea is a lightweight C library that parses NMEA 0183 sentence strings into
 structs. It is written in a modular architecture that dynamically loads a parser
 module for each implemented sentence type. This way, new sentences can easily
 be added to the library without modifying the core code.
-If you find any sentence missing, please add it by contributing to the code.
+If you find any sentence missing, please add it by contributing to the code. I
+am open to suggestions regarding the code and architecture, so if you have any
+ideas or improvements, please tell me or submit a merge request :-).
 
 [http//nmea.io](http://nmea.io/)
 
@@ -274,6 +276,15 @@ Example `indent` command:
 
 ```sh
 $ indent -st -bad -bap -bbb -bc -blf -bli0 -br -brs -bs -cbi0 -ce -cli0 -cs -nbfda -npcs -nprs -nsob -saf -saw -sai src/nmea/nmea.c
+```
+
+Use hard tabs. Example vim options:
+```
+:set noexpandtab
+:set preserveindent
+:set softtabstop=0
+:set shiftwidth=4
+:set tabstop=4
 ```
 
 ### Testing
