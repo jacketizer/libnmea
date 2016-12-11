@@ -6,7 +6,8 @@ PREFIX ?= /usr
 SRC_PARSER_DEP=src/parsers/parse.c
 OBJ_PARSER_DEP=$(patsubst %.c, %.o, $(SRC_PARSER_DEP))
 SRC_PARSERS=$(shell find src/parsers/ -type f -name "*.c" | grep -v "parse.c")
-OBJ_PARSERS=$(patsubst %.c, %, $(SRC_PARSERS))
+PARSERS=$(patsubst %.c, %, $(SRC_PARSERS))
+OBJ_PARSERS=$(patsubst %.c, %.o, $(SRC_PARSERS))
 
 SRC_EXAMPLES=$(shell find examples/ -type f -name "*.c")
 BIN_EXAMPLES=$(patsubst %.c, %, $(SRC_EXAMPLES))
@@ -15,8 +16,11 @@ CC=gcc
 CFLAGS=-c -fPIC -finline-functions -g -Wall
 LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
 
-.PHONY: all
-all: nmea parser-libs
+ifdef STATIC
+	include static.mk
+else
+	include dynamic.mk
+endif
 
 .PHONY: nmea
 nmea: $(OBJ_FILES)
@@ -25,17 +29,18 @@ nmea: $(OBJ_FILES)
 	$(CC) $(LDFLAGS) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
 	cp src/nmea/nmea.h $(BUILD_PATH)
 
+.PHONY: static
+static: $(PARSERS) $(OBJ_FILES)
+	@mkdir -p $(BUILD_PATH)
+	@echo "Building libnmea.so..."
+	$(CC) $(LDFLAGS) $(OBJ_FILES) $(patsubst src/parsers/%,$(BUILD_PATH)/nmea/%,$(OBJ_PARSERS)) -o $(BUILD_PATH)/libnmea.so
+	cp src/nmea/nmea.h $(BUILD_PATH)
+
 .PHONY: parser-libs
-parser-libs: $(OBJ_PARSERS)
+parser-libs: $(PARSERS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -DPARSER_PATH=$(PREFIX)/lib/nmea/ $< -o $@
-
-src/parsers/%: $(OBJ_PARSER_DEP)
-	@mkdir -p $(BUILD_PATH)/nmea
-	@echo Building $(patsubst src/parsers/%,lib%.so,$@)...
-	$(CC) -s -fPIC -Wall -g -shared -Isrc/nmea -L$(BUILD_PATH) -I$(BUILD_PATH) -Wl,--no-as-needed,-soname,$(patsubst src/parsers/%,lib%.so,$@) $@.c $(OBJ_PARSER_DEP) -o $(patsubst src/parsers/%,$(BUILD_PATH)/nmea/lib%.so,$@)
-	cp $@.h $(BUILD_PATH)/nmea/
 
 examples/%: examples/%.c
 	$(CC) $< -lnmea -o $(BUILD_PATH)/$(patsubst examples/%,%,$@)
