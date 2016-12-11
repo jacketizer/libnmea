@@ -13,6 +13,10 @@
 #define NMEA_DATE_FORMAT	"%d%m%y"
 #define NMEA_DATE_FORMAT_LEN	6
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Parse GPS position longitude or latitude
  *
@@ -53,5 +57,9 @@ int nmea_time_parse(char *s, struct tm *time);
  * Returns 0 on success, otherwise -1.
  */
 int nmea_date_parse(char *s, struct tm *time);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* INC_NMEA_PARSE_H */

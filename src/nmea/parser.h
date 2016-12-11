@@ -9,6 +9,10 @@
 #include "nmea.h"
 #include "parser_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef int (*allocate_data_f) (nmea_parser_s *);
 typedef int (*set_default_f) (nmea_parser_s *);
 typedef int (*free_data_f) (nmea_s *);
@@ -63,5 +67,9 @@ nmea_parser_module_s * nmea_get_parser_by_type(nmea_t type);
  * Returns the sentence parser struct, should be checked for NULL.
  */
 nmea_parser_module_s * nmea_get_parser_by_sentence(const char *sentence);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* INC_NMEA_PARSER_H */

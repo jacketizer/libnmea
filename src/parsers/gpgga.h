@@ -6,6 +6,10 @@
 #include <time.h>
 #include <nmea.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
 	nmea_s base;
 	struct tm time;
@@ -15,6 +19,10 @@ typedef struct {
 	int altitude;
 	char altitude_unit;
 } nmea_gpgga_s;
+
+#ifdef __cplusplus
+}
+#endif
 
 /* Value indexes */
 #define NMEA_GPGGA_TIME			0

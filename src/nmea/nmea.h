@@ -5,6 +5,10 @@
 #include <stdint.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* NMEA sentence types */
 typedef enum {
 	NMEA_UNKNOWN,
@@ -109,5 +113,9 @@ extern void nmea_free(nmea_s *data);
  * Returns a pointer to an NMEA data struct, or (nmea_s *) NULL if an error occurs.
  */
 extern nmea_s *nmea_parse(char *sentence, size_t length, int check_checksum);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* INC_NMEA_H */
