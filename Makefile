@@ -1,13 +1,13 @@
 SRC_FILES=src/nmea/nmea.c src/nmea/parser.c
 OBJ_FILES=$(patsubst %.c, %.o, $(SRC_FILES))
 BUILD_PATH=build
-PREFIX ?= /usr
+PREFIX?=/usr
 
 SRC_PARSER_DEP=src/parsers/parse.c
 OBJ_PARSER_DEP=$(patsubst %.c, %.o, $(SRC_PARSER_DEP))
 SRC_PARSERS=$(shell find src/parsers/ -type f -name "*.c" | grep -v "parse.c")
-PARSERS=$(patsubst %.c, %, $(SRC_PARSERS))
 OBJ_PARSERS=$(patsubst %.c, %.o, $(SRC_PARSERS))
+PARSERS=$(patsubst %.c, %, $(SRC_PARSERS))
 
 SRC_EXAMPLES=$(shell find examples/ -type f -name "*.c")
 BIN_EXAMPLES=$(patsubst %.c, %, $(SRC_EXAMPLES))
@@ -16,10 +16,37 @@ CC=gcc
 CFLAGS=-c -fPIC -finline-functions -g -Wall
 LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
 
+define PREFIX_SYMBOL =
+	objcopy --redefine-sym $(1)=$(2)_$(1) $(3)
+endef
+
+define PREFIX_PARSER_MODULE =
+	$(call PREFIX_SYMBOL,init,$(1),$(2))
+	$(call PREFIX_SYMBOL,parse,$(1),$(2))
+	$(call PREFIX_SYMBOL,set_default,$(1),$(2))
+	$(call PREFIX_SYMBOL,allocate_data,$(1),$(2))
+	$(call PREFIX_SYMBOL,free_data,$(1),$(2))
+endef
+
 ifdef STATIC
-	include static.mk
+.PHONY: all
+all: static
+
+src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
+	@mkdir -p $(BUILD_PATH)/nmea
+	@echo Building static module $*...
+	$(CC) $(CFLAGS) -Isrc/nmea -L$(BUILD_PATH) $@.c -o $@.o
+	$(call PREFIX_PARSER_MODULE,$*,$@.o)
+	cp $@.h $(BUILD_PATH)/nmea/
 else
-	include dynamic.mk
+.PHONY: all
+all: nmea parser-libs
+
+src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
+	@mkdir -p $(BUILD_PATH)/nmea
+	@echo Building dynamic module lib$*.so...
+	$(CC) $(CFLAGS) -s -shared -Isrc/nmea -L$(BUILD_PATH) -I$(BUILD_PATH) -Wl,--no-as-needed,-soname,lib$*.so $(BUILD_PATH)/nmea/lib$*.so $(OBJ_PARSER_DEP) -o $(BUILD_PATH)/nmea/lib$*.so
+	cp src/parsers/$*.h $(BUILD_PATH)/nmea/
 endif
 
 .PHONY: nmea
@@ -33,7 +60,7 @@ nmea: $(OBJ_FILES)
 static: $(PARSERS) $(OBJ_FILES)
 	@mkdir -p $(BUILD_PATH)
 	@echo "Building libnmea.so..."
-	$(CC) $(LDFLAGS) $(OBJ_FILES) $(patsubst src/parsers/%,$(BUILD_PATH)/nmea/%,$(OBJ_PARSERS)) -o $(BUILD_PATH)/libnmea.so
+	$(CC) $(LDFLAGS) $(OBJ_FILES) $(OBJ_PARSERS) -o $(BUILD_PATH)/libnmea.so
 	cp src/nmea/nmea.h $(BUILD_PATH)
 
 .PHONY: parser-libs
