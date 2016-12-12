@@ -1,5 +1,14 @@
+#ifndef STATIC
+#include <sys/types.h>
+#include <dirent.h>
+#include <dlfcn.h>
+#endif
 #include "parser.h"
 
+nmea_parser_module_s **parsers;
+int n_parsers;
+
+#ifndef STATIC
 /**
  * Where to find the parser modules.
  * Can be overridden by env variable NMEA_PARSER_PATH
@@ -187,6 +196,65 @@ nmea_unload_parsers()
 
 	free(parsers);
 }
+#else
+extern init_f gprmc_init;
+extern allocate_data_f gprmc_allocate_data;
+extern set_default_f gprmc_set_default;
+extern free_data_f gprmc_free_data;
+extern parse_f gprmc_parse;
+
+nmea_parser_module_s *
+nmea_init_parser(const char *filename)
+{
+	/* This function intentionally returns NULL */
+	return NULL;
+}
+
+int
+nmea_load_parsers()
+{
+
+	nmea_parser_module_s *parser;
+	init_f init;
+
+	/* Allocate parser struct */
+	parser = malloc(sizeof (nmea_parser_module_s));
+	if (NULL == parser) {
+		return (nmea_parser_module_s *) NULL;
+	}
+
+	parser->handle = NULL;
+
+	init = gprmc_init;
+
+	parser->allocate_data = gprmc_allocate_data;
+	parser->set_default = gprmc_set_default;
+	parser->free_data = gprmc_free_data;
+	parser->parse = gprmc_parse;
+
+	if (-1 == init((nmea_parser_s *) parser)) {
+		return (nmea_parser_module_s *) NULL;
+	}
+
+
+	/* Allocate parsers array */
+	parsers = malloc((sizeof (nmea_parser_module_s *)) * 10);
+	if (NULL == parsers) {
+		return -1;
+	}
+	memset(parsers, 0, (sizeof (nmea_parser_module_s *)) * 10);
+
+	parsers[(int) parser->parser.type - 1] = parser;
+
+	return 1;
+}
+
+void
+nmea_unload_parsers()
+{
+	/* This function body is intentionally left empty */
+}
+#endif
 
 nmea_parser_module_s *
 nmea_get_parser_by_type(nmea_t type)

@@ -14,7 +14,8 @@ BIN_EXAMPLES=$(patsubst %.c, %, $(SRC_EXAMPLES))
 
 CC=gcc
 CFLAGS=-c -fPIC -finline-functions -g -Wall
-LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
+LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -Wall -g
+LDFLAGS_DL=-ldl
 
 define PREFIX_SYMBOL =
 	@objcopy --redefine-sym $(1)=$(2)_$(1) $(3)
@@ -38,6 +39,9 @@ src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 	$(CC) $(CFLAGS) -Isrc/nmea $@.c -o $@.o
 	$(call PREFIX_PARSER_MODULE,$*,$@.o)
 	@cp $@.h $(BUILD_PATH)/nmea/
+
+%.o: %.c
+	$(CC) $(CFLAGS) -DSTATIC=$(STATIC) $< -o $@
 else
 all: nmea parser-libs
 
@@ -46,13 +50,16 @@ src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 	@echo Building dynamic module lib$*.so...
 	$(CC) $(CFLAGS) -s -shared -Isrc/nmea -L$(BUILD_PATH) -I$(BUILD_PATH) -Wl,--no-as-needed,-soname,lib$*.so $@.c $(OBJ_PARSER_DEP) -o $(BUILD_PATH)/nmea/lib$*.so
 	@cp src/parsers/$*.h $(BUILD_PATH)/nmea/
+
+%.o: %.c
+	$(CC) $(CFLAGS) -DPARSER_PATH=$(PREFIX)/lib/nmea/ $< -o $@
 endif
 
 .PHONY: nmea
 nmea: $(OBJ_FILES)
 	@mkdir -p $(BUILD_PATH)
 	@echo "Building libnmea.so..."
-	$(CC) $(LDFLAGS) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
+	$(CC) $(LDFLAGS) $(LDFLAGS_DL) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
 	@cp src/nmea/nmea.h $(BUILD_PATH)
 
 .PHONY: static
@@ -64,9 +71,6 @@ static: $(PARSERS) $(OBJ_FILES)
 
 .PHONY: parser-libs
 parser-libs: $(PARSERS)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -DPARSER_PATH=$(PREFIX)/lib/nmea/ $< -o $@
 
 examples/%: examples/%.c
 	$(CC) $< -lnmea -o $(BUILD_PATH)/$(patsubst examples/%,%,$@)
