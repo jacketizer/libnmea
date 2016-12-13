@@ -5,6 +5,21 @@
 #endif
 #include "parser.h"
 
+#define DECLARE_PARSER_FN(modname) \
+	extern init_f gp##modname##_init; \
+	extern allocate_data_f gp##modname##_allocate_data; \
+	extern set_default_f gp##modname##_set_default; \
+	extern free_data_f gp##modname##_free_data; \
+	extern parse_f gp##modname##_parse;
+
+#define PARSER_LOAD(modname) \
+	parser->allocate_data = gp##modname##_allocate_data; \
+	parser->set_default = gp##modname##_set_default; \
+	parser->free_data = gp##modname##_free_data; \
+	parser->parse = gp##modname##_parse; \
+	init = gp##modname##_init;
+
+
 nmea_parser_module_s **parsers;
 int n_parsers;
 
@@ -197,11 +212,9 @@ nmea_unload_parsers()
 	free(parsers);
 }
 #else
-extern init_f gprmc_init;
-extern allocate_data_f gprmc_allocate_data;
-extern set_default_f gprmc_set_default;
-extern free_data_f gprmc_free_data;
-extern parse_f gprmc_parse;
+DECLARE_PARSER_FN(gll)
+DECLARE_PARSER_FN(gga)
+DECLARE_PARSER_FN(rmc)
 
 nmea_parser_module_s *
 nmea_init_parser(const char *filename)
@@ -213,29 +226,8 @@ nmea_init_parser(const char *filename)
 int
 nmea_load_parsers()
 {
-
 	nmea_parser_module_s *parser;
 	init_f init;
-
-	/* Allocate parser struct */
-	parser = malloc(sizeof (nmea_parser_module_s));
-	if (NULL == parser) {
-		return (nmea_parser_module_s *) NULL;
-	}
-
-	parser->handle = NULL;
-
-	init = gprmc_init;
-
-	parser->allocate_data = gprmc_allocate_data;
-	parser->set_default = gprmc_set_default;
-	parser->free_data = gprmc_free_data;
-	parser->parse = gprmc_parse;
-
-	if (-1 == init((nmea_parser_s *) parser)) {
-		return (nmea_parser_module_s *) NULL;
-	}
-
 
 	/* Allocate parsers array */
 	parsers = malloc((sizeof (nmea_parser_module_s *)) * 10);
@@ -244,9 +236,43 @@ nmea_load_parsers()
 	}
 	memset(parsers, 0, (sizeof (nmea_parser_module_s *)) * 10);
 
+	/* GPGLL */
+	parser = malloc(sizeof (nmea_parser_module_s));
+	if (NULL == parser) {
+		return -1;
+	}
+	parser->handle = NULL;
+	PARSER_LOAD(gll);
+	if (-1 == init((nmea_parser_s *) parser)) {
+		return -1;
+	}
 	parsers[(int) parser->parser.type - 1] = parser;
 
-	return 1;
+	/* GPGGA */
+	parser = malloc(sizeof (nmea_parser_module_s));
+	if (NULL == parser) {
+		return -1;
+	}
+	parser->handle = NULL;
+	PARSER_LOAD(gga);
+	if (-1 == init((nmea_parser_s *) parser)) {
+		return -1;
+	}
+	parsers[(int) parser->parser.type - 1] = parser;
+
+	/* GPRMC */
+	parser = malloc(sizeof (nmea_parser_module_s));
+	if (NULL == parser) {
+		return -1;
+	}
+	parser->handle = NULL;
+	PARSER_LOAD(rmc);
+	if (-1 == init((nmea_parser_s *) parser)) {
+		return -1;
+	}
+	parsers[(int) parser->parser.type - 1] = parser;
+
+	return 3;
 }
 
 void

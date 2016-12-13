@@ -63,10 +63,10 @@ nmea: $(OBJ_FILES)
 	@cp src/nmea/nmea.h $(BUILD_PATH)
 
 .PHONY: static
-static: $(PARSERS) $(OBJ_FILES)
+static: $(PARSERS) $(OBJ_FILES) $(OBJ_PARSER_DEP)
 	@mkdir -p $(BUILD_PATH)
 	@echo "Building libnmea.so..."
-	$(CC) $(LDFLAGS) $(OBJ_FILES) $(OBJ_PARSERS) -o $(BUILD_PATH)/libnmea.so
+	$(CC) $(LDFLAGS) $(OBJ_FILES) $(OBJ_PARSERS) $(OBJ_PARSER_DEP) -o $(BUILD_PATH)/libnmea.so
 	@cp src/nmea/nmea.h $(BUILD_PATH)
 
 .PHONY: parser-libs
@@ -103,7 +103,9 @@ install: all
 	install --directory $(PREFIX)/lib/nmea
 	install --directory $(PREFIX)/include/nmea
 	install $(BUILD_PATH)/libnmea.so $(PREFIX)/lib/
+ifneq ($(wildcard $(BUILD_PATH)/nmea/*.so),)
 	install $(BUILD_PATH)/nmea/*.so $(PREFIX)/lib/nmea/
+endif
 	install $(BUILD_PATH)/*.h $(PREFIX)/include/
 	install $(BUILD_PATH)/nmea/*.h $(PREFIX)/include/nmea/
 	ldconfig -n $(PREFIX)/lib
