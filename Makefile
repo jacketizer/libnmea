@@ -48,7 +48,7 @@ all: nmea parser-libs
 src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 	@mkdir -p $(BUILD_PATH)/nmea
 	@echo Building dynamic module lib$*.so...
-	$(CC) $(CFLAGS) -s -shared -Isrc/nmea -L$(BUILD_PATH) -I$(BUILD_PATH) -Wl,--no-as-needed,-soname,lib$*.so $@.c $(OBJ_PARSER_DEP) -o $(BUILD_PATH)/nmea/lib$*.so
+	$(CC) -s -fPIC -Wall -g -shared -Isrc/nmea -L$(BUILD_PATH) -I$(BUILD_PATH) -Wl,--no-as-needed,-soname,lib$*.so $@.c $(OBJ_PARSER_DEP) -o $(BUILD_PATH)/nmea/lib$*.so
 	@cp src/parsers/$*.h $(BUILD_PATH)/nmea/
 
 %.o: %.c
