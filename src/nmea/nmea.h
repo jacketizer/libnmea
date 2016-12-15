@@ -5,10 +5,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* NMEA sentence types */
 typedef enum {
 	NMEA_UNKNOWN,
@@ -51,6 +47,10 @@ typedef struct {
 
 /* NMEA sentence prefix length (num chars), Ex: GPGLL */
 #define NMEA_PREFIX_LENGTH	5
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * Get the sentence type.

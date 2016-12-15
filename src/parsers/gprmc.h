@@ -6,20 +6,12 @@
 #include <time.h>
 #include <nmea.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef struct {
 	nmea_s base;
 	nmea_position longitude;
 	nmea_position latitude;
 	struct tm time;
 } nmea_gprmc_s;
-
-#ifdef __cplusplus
-}
-#endif
 
 /* Value indexes */
 #define NMEA_GPRMC_LATITUDE		2

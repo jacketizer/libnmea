@@ -9,10 +9,6 @@
 #include "nmea.h"
 #include "parser_types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef int (*allocate_data_f) (nmea_parser_s *);
 typedef int (*set_default_f) (nmea_parser_s *);
 typedef int (*free_data_f) (nmea_s *);
@@ -34,6 +30,10 @@ typedef int (*init_f) (nmea_parser_s *);
 
 nmea_parser_module_s **parsers;
 int n_parsers;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * Load the parser libs into array.

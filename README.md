@@ -192,18 +192,10 @@ lowercase. Make sure that the sentence type is defined in *src/nmea.h*.
 #include <time.h>
 #include <nmea.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef struct {
 	nmea_s base;
 	/* sentence values */
 } nmea_<type>_s;
-
-#ifdef __cplusplus
-}
-#endif
 
 /* Value indexes */
 #define NMEA_<TYPE>_<index>	0

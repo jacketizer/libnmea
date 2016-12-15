@@ -3,15 +3,15 @@
 
 #include "nmea.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef struct {
 	nmea_t type;
 	char type_word[5];
 	nmea_s *data;
 } nmea_parser_s;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern int init(nmea_parser_s *parser);
 extern int allocate_data(nmea_parser_s *parser);
