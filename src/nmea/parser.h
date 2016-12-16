@@ -31,6 +31,10 @@ typedef int (*init_f) (nmea_parser_s *);
 nmea_parser_module_s **parsers;
 int n_parsers;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Load the parser libs into array.
  *
@@ -63,5 +67,9 @@ nmea_parser_module_s * nmea_get_parser_by_type(nmea_t type);
  * Returns the sentence parser struct, should be checked for NULL.
  */
 nmea_parser_module_s * nmea_get_parser_by_sentence(const char *sentence);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* INC_NMEA_PARSER_H */

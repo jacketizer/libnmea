@@ -48,6 +48,10 @@ typedef struct {
 /* NMEA sentence prefix length (num chars), Ex: GPGLL */
 #define NMEA_PREFIX_LENGTH	5
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Get the sentence type.
  *
@@ -109,5 +113,9 @@ extern void nmea_free(nmea_s *data);
  * Returns a pointer to an NMEA data struct, or (nmea_s *) NULL if an error occurs.
  */
 extern nmea_s *nmea_parse(char *sentence, size_t length, int check_checksum);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* INC_NMEA_H */
