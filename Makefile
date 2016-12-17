@@ -1,5 +1,7 @@
 ifdef STATIC
 SRC_FILES=src/nmea/nmea.c src/nmea/parser_static.c
+PARSER_DEF=$(shell echo "$(PARSERS_ENABLED)" | sed -e 's/^/-DENABLE_/g' -e 's/,/ -DENABLE_/g')
+PARSER_CNT=$(shell echo "$(PARSERS_ENABLED)" | sed 's/,/\n/g' | wc -l)
 else
 SRC_FILES=src/nmea/nmea.c src/nmea/parser.c
 endif
@@ -47,7 +49,6 @@ nmea: $(PARSERS) $(OBJ_FILES) $(OBJ_PARSER_DEP)
 	$(CC) $(LDFLAGS) $(OBJ_PARSER_DEP) $(OBJ_PARSERS) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
 	@cp src/nmea/nmea.h $(BUILD_PATH)
 
-
 src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 	@mkdir -p $(BUILD_PATH)/nmea
 	@echo Building static module $*...
@@ -56,7 +57,7 @@ src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 	@cp $@.h $(BUILD_PATH)/nmea/
 
 %.o: %.c
-	$(CC) $(CFLAGS) -DSTATIC=$(STATIC) $< -o $@
+	$(CC) $(CFLAGS) -DSTATIC -DPARSER_COUNT=$(PARSER_CNT) $(PARSER_DEF) $< -o $@
 else
 # ##################### #
 # Dynamic build targets #
@@ -69,7 +70,6 @@ nmea: $(OBJ_FILES)
 	@echo "Building libnmea.so..."
 	$(CC) $(LDFLAGS) $(LDFLAGS_DL) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
 	@cp src/nmea/nmea.h $(BUILD_PATH)
-
 
 src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 	@mkdir -p $(BUILD_PATH)/nmea

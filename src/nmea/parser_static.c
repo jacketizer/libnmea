@@ -1,10 +1,6 @@
 #include "nmea.h"
 #include "parser.h"
 
-/* This file is included from src/nmea/parser.c when */
-
-nmea_parser_module_s parsers[3];
-
 #define DECLARE_PARSER_API(modname) \
 	extern int gp##modname##_init(nmea_parser_s *parser); \
 	extern int gp##modname##_allocate_data(nmea_parser_s *parser); \
@@ -24,11 +20,17 @@ nmea_parser_module_s parsers[3];
 	} \
 	i++;
 
-#define PARSER_COUNT (sizeof parsers / sizeof (parsers[0]))
-
+#ifdef ENABLE_GPGLL
 DECLARE_PARSER_API(gll)
+#endif
+#ifdef ENABLE_GPGLL
 DECLARE_PARSER_API(gga)
+#endif
+#ifdef ENABLE_GPGLL
 DECLARE_PARSER_API(rmc)
+#endif
+
+nmea_parser_module_s parsers[PARSER_COUNT];
 
 nmea_parser_module_s *
 nmea_init_parser(const char *filename)
@@ -43,9 +45,15 @@ nmea_load_parsers()
 	int i = 0;
 	nmea_parser_module_s *parser;
 
+#ifdef ENABLE_GPGLL
 	PARSER_LOAD(gll);
+#endif
+#ifdef ENABLE_GPGLL
 	PARSER_LOAD(gga);
+#endif
+#ifdef ENABLE_GPGLL
 	PARSER_LOAD(rmc);
+#endif
 
 	return PARSER_COUNT;
 }
