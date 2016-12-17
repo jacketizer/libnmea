@@ -13,8 +13,8 @@ SRC_EXAMPLES=$(shell find examples/ -type f -name "*.c")
 BIN_EXAMPLES=$(patsubst %.c, %, $(SRC_EXAMPLES))
 
 CC=gcc
-CFLAGS=-c -fPIC -finline-functions -g -Wall
-LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -Wall -g
+CFLAGS=-c -fPIC -g -Wall
+LDFLAGS=-shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -Wall -g
 LDFLAGS_DL=-ldl
 
 define PREFIX_SYMBOL =
@@ -66,17 +66,17 @@ nmea: $(OBJ_FILES)
 static: $(PARSERS) $(OBJ_FILES) $(OBJ_PARSER_DEP)
 	@mkdir -p $(BUILD_PATH)
 	@echo "Building libnmea.so..."
-	$(CC) $(LDFLAGS) $(OBJ_FILES) $(OBJ_PARSERS) $(OBJ_PARSER_DEP) -o $(BUILD_PATH)/libnmea.so
+	$(CC) $(LDFLAGS) $(OBJ_PARSER_DEP) $(OBJ_PARSERS) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
 	@cp src/nmea/nmea.h $(BUILD_PATH)
 
 .PHONY: parser-libs
 parser-libs: $(PARSERS)
 
 examples/%: examples/%.c
-	$(CC) $< -lnmea -o $(BUILD_PATH)/$(patsubst examples/%,%,$@)
+	$(CC) -g $< -lnmea -o $(BUILD_PATH)/$(patsubst examples/%,%,$@)
 
 .PHONY: examples
-examples: nmea parser-libs $(BIN_EXAMPLES)
+examples: $(BIN_EXAMPLES)
 
 .PHONY: unit-tests
 unit-tests: tests/unit-tests/test_lib.c tests/unit-tests/test_parse.c tests/unit-tests/test_nmea_helpers.c

@@ -6,18 +6,20 @@
 #include "parser.h"
 
 #define DECLARE_PARSER_FN(modname) \
-	extern init_f gp##modname##_init; \
-	extern allocate_data_f gp##modname##_allocate_data; \
-	extern set_default_f gp##modname##_set_default; \
-	extern free_data_f gp##modname##_free_data; \
-	extern parse_f gp##modname##_parse;
+	extern int gp##modname##_init(nmea_parser_s *parser); \
+	extern int gp##modname##_allocate_data(nmea_parser_s *parser); \
+	extern int gp##modname##_set_default(nmea_parser_s *parser); \
+	extern int gp##modname##_free_data(nmea_s *data); \
+	extern int gp##modname##_parse(nmea_parser_s *parser, char *value, int val_index);
 
 #define PARSER_LOAD(modname) \
 	parser->allocate_data = gp##modname##_allocate_data; \
 	parser->set_default = gp##modname##_set_default; \
 	parser->free_data = gp##modname##_free_data; \
 	parser->parse = gp##modname##_parse; \
-	init = gp##modname##_init;
+	if (-1 == gp##modname##_init((nmea_parser_s *) parser)) { \
+		return -1; \
+	}
 
 
 nmea_parser_module_s **parsers;
@@ -227,7 +229,6 @@ int
 nmea_load_parsers()
 {
 	nmea_parser_module_s *parser;
-	init_f init;
 
 	/* Allocate parsers array */
 	parsers = malloc((sizeof (nmea_parser_module_s *)) * 10);
@@ -243,9 +244,6 @@ nmea_load_parsers()
 	}
 	parser->handle = NULL;
 	PARSER_LOAD(gll);
-	if (-1 == init((nmea_parser_s *) parser)) {
-		return -1;
-	}
 	parsers[(int) parser->parser.type - 1] = parser;
 
 	/* GPGGA */
@@ -255,9 +253,6 @@ nmea_load_parsers()
 	}
 	parser->handle = NULL;
 	PARSER_LOAD(gga);
-	if (-1 == init((nmea_parser_s *) parser)) {
-		return -1;
-	}
 	parsers[(int) parser->parser.type - 1] = parser;
 
 	/* GPRMC */
@@ -267,10 +262,9 @@ nmea_load_parsers()
 	}
 	parser->handle = NULL;
 	PARSER_LOAD(rmc);
-	if (-1 == init((nmea_parser_s *) parser)) {
-		return -1;
-	}
 	parsers[(int) parser->parser.type - 1] = parser;
+
+	n_parsers = 3;
 
 	return 3;
 }
