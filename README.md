@@ -7,10 +7,10 @@ C Library for Parsing NMEA 0183 Sentences
 
 Libnmea is a lightweight C library that parses NMEA 0183 sentence strings into
 structs. It is written in a modular architecture that dynamically loads a parser
-module for each implemented sentence type. This way, new sentences can easily
+module for each implemented sentence type. This way, new sentences can easely
 be added to the library without modifying the core code. It is also possible to
-link the parser modules statically at build time. This enables libnmea to be
-used in environments where a dynamic loader isn't available.
+statically link the parser modules at build time to enable libnmea to be used in
+environments where a dynamic loader isn't available.
 
 If you find any sentence missing, please add it by contributing to the code. I
 am open to suggestions regarding the code and architecture, so if you have any
@@ -155,12 +155,12 @@ with static parser module loading (see next chapter).
 
 `NMEA_STATIC` - If defined, it forces libnmea to be built with static parser
 module loading (see next chapter). It should contain a comma seperated list of
-parser modules (ex: NMEA_STATIC=GPRMC,GPGGA).
+parser modules to be included in the build, ex: `NMEA_STATIC=GPRMC,GPGGA`.
 
 Static build
 ------------
 
-It is possible to link the parser modules statically at build time which is
+It is possible to statically link the parser modules at build time which is
 useful when a dynamic loader isn't available. To do this, the environment
 variable `NMEA_STATIC` must be defined along with a comma-seperated list of
 selected parser modules to include in the library. Note that both dynamic and
@@ -204,7 +204,8 @@ Implement a new sentence type
 
 To create a new sentence parser, create the following files and replace
 the `<TYPE>` with the sentence type word in uppercase letters and `<type>` in
-lowercase. Make sure that the sentence type is defined in *src/nmea.h*.
+lowercase. Make sure that the sentence type is defined in *src/nmea.h* and add
+it to *src/nmea/parser_static.h*.
 
 *src/parsers/<type>.h*:
 
