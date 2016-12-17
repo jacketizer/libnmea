@@ -31,7 +31,18 @@ endef
 
 .PHONY: all
 ifdef STATIC
-all: static
+# #################### #
+# Static build targets #
+# #################### #
+all: nmea
+
+.PHONY: nmea
+nmea: $(PARSERS) $(OBJ_FILES) $(OBJ_PARSER_DEP)
+	@mkdir -p $(BUILD_PATH)
+	@echo "Building libnmea.so..."
+	$(CC) $(LDFLAGS) $(OBJ_PARSER_DEP) $(OBJ_PARSERS) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
+	@cp src/nmea/nmea.h $(BUILD_PATH)
+
 
 src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 	@mkdir -p $(BUILD_PATH)/nmea
@@ -43,7 +54,18 @@ src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 %.o: %.c
 	$(CC) $(CFLAGS) -DSTATIC=$(STATIC) $< -o $@
 else
+# ##################### #
+# Dynamic build targets #
+# ##################### #
 all: nmea parser-libs
+
+.PHONY: nmea
+nmea: $(OBJ_FILES)
+	@mkdir -p $(BUILD_PATH)
+	@echo "Building libnmea.so..."
+	$(CC) $(LDFLAGS) $(LDFLAGS_DL) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
+	@cp src/nmea/nmea.h $(BUILD_PATH)
+
 
 src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 	@mkdir -p $(BUILD_PATH)/nmea
@@ -54,20 +76,7 @@ src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 %.o: %.c
 	$(CC) $(CFLAGS) -DPARSER_PATH=$(PREFIX)/lib/nmea/ $< -o $@
 endif
-
-.PHONY: nmea
-nmea: $(OBJ_FILES)
-	@mkdir -p $(BUILD_PATH)
-	@echo "Building libnmea.so..."
-	$(CC) $(LDFLAGS) $(LDFLAGS_DL) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
-	@cp src/nmea/nmea.h $(BUILD_PATH)
-
-.PHONY: static
-static: $(PARSERS) $(OBJ_FILES) $(OBJ_PARSER_DEP)
-	@mkdir -p $(BUILD_PATH)
-	@echo "Building libnmea.so..."
-	$(CC) $(LDFLAGS) $(OBJ_PARSER_DEP) $(OBJ_PARSERS) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
-	@cp src/nmea/nmea.h $(BUILD_PATH)
+# ifdef STATIC
 
 .PHONY: parser-libs
 parser-libs: $(PARSERS)
@@ -99,11 +108,11 @@ check:
 	make unit-tests
 
 .PHONY: install
-install: all
+install:
 	install --directory $(PREFIX)/lib/nmea
-	install --directory $(PREFIX)/include/nmea
 	install $(BUILD_PATH)/libnmea.so $(PREFIX)/lib/
 ifneq ($(wildcard $(BUILD_PATH)/nmea/*.so),)
+	install --directory $(PREFIX)/include/nmea
 	install $(BUILD_PATH)/nmea/*.so $(PREFIX)/lib/nmea/
 endif
 	install $(BUILD_PATH)/*.h $(PREFIX)/include/
