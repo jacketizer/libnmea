@@ -24,7 +24,7 @@ LDFLAGS=-shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-sonam
 LDFLAGS_DL=-ldl
 
 define PREFIX_SYMBOL =
-	@objcopy --redefine-sym $(1)=$(2)_$(1) $(3)
+	@objcopy --redefine-sym $(1)=nmea_$(2)_$(1) $(3)
 endef
 
 define PREFIX_PARSER_MODULE =

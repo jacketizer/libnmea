@@ -2,32 +2,32 @@
 #include "parser.h"
 
 #define DECLARE_PARSER_API(modname) \
-	extern int gp##modname##_init(nmea_parser_s *parser); \
-	extern int gp##modname##_allocate_data(nmea_parser_s *parser); \
-	extern int gp##modname##_set_default(nmea_parser_s *parser); \
-	extern int gp##modname##_free_data(nmea_s *data); \
-	extern int gp##modname##_parse(nmea_parser_s *parser, char *value, int val_index);
+	extern int nmea_##modname##_init(nmea_parser_s *parser); \
+	extern int nmea_##modname##_allocate_data(nmea_parser_s *parser); \
+	extern int nmea_##modname##_set_default(nmea_parser_s *parser); \
+	extern int nmea_##modname##_free_data(nmea_s *data); \
+	extern int nmea_##modname##_parse(nmea_parser_s *parser, char *value, int val_index);
 
 #define PARSER_LOAD(modname) \
 	parser = &(parsers[i]); \
 	parser->handle = NULL; \
-	parser->allocate_data = gp##modname##_allocate_data; \
-	parser->set_default = gp##modname##_set_default; \
-	parser->free_data = gp##modname##_free_data; \
-	parser->parse = gp##modname##_parse; \
-	if (-1 == gp##modname##_init((nmea_parser_s *) parser)) { \
+	parser->allocate_data = nmea_##modname##_allocate_data; \
+	parser->set_default = nmea_##modname##_set_default; \
+	parser->free_data = nmea_##modname##_free_data; \
+	parser->parse = nmea_##modname##_parse; \
+	if (-1 == nmea_##modname##_init((nmea_parser_s *) parser)) { \
 		return -1; \
 	} \
 	i++;
 
 #ifdef ENABLE_GPGLL
-DECLARE_PARSER_API(gll)
+DECLARE_PARSER_API(gpgll)
 #endif
 #ifdef ENABLE_GPGLL
-DECLARE_PARSER_API(gga)
+DECLARE_PARSER_API(gpgga)
 #endif
 #ifdef ENABLE_GPGLL
-DECLARE_PARSER_API(rmc)
+DECLARE_PARSER_API(gprmc)
 #endif
 
 nmea_parser_module_s parsers[PARSER_COUNT];
@@ -46,13 +46,13 @@ nmea_load_parsers()
 	nmea_parser_module_s *parser;
 
 #ifdef ENABLE_GPGLL
-	PARSER_LOAD(gll);
+	PARSER_LOAD(gpgll);
 #endif
 #ifdef ENABLE_GPGLL
-	PARSER_LOAD(gga);
+	PARSER_LOAD(gpgga);
 #endif
 #ifdef ENABLE_GPGLL
-	PARSER_LOAD(rmc);
+	PARSER_LOAD(gprmc);
 #endif
 
 	return PARSER_COUNT;
