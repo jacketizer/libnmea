@@ -1,7 +1,7 @@
-ifdef STATIC
+ifdef NMEA_STATIC
 SRC_FILES=src/nmea/nmea.c src/nmea/parser_static.c
-PARSER_DEF=$(shell echo "$(PARSERS_ENABLED)" | sed -e 's/^/-DENABLE_/g' -e 's/,/ -DENABLE_/g')
-PARSER_CNT=$(shell echo "$(PARSERS_ENABLED)" | sed 's/,/\n/g' | wc -l)
+PARSER_DEF=$(shell echo "$(NMEA_STATIC)" | sed -e 's/^/-DENABLE_/g' -e 's/,/ -DENABLE_/g')
+PARSER_CNT=$(shell echo "$(NMEA_STATIC)" | sed 's/,/\n/g' | wc -l)
 else
 SRC_FILES=src/nmea/nmea.c src/nmea/parser.c
 endif
@@ -36,7 +36,7 @@ define PREFIX_PARSER_MODULE =
 endef
 
 .PHONY: all
-ifdef STATIC
+ifdef NMEA_STATIC
 # #################### #
 # Static build targets #
 # #################### #
@@ -80,7 +80,7 @@ src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 %.o: %.c
 	$(CC) $(CFLAGS) -DPARSER_PATH=$(PREFIX)/lib/nmea/ $< -o $@
 endif
-# ifdef STATIC
+# ifdef NMEA_STATIC
 
 .PHONY: parser-libs
 parser-libs: $(PARSERS)

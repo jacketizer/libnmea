@@ -8,7 +8,10 @@ C Library for Parsing NMEA 0183 Sentences
 Libnmea is a lightweight C library that parses NMEA 0183 sentence strings into
 structs. It is written in a modular architecture that dynamically loads a parser
 module for each implemented sentence type. This way, new sentences can easily
-be added to the library without modifying the core code.
+be added to the library without modifying the core code. It is also possible to
+link the parser modules statically at build time. This enables libnmea to be
+used in environments where a dynamic loader isn't available.
+
 If you find any sentence missing, please add it by contributing to the code. I
 am open to suggestions regarding the code and architecture, so if you have any
 ideas or improvements, please tell me or submit a merge request :-).
@@ -141,9 +144,31 @@ $ gcc example.c -lnmea -o example
 Environment variables
 ---------------------
 
+###Run time:
+
 `NMEA_PARSER_PATH` - The path where the parser libraries are located. Default
 is `/usr/lib/nmea`. If a custom prefix was used when installing, they will be
-located in *PREFIX/lib/nmea*
+located in *PREFIX/lib/nmea*. This variable isn't used when libnmea is built
+with static parser module loading (see next chapter).
+
+###Build time:
+
+`NMEA_STATIC` - If defined, it forces libnmea to be built with static parser
+module loading (see next chapter). It should contain a comma seperated list of
+parser modules (ex: NMEA_STATIC=GPRMC,GPGGA).
+
+Static build
+------------
+
+It is possible to link the parser modules statically at build time which is
+useful when a dynamic loader isn't available. To do this, the environment
+variable `NMEA_STATIC` must be defined along with a comma-seperated list of
+selected parser modules to include in the library. Note that both dynamic and
+static module loading cannot be utilized at the same time.
+
+```sh
+$ NMEA_STATIC=GPGLL,GPRMC make
+```
 
 Run tests
 ---------
