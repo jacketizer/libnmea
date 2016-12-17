@@ -1,4 +1,8 @@
+ifdef STATIC
+SRC_FILES=src/nmea/nmea.c src/nmea/parser_static.c
+else
 SRC_FILES=src/nmea/nmea.c src/nmea/parser.c
+endif
 OBJ_FILES=$(patsubst %.c, %.o, $(SRC_FILES))
 BUILD_PATH=build
 PREFIX ?= /usr

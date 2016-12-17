@@ -1,16 +1,11 @@
-#ifndef STATIC
 #include <sys/types.h>
 #include <dirent.h>
 #include <dlfcn.h>
-#endif
 #include "parser.h"
 
-nmea_parser_module_s **parsers;
 int n_parsers;
+nmea_parser_module_s **parsers;
 
-#ifdef STATIC
-#include "parser_static.c"
-#else
 /**
  * Where to find the parser modules.
  * Can be overridden by env variable NMEA_PARSER_PATH
@@ -198,7 +193,6 @@ nmea_unload_parsers()
 
 	free(parsers);
 }
-#endif
 
 nmea_parser_module_s *
 nmea_get_parser_by_type(nmea_t type)
