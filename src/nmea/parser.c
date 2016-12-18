@@ -1,4 +1,10 @@
+#include <sys/types.h>
+#include <dirent.h>
+#include <dlfcn.h>
 #include "parser.h"
+
+int n_parsers;
+nmea_parser_module_s **parsers;
 
 /**
  * Where to find the parser modules.

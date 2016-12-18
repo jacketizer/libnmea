@@ -1,4 +1,10 @@
+ifdef NMEA_STATIC
+SRC_FILES=src/nmea/nmea.c src/nmea/parser_static.c
+PARSER_DEF=$(shell echo "$(NMEA_STATIC)" | sed -e 's/^/-DENABLE_/g' -e 's/,/ -DENABLE_/g')
+PARSER_CNT=$(shell echo "$(NMEA_STATIC)" | sed 's/,/\n/g' | wc -l)
+else
 SRC_FILES=src/nmea/nmea.c src/nmea/parser.c
+endif
 OBJ_FILES=$(patsubst %.c, %.o, $(SRC_FILES))
 BUILD_PATH=build
 PREFIX ?= /usr
@@ -6,42 +12,84 @@ PREFIX ?= /usr
 SRC_PARSER_DEP=src/parsers/parse.c
 OBJ_PARSER_DEP=$(patsubst %.c, %.o, $(SRC_PARSER_DEP))
 SRC_PARSERS=$(shell find src/parsers/ -type f -name "*.c" | grep -v "parse.c")
-OBJ_PARSERS=$(patsubst %.c, %, $(SRC_PARSERS))
+OBJ_PARSERS=$(patsubst %.c, %.o, $(SRC_PARSERS))
+PARSERS=$(patsubst %.c, %, $(SRC_PARSERS))
 
 SRC_EXAMPLES=$(shell find examples/ -type f -name "*.c")
 BIN_EXAMPLES=$(patsubst %.c, %, $(SRC_EXAMPLES))
 
 CC=gcc
-CFLAGS=-c -fPIC -finline-functions -g -Wall
-LDFLAGS=-s -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -ldl -Wall -g
+CFLAGS=-c -fPIC -g -Wall
+LDFLAGS=-shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -Wall -g
+LDFLAGS_DL=-ldl
+
+define PREFIX_SYMBOL =
+	@objcopy --redefine-sym $(1)=nmea_$(2)_$(1) $(3)
+endef
+
+define PREFIX_PARSER_MODULE =
+	$(call PREFIX_SYMBOL,init,$(1),$(2))
+	$(call PREFIX_SYMBOL,parse,$(1),$(2))
+	$(call PREFIX_SYMBOL,set_default,$(1),$(2))
+	$(call PREFIX_SYMBOL,allocate_data,$(1),$(2))
+	$(call PREFIX_SYMBOL,free_data,$(1),$(2))
+endef
 
 .PHONY: all
+ifdef NMEA_STATIC
+# #################### #
+# Static build targets #
+# #################### #
+all: nmea
+
+.PHONY: nmea
+nmea: $(PARSERS) $(OBJ_FILES) $(OBJ_PARSER_DEP)
+	@mkdir -p $(BUILD_PATH)
+	@echo "Building libnmea.so..."
+	$(CC) $(LDFLAGS) $(OBJ_PARSER_DEP) $(OBJ_PARSERS) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
+	@cp src/nmea/nmea.h $(BUILD_PATH)
+
+src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
+	@mkdir -p $(BUILD_PATH)/nmea
+	@echo Building static module $*...
+	$(CC) $(CFLAGS) -Isrc/nmea $@.c -o $@.o
+	$(call PREFIX_PARSER_MODULE,$*,$@.o)
+	@cp $@.h $(BUILD_PATH)/nmea/
+
+%.o: %.c
+	$(CC) $(CFLAGS) -DSTATIC -DPARSER_COUNT=$(PARSER_CNT) $(PARSER_DEF) $< -o $@
+else
+# ##################### #
+# Dynamic build targets #
+# ##################### #
 all: nmea parser-libs
 
 .PHONY: nmea
 nmea: $(OBJ_FILES)
 	@mkdir -p $(BUILD_PATH)
 	@echo "Building libnmea.so..."
-	$(CC) $(LDFLAGS) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
-	cp src/nmea/nmea.h $(BUILD_PATH)
+	$(CC) $(LDFLAGS) $(LDFLAGS_DL) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
+	@cp src/nmea/nmea.h $(BUILD_PATH)
 
-.PHONY: parser-libs
-parser-libs: $(OBJ_PARSERS)
+src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
+	@mkdir -p $(BUILD_PATH)/nmea
+	@echo Building dynamic module lib$*.so...
+	$(CC) -s -fPIC -Wall -g -shared -Isrc/nmea -L$(BUILD_PATH) -I$(BUILD_PATH) -Wl,--no-as-needed,-soname,lib$*.so $@.c $(OBJ_PARSER_DEP) -o $(BUILD_PATH)/nmea/lib$*.so
+	@cp src/parsers/$*.h $(BUILD_PATH)/nmea/
 
 %.o: %.c
 	$(CC) $(CFLAGS) -DPARSER_PATH=$(PREFIX)/lib/nmea/ $< -o $@
+endif
+# ifdef NMEA_STATIC
 
-src/parsers/%: $(OBJ_PARSER_DEP)
-	@mkdir -p $(BUILD_PATH)/nmea
-	@echo Building $(patsubst src/parsers/%,lib%.so,$@)...
-	$(CC) -s -fPIC -Wall -g -shared -Isrc/nmea -L$(BUILD_PATH) -I$(BUILD_PATH) -Wl,--no-as-needed,-soname,$(patsubst src/parsers/%,lib%.so,$@) $@.c $(OBJ_PARSER_DEP) -o $(patsubst src/parsers/%,$(BUILD_PATH)/nmea/lib%.so,$@)
-	cp $@.h $(BUILD_PATH)/nmea/
+.PHONY: parser-libs
+parser-libs: $(PARSERS)
 
 examples/%: examples/%.c
-	$(CC) $< -lnmea -o $(BUILD_PATH)/$(patsubst examples/%,%,$@)
+	$(CC) -g $< -lnmea -o $(BUILD_PATH)/$(patsubst examples/%,%,$@)
 
 .PHONY: examples
-examples: nmea parser-libs $(BIN_EXAMPLES)
+examples: $(BIN_EXAMPLES)
 
 .PHONY: unit-tests
 unit-tests: tests/unit-tests/test_lib.c tests/unit-tests/test_parse.c tests/unit-tests/test_nmea_helpers.c
@@ -64,17 +112,20 @@ check:
 	make unit-tests
 
 .PHONY: install
-install: all
+install:
 	install --directory $(PREFIX)/lib/nmea
-	install --directory $(PREFIX)/include/nmea
 	install $(BUILD_PATH)/libnmea.so $(PREFIX)/lib/
+ifneq ($(wildcard $(BUILD_PATH)/nmea/*.so),)
+	install --directory $(PREFIX)/include/nmea
 	install $(BUILD_PATH)/nmea/*.so $(PREFIX)/lib/nmea/
+endif
 	install $(BUILD_PATH)/*.h $(PREFIX)/include/
 	install $(BUILD_PATH)/nmea/*.h $(PREFIX)/include/nmea/
 	ldconfig -n $(PREFIX)/lib
 
 .PHONY: clean
 clean:
+	@echo "Cleaning..."
 	@rm -f *.o
 	@rm -f tests/*.o
 	@rm -f src/nmea/*.o
