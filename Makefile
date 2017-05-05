@@ -105,10 +105,10 @@ system-tests: tests/systests.sh
 
 .PHONY: check
 check:
-	export LIBRARY_PATH="$(BUILD_PATH)";
-	export C_INCLUDE_PATH="$(BUILD_PATH)";
-	export LD_LIBRARY_PATH="$(BUILD_PATH)";
-	export NMEA_PARSER_PATH="$(BUILD_PATH)/nmea/"
+	LIBRARY_PATH="$(BUILD_PATH)" \
+	C_INCLUDE_PATH="$(BUILD_PATH)" \
+	LD_LIBRARY_PATH="$(BUILD_PATH)" \
+	NMEA_PARSER_PATH="$(BUILD_PATH)/nmea/" \
 	make unit-tests
 
 .PHONY: install
