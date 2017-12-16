@@ -1,7 +1,7 @@
 ifdef NMEA_STATIC
 SRC_FILES=src/nmea/nmea.c src/nmea/parser_static.c
 PARSER_DEF=$(shell echo "$(NMEA_STATIC)" | sed -e 's/^/-DENABLE_/g' -e 's/,/ -DENABLE_/g')
-PARSER_CNT=$(shell echo "$(NMEA_STATIC)" | sed 's/,/\n/g' | wc -l)
+PARSER_CNT=$(shell echo "$(NMEA_STATIC)" | sed 's/,/ /g' | wc -w | tr -d ' ')
 else
 SRC_FILES=src/nmea/nmea.c src/nmea/parser.c
 endif
