@@ -23,10 +23,10 @@
 #ifdef ENABLE_GPGLL
 DECLARE_PARSER_API(gpgll)
 #endif
-#ifdef ENABLE_GPGLL
+#ifdef ENABLE_GPGGA
 DECLARE_PARSER_API(gpgga)
 #endif
-#ifdef ENABLE_GPGLL
+#ifdef ENABLE_GPRMC
 DECLARE_PARSER_API(gprmc)
 #endif
 
@@ -48,10 +48,10 @@ nmea_load_parsers()
 #ifdef ENABLE_GPGLL
 	PARSER_LOAD(gpgll);
 #endif
-#ifdef ENABLE_GPGLL
+#ifdef ENABLE_GPGGA
 	PARSER_LOAD(gpgga);
 #endif
-#ifdef ENABLE_GPGLL
+#ifdef ENABLE_GPRMC
 	PARSER_LOAD(gprmc);
 #endif
 
