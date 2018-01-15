@@ -1,5 +1,4 @@
-C Library for Parsing NMEA 0183 Sentences
-=========================================
+# C Library for Parsing NMEA 0183 Sentences
 
 [![Build Status](https://travis-ci.org/jacketizer/libnmea.svg?branch=master)](https://travis-ci.org/jacketizer/libnmea)
 [![Memory Leaks](https://img.shields.io/badge/memory%20leaks-0%20bytes-brightgreen.svg)](https://travis-ci.org/jacketizer/libnmea)
@@ -20,8 +19,7 @@ ideas or improvements, please tell me or submit a merge request :-).
 
 Supported sentences: `GPGLL`, `GPGGA` and `GPRMC`.
 
-To build
---------
+## To build
 
 ```sh
 $ make && make check
@@ -30,8 +28,7 @@ $ make && make check
 When running `make`, the library will be built to a local build directory
 (*./build*).
 
-Installation
-------------
+## Installation
 
 Run `make install` to install *libnmea*. The files will be installed in */usr/*
 by default. Use the environment variable `PREFIX` to set a different
@@ -45,8 +42,7 @@ $ make
 $ PREFIX=target make install
 ```
 
-Try it
-------
+## Try it
 
 When the library is built and installed, you can compile the example programs:
 
@@ -64,12 +60,11 @@ export C_INCLUDE_PATH="<prefix>/include"
 export LD_LIBRARY_PATH="<prefix>/lib"
 ```
 
-How to use it
--------------
+## How to use it
 
 First, include *nmea.h* and the header files for the desired sentence types:
 
-```C
+```c
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -88,7 +83,7 @@ main(void)
 
 To parse an NMEA sentence string, use `nmea_parse()`:
 
-```C
+```c
 // Sentence string to be parsed
 char sentence[] = "$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n";
 
@@ -105,7 +100,7 @@ if (NULL == data) {
 The parsed data can be found in the data variable and for example printed to
 screen:
 
-```C
+```c
 if (NMEA_GPGGA == data->type) {
 	nmea_gpgga_s *gpgga = (nmea_gpgga_s *) data;
 
@@ -131,7 +126,7 @@ if (NMEA_GPGLL == data->type) {
 
 Free the memory used by the data variable:
 
-```C
+```c
 nmea_free(data);
 ```
 
@@ -141,24 +136,22 @@ Compile with `-lnmea`:
 $ gcc example.c -lnmea -o example
 ```
 
-Environment variables
----------------------
+## Environment variables
 
-###Run time:
+### Run time:
 
 `NMEA_PARSER_PATH` - The path where the parser libraries are located. Default
 is `/usr/lib/nmea`. If a custom prefix was used when installing, they will be
 located in *PREFIX/lib/nmea*. This variable isn't used when libnmea is built
 with static parser module loading (see next chapter).
 
-###Build time:
+### Build time:
 
 `NMEA_STATIC` - If defined, it forces libnmea to be built with static parser
 module loading (see next chapter). It should contain a comma seperated list of
 parser modules to be included in the build, ex: `NMEA_STATIC=GPRMC,GPGGA`.
 
-Static build
-------------
+## Static build
 
 It is possible to statically link the parser modules at build time which is
 useful when a dynamic loader isn't available. To do this, the environment
@@ -170,8 +163,7 @@ static module loading cannot be utilized at the same time.
 $ NMEA_STATIC=GPGLL,GPRMC make
 ```
 
-Run tests
----------
+## Run tests
 
 After `make`, run the tests against the build directory:
 
@@ -192,15 +184,13 @@ To check for memory leaks, run:
 $ make check-memory-leaks
 ```
 
-Library functions
------------------
+## Library functions
 
 Check *nmea.h* for more detailed info about functions. The header files for the
 sentences (ex: *nmea/gpgll.h*) contains the struct definitions for each
 sentence.
 
-Implement a new sentence type
------------------------------
+## Implement a new sentence type
 
 To create a new sentence parser, create the following files and replace
 the `<TYPE>` with the sentence type word in uppercase letters and `<type>` in
@@ -209,7 +199,7 @@ it to *src/nmea/parser_static.h*.
 
 *src/parsers/<type>.h*:
 
-```C
+```c
 #ifndef INC_NMEA_<TYPE>_H
 #define INC_NMEA_<TYPE>_H
 
@@ -232,7 +222,7 @@ typedef struct {
 
 *src/parsers/<type>.c*:
 
-```C
+```c
 #include "../nmea/parser_types.h"
 #include "<type>.h"
 #include "parse.h"
@@ -286,8 +276,7 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 }
 ```
 
-Contributing
-------------
+## Contributing
 
 Contributions are more than welcome. Be sure to read this chapter before
 submitting a merge request.
