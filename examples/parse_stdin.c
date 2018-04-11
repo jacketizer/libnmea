@@ -146,8 +146,22 @@ main(void)
 		  	printf("  Degrees: %d\n", pos->latitude.degrees);
 		  	printf("  Minutes: %f\n", pos->latitude.minutes);
 		  	printf("  Cardinal: %c\n", (char) pos->latitude.cardinal);
-		  	strftime(buf, sizeof(buf), "%H:%M:%S", &pos->time);
-		  	printf("Time: %s\n", buf);
+		  	strftime(buf, sizeof(buf), "%d %b %T %Y", &pos->date_time);
+		  	printf("Date & Time: %s\n", buf);
+		  	printf("Speed, in Knots: %f:\n", pos->gndspd_knots);
+		  	printf("Track, in degrees: %f\n", pos->track_deg);
+		  	printf("Magnetic Variation:\n");
+		  	printf("  Degrees: %f\n", pos->magvar_deg);
+		  	printf("  Cardinal: %c\n", (char) pos->magvar_cardinal);
+		  	double adjusted_course = pos->track_deg;            
+		  	if (NMEA_CARDINAL_DIR_EAST == pos->magvar_cardinal)
+		  		adjusted_course -= pos->magvar_deg;
+		  	else if (NMEA_CARDINAL_DIR_WEST == pos->magvar_cardinal)
+		  		adjusted_course += pos->magvar_deg;
+		  	else
+		  		printf("Invalid Magnetic Variation Direction!!\n");
+
+		  	printf("Adjusted Track (heading): %f\n", adjusted_course);
 		  }
 
 		  nmea_free(data);
