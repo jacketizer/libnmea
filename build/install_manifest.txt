@@ -1,0 +1,12 @@
+/usr/local/lib/libnmea.so.0.1.0
+/usr/local/lib/libnmea.so
+/usr/lib/nmea/libgpgga.so
+/usr/lib/nmea/libgpgll.so
+/usr/lib/nmea/libgprmc.so
+/usr/local/include/nmea.h
+/usr/local/include/nmea/gpgga.h
+/usr/local/include/nmea/gpgll.h
+/usr/local/include/nmea/gprmc.h
+/usr/local/include/nmea/parse.h
+/usr/local/lib/cmake/libnmea/libnmeaConfig.cmake
+/usr/local/lib/cmake/libnmea/libnmeaConfigVersion.cmake
