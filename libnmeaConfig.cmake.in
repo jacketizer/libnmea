@@ -10,8 +10,4 @@ set(LIBNMEA_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
 # endif()
 
 # These are IMPORTED targets created by libnmeaTargets.cmake
-IF(WITH_DBUS)
-    set(LIBNMEA_LIBRARIES libnmea libnmea-dbus)
-ELSE(WITH_DBUS)
-    set(LIBNMEA_LIBRARIES libnmea)
-ENDIF(WITH_DBUS)
+set(LIBNMEA_LIBRARIES nmea)
