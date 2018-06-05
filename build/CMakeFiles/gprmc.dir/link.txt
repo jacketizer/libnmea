@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC   -shared -Wl,-soname,libgprmc.so -o parsers/libgprmc.so CMakeFiles/gprmc.dir/src/parsers/gprmc.c.o CMakeFiles/gprmc.dir/src/parsers/parse.c.o 

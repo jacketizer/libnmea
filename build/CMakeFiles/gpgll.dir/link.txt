@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC   -shared -Wl,-soname,libgpgll.so -o parsers/libgpgll.so CMakeFiles/gpgll.dir/src/parsers/gpgll.c.o CMakeFiles/gpgll.dir/src/parsers/parse.c.o 

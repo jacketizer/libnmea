@@ -1,2 +1,0 @@
-/usr/bin/ar qc lib/libnmea.a  CMakeFiles/nmea.dir/src/nmea/nmea.c.o CMakeFiles/nmea.dir/src/nmea/parser.c.o
-/usr/bin/ranlib lib/libnmea.a

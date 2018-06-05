@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC   -shared -Wl,-soname,libgpgga.so -o parsers/libgpgga.so CMakeFiles/gpgga.dir/src/parsers/gpgga.c.o CMakeFiles/gpgga.dir/src/parsers/parse.c.o 

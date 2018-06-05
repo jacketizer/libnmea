@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC   -shared -Wl,-soname,libnmea.so.0.1.0 -o lib/libnmea.so.0.1.0 CMakeFiles/nmea_shared.dir/src/nmea/nmea.c.o CMakeFiles/nmea_shared.dir/src/nmea/parser.c.o -ldl 
