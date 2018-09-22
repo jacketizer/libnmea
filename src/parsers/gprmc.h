@@ -10,6 +10,7 @@ typedef struct {
 	nmea_s base;
 	nmea_position longitude;
 	nmea_position latitude;
+	double speed;
 	struct tm time;
 } nmea_gprmc_s;
 
@@ -20,5 +21,5 @@ typedef struct {
 #define NMEA_GPRMC_LONGITUDE_CARDINAL	5
 #define NMEA_GPRMC_TIME			0
 #define NMEA_GPRMC_DATE			8
-
+#define NMEA_GPRMC_SPEED		6
 #endif  /* INC_NMEA_GPRMC_H */
