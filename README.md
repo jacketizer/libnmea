@@ -6,7 +6,7 @@
 
 Libnmea is a lightweight C library that parses NMEA 0183 sentence strings into
 structs. It is written in a modular architecture that dynamically loads a parser
-module for each implemented sentence type. This way, new sentences can easely
+module for each implemented sentence type. This way, new sentences can easily
 be added to the library without modifying the core code. It is also possible to
 statically link the parser modules at build time to enable libnmea to be used in
 environments where a dynamic loader isn't available.
