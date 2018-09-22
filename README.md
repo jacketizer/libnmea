@@ -17,7 +17,7 @@ ideas or improvements, please tell me or submit a merge request :-).
 
 [http//nmea.io](http://nmea.io/)
 
-Supported sentences: `GPGLL`, `GPGGA` and `GPRMC`.
+Supported sentences: `GPGLL`, `GPGGA`, `GPRMC`, and `GPGSV`.
 
 ## To build
 
