@@ -1,0 +1,13 @@
+# - Config file for the libnmea package
+
+# Compute paths
+get_filename_component(LIBNMEA_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(LIBNMEA_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+# if(NOT TARGET libnmea)
+#   include("${LIBNMEA_CMAKE_DIR}/libnmeaTargets.cmake")
+# endif()
+
+# These are IMPORTED targets created by libnmeaTargets.cmake
+set(LIBNMEA_LIBRARIES nmea)

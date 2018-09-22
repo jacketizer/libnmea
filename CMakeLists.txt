@@ -1,6 +1,31 @@
 cmake_minimum_required (VERSION 2.8)
 project(libnmea C)
 
+set(LIBNMEA_MAJOR_VERSION 0)
+set(LIBNMEA_MINOR_VERSION 1)
+set(LIBNMEA_PATCH_VERSION 2)
+set(LIBNMEA_VERSION
+  ${LIBNMEA_MAJOR_VERSION}.${LIBNMEA_MINOR_VERSION}.${LIBNMEA_PATCH_VERSION})
+
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
+
+#Define cmake install path
+if(WIN32 AND NOT CYGWIN)
+  set(DEF_INSTALL_CMAKE_DIR CMake)
+else()
+  set(DEF_INSTALL_CMAKE_DIR lib/cmake/${PROJECT_NAME})
+endif()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
+  "Installation directory for CMake files")
+
+# Make relative paths absolute (needed later on)
+foreach(p LIB BIN INCLUDE CMAKE)
+  set(var INSTALL_${p}_DIR)
+  if(NOT IS_ABSOLUTE "${${var}}")
+    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
+  endif()
+endforeach()
+
 option(NMEA_BUILD_STATIC_LIB "Build static libnmea" ON)
 option(NMEA_BUILD_SHARED_LIB "Build shared libnmea" ON)
 option(NMEA_BUILD_EXAMPLES "Build examples" ON)
@@ -44,8 +69,11 @@ set(NMEA_HDR
 source_group("Headers" FILES ${NMEA_HDR})
 source_group("Source" FILES ${NMEA_SRC})
 
+set(LIBNMEA_TARGETS "")
 if (NMEA_BUILD_STATIC_LIB)
+    set(LIBNMEA_TARGETS ${LIBNMEA_TARGETS} nmea)
     add_library(nmea STATIC ${NMEA_SRC})
+    set_target_properties(nmea PROPERTIES VERSION ${LIBNMEA_VERSION})
     target_link_libraries(nmea dl)
     install(TARGETS nmea DESTINATION lib)
 endif()
@@ -56,7 +84,10 @@ if (NMEA_BUILD_SHARED_LIB)
         cmake_policy(SET CMP0042 OLD)
     endif()
 
+    set(LIBNMEA_TARGETS ${LIBNMEA_TARGETS} nmea_shared)
+
     add_library(nmea_shared SHARED ${NMEA_SRC})
+    set_target_properties(nmea_shared PROPERTIES VERSION ${LIBNMEA_VERSION})
     target_link_libraries(nmea_shared dl)
 
     if (UNIX)
@@ -191,3 +222,36 @@ if (NMEA_UNIT_TESTS)
     endforeach()
 endif()
 
+# Handle CMake Config
+# Add all targets to the build-tree export set
+export(TARGETS ${LIBNMEA_TARGETS}
+  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake")
+
+# Export the package for use from the build-tree
+# (this registers the build-tree with a global CMake-registry)
+export(PACKAGE ${PROJECT_NAME})
+
+# Create the ${PROJECT_NAME}Config.cmake and ${PROJECT_NAME}ConfigVersion files
+file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
+   "${INSTALL_INCLUDE_DIR}/include")
+# ... for the build tree
+set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
+configure_file(${PROJECT_NAME}Config.cmake.in
+  "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake" @ONLY)
+# ... for the install tree
+set(CONF_INCLUDE_DIRS "\${LIBNMEA_CMAKE_DIR}/${REL_INCLUDE_DIR}/${PROJECT_NAME}")
+configure_file(${PROJECT_NAME}Config.cmake.in
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake" @ONLY)
+# ... for both
+configure_file(${PROJECT_NAME}ConfigVersion.cmake.in
+  "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" @ONLY)
+
+# Install the ${PROJECT_NAME}Config.cmake and ${PROJECT_NAME}ConfigVersion.cmake
+install(FILES
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake"
+  "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+
+# Install the export set for use with the install-tree
+# install(EXPORT ${PROJECT_NAME}Targets DESTINATION
+#  "${INSTALL_CMAKE_DIR}" COMPONENT dev)
