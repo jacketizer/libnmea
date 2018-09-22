@@ -88,7 +88,6 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 
 	case NMEA_GPRMC_SPEED:
 		/* Parse ground speed in knots */
-		/* TODO: use strtod to do the conversion with error checking */
 		data->speed = atof(value);
 		break;
 
