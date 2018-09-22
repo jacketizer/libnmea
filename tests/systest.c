@@ -1,4 +1,4 @@
-// This file parses standard input and the exits.
+// This file parses standard input and then exits.
 // Should be used together with valgrind to check for memory leaks.
 #include <stdlib.h>
 #include <stdio.h>
