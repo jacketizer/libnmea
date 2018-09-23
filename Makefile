@@ -99,14 +99,14 @@ examples/%: examples/%.c
 examples: $(BIN_EXAMPLES)
 
 .PHONY: unit-tests
-unit-tests: tests/unit-tests/test_lib.c tests/unit-tests/test_parse.c tests/unit-tests/test_nmea_helpers.c
+unit-tests:
 	@$(CC) tests/unit-tests/test_lib.c -lnmea -o utests
 	@$(CC) src/parsers/parse.c tests/unit-tests/test_parse.c -o utests-parse
 	@$(CC) src/nmea/parser.c tests/unit-tests/test_nmea_helpers.c -ldl -o utests-nmea
 	@./utests && ./utests-parse && ./utests-nmea && (echo "All tests passed!")
 
 .PHONY: system-tests
-system-tests: tests/systests.sh
+system-tests:
 	$(CC) tests/systest.c -lnmea -o systest
 	@tests/systests.sh
 
