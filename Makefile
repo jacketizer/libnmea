@@ -1,30 +1,30 @@
 ifdef NMEA_STATIC
-SRC_FILES=src/nmea/nmea.c src/nmea/parser_static.c
-PARSER_DEF=$(shell echo "$(NMEA_STATIC)" | sed -e 's/^/-DENABLE_/g' -e 's/,/ -DENABLE_/g')
-PARSER_CNT=$(shell echo "$(NMEA_STATIC)" | sed 's/,/ /g' | wc -w | tr -d ' ')
+SRC_FILES := src/nmea/nmea.c src/nmea/parser_static.c
+PARSER_DEF := $(shell echo "$(NMEA_STATIC)" | sed -e 's/^/-DENABLE_/g' -e 's/,/ -DENABLE_/g')
+PARSER_CNT := $(shell echo "$(NMEA_STATIC)" | sed 's/,/ /g' | wc -w | tr -d ' ')
 else
-SRC_FILES=src/nmea/nmea.c src/nmea/parser.c
+SRC_FILES := src/nmea/nmea.c src/nmea/parser.c
 endif
-OBJ_FILES=$(patsubst %.c, %.o, $(SRC_FILES))
-BUILD_PATH=build
+OBJ_FILES := $(patsubst %.c, %.o, $(SRC_FILES))
+BUILD_PATH := build
 PREFIX ?= /usr
 
-SRC_PARSER_DEP=src/parsers/parse.c
-OBJ_PARSER_DEP=$(patsubst %.c, %.o, $(SRC_PARSER_DEP))
-SRC_PARSERS=$(shell find src/parsers/ -type f -name "*.c" | grep -v "parse.c")
-OBJ_PARSERS=$(patsubst %.c, %.o, $(SRC_PARSERS))
-PARSERS=$(patsubst %.c, %, $(SRC_PARSERS))
+SRC_PARSER_DEP := src/parsers/parse.c
+OBJ_PARSER_DEP := $(patsubst %.c, %.o, $(SRC_PARSER_DEP))
+SRC_PARSERS := $(shell find src/parsers/ -type f -name "*.c" | grep -v "parse.c")
+OBJ_PARSERS := $(patsubst %.c, %.o, $(SRC_PARSERS))
+PARSERS := $(patsubst %.c, %, $(SRC_PARSERS))
 
 ALL_SOURCES := $(SRC_FILES) $(SRC_PARSERS) $(SRC_PARSER_DEP)
 ALL_DEPEND_FILES := $(patsubst %.c,%.d,$(ALL_SOURCES))
 
-SRC_EXAMPLES=$(shell find examples/ -type f -name "*.c")
-BIN_EXAMPLES=$(patsubst %.c, %, $(SRC_EXAMPLES))
+SRC_EXAMPLES := $(shell find examples/ -type f -name "*.c")
+BIN_EXAMPLES := $(patsubst %.c, %, $(SRC_EXAMPLES))
 
-CC=gcc
-CFLAGS=-c -fPIC -g -Wall
-LDFLAGS=-shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -Wall -g
-LDFLAGS_DL=-ldl
+CC := gcc
+CFLAGS := -c -fPIC -g -Wall
+LDFLAGS := -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -Wall -g
+LDFLAGS_DL := -ldl
 
 define PREFIX_SYMBOL =
 	@objcopy --redefine-sym $(1)=nmea_$(2)_$(1) $(3)
