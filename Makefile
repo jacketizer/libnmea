@@ -137,7 +137,7 @@ clean:
 	@rm -f tests/*.o
 	@rm -f src/nmea/*.o
 	@rm -f src/parsers/*.o
-	@rm -f utests utests-parse utests-nmea memcheck
+	@rm -f utests utests-parse utests-nmea memcheck systest
 	@rm -f $(ALL_DEPEND_FILES)
 
 .PHONY: clean-all

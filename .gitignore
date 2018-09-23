@@ -31,5 +31,8 @@
 # Debug files
 *.dSYM/
 
-*.d
+# Build and test
 build/
+*.d
+utests*
+systest
