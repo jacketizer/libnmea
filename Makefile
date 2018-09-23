@@ -15,6 +15,9 @@ SRC_PARSERS=$(shell find src/parsers/ -type f -name "*.c" | grep -v "parse.c")
 OBJ_PARSERS=$(patsubst %.c, %.o, $(SRC_PARSERS))
 PARSERS=$(patsubst %.c, %, $(SRC_PARSERS))
 
+ALL_SOURCES := $(SRC_FILES) $(SRC_PARSERS) $(SRC_PARSER_DEP)
+ALL_DEPEND_FILES := $(patsubst %.c,%.d,$(ALL_SOURCES))
+
 SRC_EXAMPLES=$(shell find examples/ -type f -name "*.c")
 BIN_EXAMPLES=$(patsubst %.c, %, $(SRC_EXAMPLES))
 
@@ -57,6 +60,7 @@ src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 	@cp $@.h $(BUILD_PATH)/nmea/
 
 %.o: %.c
+	$(CC) $(CFLAGS) -MM $< > $(patsubst %.o,%.d,$@)
 	$(CC) $(CFLAGS) -DSTATIC -DPARSER_COUNT=$(PARSER_CNT) $(PARSER_DEF) $< -o $@
 else
 # ##################### #
@@ -78,6 +82,7 @@ src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 	@cp src/parsers/$*.h $(BUILD_PATH)/nmea/
 
 %.o: %.c
+	$(CC) $(CFLAGS) -MM $< > $(patsubst %.o,%.d,$@)
 	$(CC) $(CFLAGS) -DPARSER_PATH=$(PREFIX)/lib/nmea/ $< -o $@
 endif
 # ifdef NMEA_STATIC
@@ -131,7 +136,10 @@ clean:
 	@rm -f src/nmea/*.o
 	@rm -f src/parsers/*.o
 	@rm -f utests utests-parse utests-nmea memcheck
+	@rm -f $(ALL_DEPEND_FILES)
 
 .PHONY: clean-all
 clean-all: clean
 	@rm -rf $(BUILD_PATH)
+
+-include $(ALL_DEPEND_FILES)
