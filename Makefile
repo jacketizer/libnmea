@@ -5,6 +5,7 @@ PARSER_CNT := $(shell echo "$(NMEA_STATIC)" | sed 's/,/ /g' | wc -w | tr -d ' ')
 else
 SRC_FILES := src/nmea/nmea.c src/nmea/parser.c
 endif
+
 OBJ_FILES := $(patsubst %.c, %.o, $(SRC_FILES))
 BUILD_PATH := build
 PREFIX ?= /usr
@@ -38,18 +39,19 @@ define PREFIX_PARSER_MODULE =
 	$(call PREFIX_SYMBOL,free_data,$(1),$(2))
 endef
 
+LIBRARY_FILE := $(BUILD_PATH)/libnmea.so
+
 .PHONY: all
 ifdef NMEA_STATIC
 # #################### #
 # Static build targets #
 # #################### #
-all: nmea
+all: $(LIBRARY_FILE)
 
-.PHONY: nmea
-nmea: $(PARSERS) $(OBJ_FILES) $(OBJ_PARSER_DEP)
+$(LIBRARY_FILE): $(PARSERS) $(OBJ_FILES) $(OBJ_PARSER_DEP)
 	@mkdir -p $(BUILD_PATH)
-	@echo "Building libnmea.so..."
-	$(CC) $(LDFLAGS) $(OBJ_PARSER_DEP) $(OBJ_PARSERS) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
+	@echo "Building $@..."
+	$(CC) $(LDFLAGS) $(OBJ_PARSER_DEP) $(OBJ_PARSERS) $(OBJ_FILES) -o $@
 	@cp src/nmea/nmea.h $(BUILD_PATH)
 
 src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
@@ -66,13 +68,13 @@ else
 # ##################### #
 # Dynamic build targets #
 # ##################### #
-all: nmea parser-libs
+all: $(LIBRARY_FILE) parser-libs
 
 .PHONY: nmea
-nmea: $(OBJ_FILES)
+$(LIBRARY_FILE): $(OBJ_FILES)
 	@mkdir -p $(BUILD_PATH)
-	@echo "Building libnmea.so..."
-	$(CC) $(LDFLAGS) $(LDFLAGS_DL) $(OBJ_FILES) -o $(BUILD_PATH)/libnmea.so
+	@echo "Building $@"
+	$(CC) $(LDFLAGS) $(LDFLAGS_DL) $(OBJ_FILES) -o $@
 	@cp src/nmea/nmea.h $(BUILD_PATH)
 
 src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
@@ -119,7 +121,7 @@ check:
 .PHONY: install
 install:
 	install --directory $(PREFIX)/lib/nmea
-	install $(BUILD_PATH)/libnmea.so $(PREFIX)/lib/
+	install $(LIBRARY_FILE) $(PREFIX)/lib/
 ifneq ($(wildcard $(BUILD_PATH)/nmea/*.so),)
 	install --directory $(PREFIX)/include/nmea
 	install $(BUILD_PATH)/nmea/*.so $(PREFIX)/lib/nmea/
