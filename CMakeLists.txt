@@ -165,11 +165,6 @@ endif()
 if (NMEA_UNIT_TESTS)
     ENABLE_TESTING()
 
-    # Find test sources.
-    file(GLOB TEST_SRCS
-        RELATIVE "${PROJECT_SOURCE_DIR}"
-        "${PROJECT_SOURCE_DIR}/tests/test_*.c")
-
     # Find valgrind if we're supposed to check for leaks when
     # running the unit tests.
     if (NMEA_WITH_MEMCHECK)
@@ -186,7 +181,7 @@ if (NMEA_UNIT_TESTS)
     #
     # Lib unit tests.
     #
-    add_executable(utests tests/test_lib.c)
+    add_executable(utests tests/unit-tests/test_lib.c)
 
     if (NMEA_UNIT_TESTS_LINK_STATIC)
         target_link_libraries(utests nmea)
@@ -197,12 +192,12 @@ if (NMEA_UNIT_TESTS)
     #
     # Parse unit tests.
     #
-    add_executable(utests-parse src/parsers/parse.c tests/test_parse.c)
+    add_executable(utests-parse src/parsers/parse.c tests/unit-tests/test_parse.c)
 
     #
     # NMEA unit tests.
     #
-    add_executable(utests-nmea src/nmea/parser.c tests/test_nmea_helpers.c)
+    add_executable(utests-nmea src/nmea/parser.c tests/unit-tests/test_nmea_helpers.c)
     target_link_libraries(utests-nmea dl)
 
     set(TESTS utests utests-parse utests-nmea)
