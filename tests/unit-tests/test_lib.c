@@ -13,12 +13,12 @@ test_get_type_ok()
 	char *sentence;
 	nmea_t res;
 
-	sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n");
+	sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\r\n");
 	res = nmea_get_type(sentence);
 	mu_assert("should return correct type (GPGLL)", NMEA_GPGLL == res);
 	free(sentence);
 
-	sentence = strdup("$GPGGA,4916.45,N,12311.12,W,225444,A\n\n");
+	sentence = strdup("$GPGGA,4916.45,N,12311.12,W,225444,A\r\n");
 	res = nmea_get_type(sentence);
 	mu_assert("should return correct type (GPGGA)", NMEA_GPGGA == res);
 	free(sentence);
@@ -54,7 +54,7 @@ static char *
 test_get_checksum_with_crc()
 {
 	// Sentence with checksum (0x1D == 29)
-	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n");
+	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\r\n");
 	uint8_t res = nmea_get_checksum(sentence);
 	mu_assert("should return correct checksum", 29 == res);
 	free(sentence);
@@ -66,7 +66,7 @@ static char *
 test_get_checksum_without_crc()
 {
 	// Sentence without checksum (0x1D == 29)
-	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,\n\n");
+	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,\r\n");
 	uint8_t res = nmea_get_checksum(sentence);
 	mu_assert("should return correct checksum", 29 == res);
 	free(sentence);
@@ -78,7 +78,7 @@ static char *
 test_has_checksum_yes()
 {
 	// Sentence with checksum
-	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A*1D\n\n");
+	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A*1D\r\n");
 	int res = nmea_has_checksum(sentence, strlen(sentence));
 	mu_assert("should return 0 when sentence has a checksum", 0 == res);
 	free(sentence);
@@ -90,7 +90,7 @@ static char *
 test_has_checksum_no()
 {
 	// Sentence without checksum
-	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A\n\n");
+	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A\r\n");
 	int res = nmea_has_checksum(sentence, strlen(sentence));
 	mu_assert("should return -1 when sentence does not have a checksum", -1 == res);
 	free(sentence);
@@ -102,7 +102,7 @@ static char *
 test_validate_ok_with_crc()
 {
 	// Valid sentence with checksum
-	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\n\n");
+	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\r\n");
 	int res = nmea_validate(sentence, strlen(sentence), 1);
 	mu_assert("should return 0 when sentence is valid", 0 == res);
 	free(sentence);
@@ -117,13 +117,13 @@ test_validate_ok_without_crc()
 	int res;
 
 	// Valid sentence without checksum
-	sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A\n\n");
+	sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A\r\n");
 	res = nmea_validate(sentence, strlen(sentence), 1);
 	mu_assert("should return 0 when sentence is valid", 0 == res);
 	free(sentence);
 
 	// Valid sentence with invalid checksum
-	sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A*FF\n\n");
+	sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A*FF\r\n");
 	res = nmea_validate(sentence, strlen(sentence), 0);
 	mu_assert("should return 0 when check_checksum is 0 and crc is invalid", 0 == res);
 	free(sentence);
@@ -135,7 +135,7 @@ static char *
 test_validate_fail_type()
 {
 	// Invalid sentence type
-	char *sentence = strdup("$GPgll,4916.45,N,12311.12,W,225444,A\n\n");
+	char *sentence = strdup("$GPgll,4916.45,N,12311.12,W,225444,A\r\n");
 	int res = nmea_validate(sentence, strlen(sentence), 1);
 	mu_assert("should return -1 when sentence type is invalid", -1 == res);
 	free(sentence);
@@ -147,7 +147,7 @@ static char *
 test_validate_fail_start()
 {
 	// Invalid sentence start (no $ sign)
-	char *sentence = strdup("£GPGLL,4916.45,N,12311.12,W,225444,A\n\n");
+	char *sentence = strdup("£GPGLL,4916.45,N,12311.12,W,225444,A\r\n");
 	int res = nmea_validate(sentence, strlen(sentence), 1);
 	mu_assert("should return -1 when sentence start is invalid", -1 == res);
 	free(sentence);
@@ -195,14 +195,14 @@ test_parse_ok()
 	nmea_s *res;
 
 	// With crc\n
-	sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47\n\n");
+	sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47\r\n");
 	res = nmea_parse(sentence, strlen(sentence), 1);
 	mu_assert("should be able to parse a GPGGA sentence", NULL != res);
 	free(sentence);
 	nmea_free(res);
 
 	// With invalid crc, but check disabled
-	sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*FF\n\n");
+	sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*FF\r\n");
 	res = nmea_parse(sentence, strlen(sentence), 0);
 	mu_assert("should be able to parse a GPGGA sentence", NULL != res);
 	free(sentence);
@@ -217,7 +217,7 @@ test_parse_unknown()
 	char *sentence;
 	nmea_s *res;
 
-	sentence = strdup("$JACK1,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47\n\n");
+	sentence = strdup("$JACK1,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47\r\n");
 	res = nmea_parse(sentence, strlen(sentence), 1);
 	mu_assert("should return NULL when sentence type is unknown", NULL == res);
 	free(sentence);
@@ -232,7 +232,7 @@ test_parse_invalid()
 	char *sentence;
 	nmea_s *res;
 
-	sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*FF\n\n");
+	sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*FF\r\n");
 	res = nmea_parse(sentence, strlen(sentence), 1);
 	mu_assert("should return NULL when checksum is invalid", NULL != res);
 	free(sentence);
