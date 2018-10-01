@@ -72,7 +72,10 @@ source_group("Source" FILES ${NMEA_SRC})
 set(LIBNMEA_TARGETS "")
 if (NMEA_BUILD_STATIC_LIB)
     set(LIBNMEA_TARGETS ${LIBNMEA_TARGETS} nmea)
-    add_library(nmea STATIC ${NMEA_SRC})
+    add_library(nmea STATIC
+        src/nmea/nmea.c
+        src/nmea/parser_static.c
+        src/parsers/parse.c)
     set_target_properties(nmea PROPERTIES VERSION ${LIBNMEA_VERSION})
     target_link_libraries(nmea dl)
     install(TARGETS nmea DESTINATION lib)
@@ -121,6 +124,27 @@ foreach(PARSER_SRC ${PARSERS_SRCS})
     # Otherwise using absolute paths like this is not the CMake way.
     install(TARGETS ${PARSER_NAME} DESTINATION /usr/lib/nmea/)
 endforeach()
+
+# Add parsers to static library
+if (NMEA_BUILD_STATIC_LIB)
+    list(LENGTH PARSERS_SRCS PARSER_CNT)
+    target_compile_definitions(nmea PRIVATE -DPARSER_COUNT=${PARSER_CNT})
+    # Add definition for each parser found and add dependency to rename symbols
+    foreach(PARSER_SRC ${PARSERS_SRCS})
+        get_filename_component(PARSER ${PARSER_SRC} NAME_WE)
+        string(TOUPPER ${PARSER} PARSER)
+        target_compile_definitions(nmea PRIVATE -DENABLE_${PARSER})
+        string(TOLOWER ${PARSER} PARSER)
+        add_custom_command(TARGET nmea PRE_LINK
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym init=nmea_${PARSER}_init ${PARSER}.c.o
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym parse=nmea_${PARSER}_parse ${PARSER}.c.o
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym set_default=nmea_${PARSER}_set_default ${PARSER}.c.o
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym allocate_data=nmea_${PARSER}_allocate_data ${PARSER}.c.o
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym free_data=nmea_${PARSER}_free_data ${PARSER}.c.o
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/nmea.dir/src/parsers/)
+    endforeach()
+    target_sources(nmea PRIVATE ${PARSERS_SRCS})
+endif()
 
 # Find parser headers as well.
 file(GLOB PARSERS_HDRS
