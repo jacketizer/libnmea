@@ -68,7 +68,10 @@ nmea_time_parse(char *s, struct tm *time)
 	time->tm_hour = x / 10000;
 	time->tm_min = (x % 10000) / 100;
 	time->tm_sec = x % 100;
-	if (rv && *rv == '.') {
+	if (time->tm_hour > 23 || time->tm_min > 59 || time->tm_sec > 59 || (int) (rv - s) < NMEA_TIME_FORMAT_LEN) {
+		return -1;
+	}
+	if (*rv == '.') {
 		/* TODO There is a sub-second field. */
 	}
 
