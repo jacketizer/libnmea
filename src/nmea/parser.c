@@ -211,7 +211,7 @@ nmea_get_parser_by_sentence(const char *sentence)
 
 	for (i = 0; i < n_parsers; i++) {
 		parser = parsers[i];
-		if (0 == strncmp(sentence + 3, parser->parser.type_word, sizeof(parsers[i].parser.type_word))) {
+		if (0 == strncmp(sentence + 3, parser->parser.type_word, sizeof(parser->parser.type_word))) {
 			return parser;
 		}
 	}
