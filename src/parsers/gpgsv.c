@@ -26,6 +26,11 @@ int
 set_default(nmea_parser_s *parser)
 {
 	memset(parser->data, 0, sizeof (nmea_gpgsv_s));
+	((nmea_gpgsv_s *) parser->data)->sat[0].prn = -1;
+	((nmea_gpgsv_s *) parser->data)->sat[1].prn = -1;
+	((nmea_gpgsv_s *) parser->data)->sat[2].prn = -1;
+	((nmea_gpgsv_s *) parser->data)->sat[3].prn = -1;
+
 	return 0;
 }
 
@@ -58,23 +63,35 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 		break;
 
 	case NMEA_GPGSV_PRN:
+	case NMEA_GPGSV_PRN + 4:
+	case NMEA_GPGSV_PRN + 8:
+	case NMEA_GPGSV_PRN + 12:
 		/* Parse longitude */
-		data->prn = atoi(value);
+		data->sat[(val_index - NMEA_GPGSV_PRN) / 4].prn = atoi(value);
 		break;
 
 	case NMEA_GPGSV_ELEVATION:
+	case NMEA_GPGSV_ELEVATION + 4:
+	case NMEA_GPGSV_ELEVATION + 8:
+	case NMEA_GPGSV_ELEVATION + 12:
 		/* Parse cardinal direction */
-		data->elevation = atoi(value);
+		data->sat[(val_index - NMEA_GPGSV_ELEVATION) / 4].elevation = atoi(value);
 		break;
 
 	case NMEA_GPGSV_AZIMUTH:
+	case NMEA_GPGSV_AZIMUTH + 4:
+	case NMEA_GPGSV_AZIMUTH + 8:
+	case NMEA_GPGSV_AZIMUTH + 12:
 		/* Parse number of satellies */
-		data->azimuth = atoi(value);
+		data->sat[(val_index - NMEA_GPGSV_AZIMUTH) / 4].azimuth = atoi(value);
 		break;
 
 	case NMEA_GPGSV_SNR:
+	case NMEA_GPGSV_SNR + 4:
+	case NMEA_GPGSV_SNR + 8:
+	case NMEA_GPGSV_SNR + 12:
 		/* Parse altitude */
-		data->snr = atoi(value);
+		data->sat[(val_index - NMEA_GPGSV_SNR) / 4].snr = atoi(value);
 		break;
 
 	default:

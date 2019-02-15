@@ -29,6 +29,9 @@ DECLARE_PARSER_API(gpgga)
 #ifdef ENABLE_GPRMC
 DECLARE_PARSER_API(gprmc)
 #endif
+#ifdef ENABLE_GPGSV
+DECLARE_PARSER_API(gpgsv)
+#endif
 
 nmea_parser_module_s parsers[PARSER_COUNT];
 
@@ -53,6 +56,9 @@ nmea_load_parsers()
 #endif
 #ifdef ENABLE_GPRMC
 	PARSER_LOAD(gprmc);
+#endif
+#ifdef ENABLE_GPGSV
+	PARSER_LOAD(gpgsv);
 #endif
 
 	return PARSER_COUNT;

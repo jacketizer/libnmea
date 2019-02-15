@@ -10,10 +10,12 @@ typedef struct {
 	unsigned int sentences; //Number of sentences for full data
 	unsigned int sentence_number; //Current sentence number
 	unsigned int satellites; //Number of satellites in view
-	unsigned int prn; //Satellite PRN number
-	int elevation; //Elevation, degrees
-	int azimuth; //Azimuth, degrees
-	int snr; //SNR - higher is better
+	struct {
+		int prn; //Satellite PRN number
+		int elevation; //Elevation, degrees
+		int azimuth; //Azimuth, degrees
+		int snr; //SNR - higher is better
+	} sat[4];
 } nmea_gpgsv_s;
 
 /* Value indexes */
