@@ -49,6 +49,17 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 		}
 		break;
 
+	case NMEA_GPRMC_STATUS:
+		/* Parse status */
+		if (*value == 'A') {
+			data->valid = true;
+		} else if (*value == 'V') {
+			data->valid = false;
+		} else {
+			return -1;
+		}
+		break;
+
 	case NMEA_GPRMC_LATITUDE:
 		/* Parse latitude */
 		if (-1 == nmea_position_parse(value, &data->latitude)) {

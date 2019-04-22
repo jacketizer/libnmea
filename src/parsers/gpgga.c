@@ -79,6 +79,11 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 		}
 		break;
 
+	case NMEA_GPGGA_POSITION_FIX:
+		/* Parse position fix indicator */
+		data->position_fix = atoi(value);
+		break;
+
 	case NMEA_GPGGA_N_SATELLITES:
 		/* Parse number of satellies */
 		data->n_satellites = atoi(value);

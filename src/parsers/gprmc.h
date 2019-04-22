@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <time.h>
 #include <nmea.h>
 
@@ -12,6 +13,7 @@ typedef struct {
 	nmea_position latitude;
 	double speed;
 	struct tm time;
+	bool valid;
 } nmea_gprmc_s;
 
 /* Value indexes */
@@ -22,4 +24,5 @@ typedef struct {
 #define NMEA_GPRMC_TIME			0
 #define NMEA_GPRMC_DATE			8
 #define NMEA_GPRMC_SPEED		6
+#define NMEA_GPRMC_STATUS		1
 #endif  /* INC_NMEA_GPRMC_H */
