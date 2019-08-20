@@ -117,7 +117,7 @@ main(void)
 		  	printf("GPGGA sentence\n");
 		  	nmea_gpgga_s *gpgga = (nmea_gpgga_s *) data;
 		  	printf("Number of satellites: %d\n", gpgga->n_satellites);
-		  	printf("Altitude: %d %c\n", gpgga->altitude, gpgga->altitude_unit);
+		  	printf("Altitude: %f %c\n", gpgga->altitude, gpgga->altitude_unit);
 		  }
 
 		  if (NMEA_GPGLL == data->type) {

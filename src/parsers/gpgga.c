@@ -86,12 +86,22 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 
 	case NMEA_GPGGA_ALTITUDE:
 		/* Parse altitude */
-		data->altitude = atoi(value);
+		data->altitude = atof(value);
 		break;
 
 	case NMEA_GPGGA_ALTITUDE_UNIT:
 		/* Parse altitude unit */
 		data->altitude_unit = *value;
+		break;
+
+	case NMEA_GPGGA_UNDULATION:
+		/* Parse undulation */
+		data->undulation = atof(value);
+		break;
+
+	case NMEA_GPGGA_UNDULATION_UNIT:
+		/* Parse undulation unit */
+		data->undulation_unit = *value;
 		break;
 
 	default:
