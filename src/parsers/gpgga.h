@@ -30,4 +30,6 @@ typedef struct {
 #define NMEA_GPGGA_UNDULATION		10
 #define NMEA_GPGGA_UNDULATION_UNIT	11
 
+#define INVALID_UNDULATION -9999.999
+
 #endif  /* INC_NMEA_GPGGA_H */
