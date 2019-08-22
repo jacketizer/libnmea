@@ -110,18 +110,6 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 		}
 		break;
 
-	case NMEA_GPRMC_DATE:
-		/* Parse date */
-		if (-1 == nmea_date_parse(value, &data->time)) {
-			return -1;
-		}
-		break;
-
-	case NMEA_GPRMC_SPEED:
-		/* Parse ground speed in knots */
-		data->speed = atof(value);
-		break;
-
 	default:
 		break;
 	}

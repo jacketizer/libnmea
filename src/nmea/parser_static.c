@@ -20,14 +20,26 @@
 	} \
 	i++;
 
-#ifdef ENABLE_GPGLL
-DECLARE_PARSER_API(gpgll)
-#endif
 #ifdef ENABLE_GPGGA
-DECLARE_PARSER_API(gpgga)
+	DECLARE_PARSER_API(gpgga)
+#endif
+#ifdef ENABLE_GPGLL
+	DECLARE_PARSER_API(gpgll)
+#endif
+#ifdef ENABLE_GPGSA
+	DECLARE_PARSER_API(gpgsa)
+#endif
+#ifdef ENABLE_GPGSV
+	DECLARE_PARSER_API(gpgsv)
 #endif
 #ifdef ENABLE_GPRMC
-DECLARE_PARSER_API(gprmc)
+	DECLARE_PARSER_API(gprmc)
+#endif
+#ifdef ENABLE_GPTXT
+	DECLARE_PARSER_API(gptxt)
+#endif
+#ifdef ENABLE_GPVTG
+	DECLARE_PARSER_API(gpvtg)
 #endif
 
 nmea_parser_module_s parsers[PARSER_COUNT];
@@ -45,14 +57,26 @@ nmea_load_parsers()
 	int i = 0;
 	nmea_parser_module_s *parser;
 
-#ifdef ENABLE_GPGLL
-	PARSER_LOAD(gpgll);
-#endif
 #ifdef ENABLE_GPGGA
 	PARSER_LOAD(gpgga);
 #endif
+#ifdef ENABLE_GPGLL
+	PARSER_LOAD(gpgll);
+#endif
+#ifdef ENABLE_GPGSA
+	PARSER_LOAD(gpgsa);
+#endif
+#ifdef ENABLE_GPGSV
+	PARSER_LOAD(gpgsv);
+#endif
 #ifdef ENABLE_GPRMC
 	PARSER_LOAD(gprmc);
+#endif
+#ifdef ENABLE_GPTXT
+	PARSER_LOAD(gptxt);
+#endif
+#ifdef ENABLE_GPVTG
+	PARSER_LOAD(gpvtg);
 #endif
 
 	return PARSER_COUNT;

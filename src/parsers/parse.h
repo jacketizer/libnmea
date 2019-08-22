@@ -12,8 +12,6 @@
 
 #define NMEA_TIME_FORMAT	"%H%M%S"
 #define NMEA_TIME_FORMAT_LEN	6
-#define NMEA_DATE_FORMAT	"%d%m%y"
-#define NMEA_DATE_FORMAT_LEN	6
 
 #define NMEA_DATE_FORMAT	"%d%m%y"
 #define NMEA_DATE_FORMAT_LEN	6

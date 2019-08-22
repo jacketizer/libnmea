@@ -25,8 +25,11 @@ main(void)
 	// Parse...
 	data = nmea_parse(sentence, strlen(sentence), 0);
 
-	if (NULL != data)
-	{
+	if(data == NULL) {
+		printf("Failed to parse sentence!\n");
+		return -1;
+	}
+
 	if (NMEA_GPGLL == data->type) {
 		nmea_gpgll_s *gpgll = (nmea_gpgll_s *) data;
 
@@ -87,11 +90,6 @@ main(void)
   }
 
 	nmea_free(data);
-	}
-	else
-	{
-	  printf("BAD PARSE!\n");
-	}
 
 	return 0;
 }
