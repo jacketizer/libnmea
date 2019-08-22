@@ -21,25 +21,25 @@
 	i++;
 
 #ifdef ENABLE_GPGGA
-	DECLARE_PARSER_API(gpgga)
+DECLARE_PARSER_API(gpgga)
 #endif
 #ifdef ENABLE_GPGLL
-	DECLARE_PARSER_API(gpgll)
+DECLARE_PARSER_API(gpgll)
 #endif
 #ifdef ENABLE_GPGSA
-	DECLARE_PARSER_API(gpgsa)
+DECLARE_PARSER_API(gpgsa)
 #endif
 #ifdef ENABLE_GPGSV
-	DECLARE_PARSER_API(gpgsv)
+DECLARE_PARSER_API(gpgsv)
 #endif
 #ifdef ENABLE_GPRMC
-	DECLARE_PARSER_API(gprmc)
+DECLARE_PARSER_API(gprmc)
 #endif
 #ifdef ENABLE_GPTXT
-	DECLARE_PARSER_API(gptxt)
+DECLARE_PARSER_API(gptxt)
 #endif
 #ifdef ENABLE_GPVTG
-	DECLARE_PARSER_API(gpvtg)
+DECLARE_PARSER_API(gpvtg)
 #endif
 
 nmea_parser_module_s parsers[PARSER_COUNT];
