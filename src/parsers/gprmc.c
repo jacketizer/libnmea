@@ -7,7 +7,7 @@ init(nmea_parser_s *parser)
 {
 	/* Declare what sentence type to parse */
 	NMEA_PARSER_TYPE(parser, NMEA_GPRMC);
-	NMEA_PARSER_PREFIX(parser, "GPRMC");
+	NMEA_PARSER_PREFIX(parser, "RMC");
 	return 0;
 }
 

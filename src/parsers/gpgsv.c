@@ -7,7 +7,7 @@ init(nmea_parser_s *parser)
 {
 	/* Declare what sentence type to parse */
 	NMEA_PARSER_TYPE(parser, NMEA_GPGSV);
-	NMEA_PARSER_PREFIX(parser, "GPGSV");
+	NMEA_PARSER_PREFIX(parser, "GSV");
 	return 0;
 }
 
