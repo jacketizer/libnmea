@@ -1,7 +1,10 @@
 #ifndef INC_NMEA_PARSE_H
 #define INC_NMEA_PARSE_H
 
+#ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE /* glibc2 needs this */
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
