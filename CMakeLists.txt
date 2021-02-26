@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.5)
 project(libnmea C)
 
 set(LIBNMEA_MAJOR_VERSION 0)
@@ -80,6 +80,7 @@ if (NMEA_BUILD_STATIC_LIB)
         src/nmea/parser_static.c
         src/parsers/parse.c)
     set_target_properties(nmea PROPERTIES VERSION ${LIBNMEA_VERSION})
+    target_include_directories(nmea INTERFACE src/nmea)
     target_link_libraries(nmea dl)
     install(TARGETS nmea DESTINATION lib)
 endif()
@@ -94,6 +95,7 @@ if (NMEA_BUILD_SHARED_LIB)
 
     add_library(nmea_shared SHARED ${NMEA_SRC})
     set_target_properties(nmea_shared PROPERTIES VERSION ${LIBNMEA_VERSION})
+    target_include_directories(nmea_shared INTERFACE src/nmea)
     target_link_libraries(nmea_shared dl)
 
     if (UNIX)
@@ -140,11 +142,11 @@ if (NMEA_BUILD_STATIC_LIB)
         target_compile_definitions(nmea PRIVATE -DENABLE_${PARSER})
         string(TOLOWER ${PARSER} PARSER)
         add_custom_command(TARGET nmea PRE_LINK
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym init=nmea_${PARSER}_init ${PARSER}.c.o
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym parse=nmea_${PARSER}_parse ${PARSER}.c.o
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym set_default=nmea_${PARSER}_set_default ${PARSER}.c.o
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym allocate_data=nmea_${PARSER}_allocate_data ${PARSER}.c.o
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym free_data=nmea_${PARSER}_free_data ${PARSER}.c.o
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym init=nmea_${PARSER}_init ${PARSER}.c.obj
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym parse=nmea_${PARSER}_parse ${PARSER}.c.obj
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym set_default=nmea_${PARSER}_set_default ${PARSER}.c.obj
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym allocate_data=nmea_${PARSER}_allocate_data ${PARSER}.c.obj
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym free_data=nmea_${PARSER}_free_data ${PARSER}.c.obj
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/nmea.dir/src/parsers/)
     endforeach()
     target_sources(nmea PRIVATE ${PARSERS_SRCS})
