@@ -41,26 +41,25 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 {
 	nmea_gptxt_s *data = (nmea_gptxt_s *) parser->data;
   
-  memset(data->text, 0, 64);
+	memset(data->text, 0, NMEA_GPTXT_TEXT_SIZE);
 
-  switch (val_index)
-  {
-    case NMEA_GPTXT_ID00:
-      data->id_00 = strtol(value, NULL, 10);
-      break;
-    case NMEA_GPTXT_ID01:
-      data->id_01 = strtol(value, NULL, 10);
-      break;
-    case NMEA_GPTXT_ID02:
-      data->id_02 = strtol(value, NULL, 10);
-      break;
-    case NMEA_GPTXT_TEXT:
-      strncpy(data->text, value, 64);
-      data->text[strlen(value)] = '\0';
-      break;
-    default:
-      break;
-  }
+	switch (val_index) {
+	case NMEA_GPTXT_ID00:
+		data->id_00 = strtol(value, NULL, 10);
+		break;
+	case NMEA_GPTXT_ID01:
+		data->id_01 = strtol(value, NULL, 10);
+		break;
+	case NMEA_GPTXT_ID02:
+		data->id_02 = strtol(value, NULL, 10);
+		break;
+	case NMEA_GPTXT_TEXT:
+		strncpy(data->text, value, NMEA_GPTXT_TEXT_SIZE);
+		data->text[NMEA_GPTXT_TEXT_SIZE - 1] = '\0';
+		break;
+	default:
+		break;
+	}
 
 	return 0;
 }

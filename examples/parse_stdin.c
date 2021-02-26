@@ -154,12 +154,15 @@ main(void)
 		  	printf("  Degrees: %f\n", pos->magvar_deg);
 		  	printf("  Cardinal: %c\n", (char) pos->magvar_cardinal);
 		  	double adjusted_course = pos->track_deg;            
-		  	if (NMEA_CARDINAL_DIR_EAST == pos->magvar_cardinal)
+		  	if (NMEA_CARDINAL_DIR_EAST == pos->magvar_cardinal) {
 		  		adjusted_course -= pos->magvar_deg;
-		  	else if (NMEA_CARDINAL_DIR_WEST == pos->magvar_cardinal)
+			}
+		  	else if (NMEA_CARDINAL_DIR_WEST == pos->magvar_cardinal) {
 		  		adjusted_course += pos->magvar_deg;
-		  	else
+			}
+		  	else {
 		  		printf("Invalid Magnetic Variation Direction!!\n");
+			}
 
 		  	printf("Adjusted Track (heading): %f\n", adjusted_course);
 		  }
