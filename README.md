@@ -1,7 +1,7 @@
 # C Library for Parsing NMEA 0183 Sentences
 
-[![Build Status](https://travis-ci.org/jacketizer/libnmea.svg?branch=master)](https://travis-ci.org/jacketizer/libnmea)
-[![Memory Leaks](https://img.shields.io/badge/memory%20leaks-0%20bytes-brightgreen.svg)](https://travis-ci.org/jacketizer/libnmea)
+[![Build Status](https://github.com/jacketizer/libnmea/workflows/builds%20and%20tests/badge.svg)](https://github.com/jacketizer/libnmea/actions?query=workflow%3A%22builds+and+tests%22+branch%3Amaster)
+![Memory Leaks](https://img.shields.io/badge/memory%20leaks-0%20bytes-brightgreen.svg)
 [![License](https://img.shields.io/npm/l/express.svg)](https://raw.githubusercontent.com/jacketizer/libnmea/master/LICENSE)
 
 Libnmea is a lightweight C library that parses NMEA 0183 sentence strings into
