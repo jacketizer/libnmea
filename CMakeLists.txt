@@ -81,7 +81,9 @@ if (NMEA_BUILD_STATIC_LIB)
         src/parsers/parse.c)
     set_target_properties(nmea PROPERTIES VERSION ${LIBNMEA_VERSION})
     target_include_directories(nmea INTERFACE src/nmea)
-    target_link_libraries(nmea dl)
+    if (UNIX)
+        target_link_libraries(nmea ${CMAKE_DL_LIBS})
+    endif()
     install(TARGETS nmea DESTINATION lib)
 endif()
 
@@ -96,9 +98,9 @@ if (NMEA_BUILD_SHARED_LIB)
     add_library(nmea_shared SHARED ${NMEA_SRC})
     set_target_properties(nmea_shared PROPERTIES VERSION ${LIBNMEA_VERSION})
     target_include_directories(nmea_shared INTERFACE src/nmea)
-    target_link_libraries(nmea_shared dl)
 
     if (UNIX)
+        target_link_libraries(nmea_shared ${CMAKE_DL_LIBS})
         set_target_properties(nmea_shared PROPERTIES OUTPUT_NAME nmea)
     endif()
 
@@ -120,7 +122,11 @@ source_group("Parser Sources" FILES ${PARSERS_SRCS})
 
 foreach(PARSER_SRC ${PARSERS_SRCS})
     get_filename_component(PARSER_NAME ${PARSER_SRC} NAME_WE)
-    add_library(${PARSER_NAME} SHARED ${PARSER_SRC} src/parsers/parse.c)
+    if (NMEA_BUILD_STATIC_LIB)
+        add_library(${PARSER_NAME} STATIC ${PARSER_SRC} src/parsers/parse.c)
+    else()
+        add_library(${PARSER_NAME} SHARED ${PARSER_SRC} src/parsers/parse.c)
+    endif()
 
     # Copy parser plugins to separate cmake build directory.
     set_target_properties(${PARSER_NAME} PROPERTIES
@@ -227,7 +233,7 @@ if (NMEA_UNIT_TESTS)
     # NMEA unit tests.
     #
     add_executable(utests-nmea src/nmea/parser.c tests/unit-tests/test_nmea_helpers.c)
-    target_link_libraries(utests-nmea dl)
+    target_link_libraries(utests-nmea ${CMAKE_DL_LIBS})
 
     set(TESTS utests utests-parse utests-nmea)
 
