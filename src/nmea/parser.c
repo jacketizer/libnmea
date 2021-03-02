@@ -148,8 +148,6 @@ nmea_load_parsers()
 	if (NULL == parser_path) {
 		/* Use default path */
 		parser_path = PARSER_PATH;
-	} else {
-		parser_path = parser_path;
 	}
 
 	n_parsers = _get_so_files(parser_path, files);
