@@ -85,7 +85,7 @@ src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -MM $< > $(patsubst %.o,%.d,$@)
-	$(CC) $(CFLAGS) -DPARSER_PATH=$(PREFIX)/lib/nmea/ $< -o $@
+	$(CC) $(CFLAGS) -DPARSER_PATH=\"$(PREFIX)/lib/nmea/\" $< -o $@
 endif
 # ifdef NMEA_STATIC
 

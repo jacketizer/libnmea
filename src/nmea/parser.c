@@ -10,7 +10,10 @@ nmea_parser_module_s **parsers;
  * Where to find the parser modules.
  * Can be overridden by env variable NMEA_PARSER_PATH
  */
+#ifndef PARSER_PATH
 #define PARSER_PATH "/usr/lib/nmea/"
+#endif
+
 #define FILENAME_MAX 255
 
 static int
