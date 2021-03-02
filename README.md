@@ -60,6 +60,12 @@ export C_INCLUDE_PATH="<prefix>/include"
 export LD_LIBRARY_PATH="<prefix>/lib"
 ```
 
+Additionally, set `NMEA_PARSER_PATH` variable before running the program:
+```sh
+export NMEA_PARSER_PATH="<prefix>/lib/nmea/"
+```
+Note that the trailing slash is required!
+
 ## How to use it
 
 First, include *nmea.h* and the header files for the desired sentence types:
