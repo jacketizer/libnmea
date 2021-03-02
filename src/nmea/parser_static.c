@@ -85,10 +85,6 @@ nmea_get_parser_by_sentence(const char *sentence)
 	int i;
 
 	for (i = 0; i < PARSER_COUNT; i++) {
-		if (NULL == parsers[i].parser.type_word) {
-			continue;
-		}
-
 		if (0 == strncmp(sentence + 1, parsers[i].parser.type_word, NMEA_PREFIX_LENGTH)) {
 			return &(parsers[i]);
 		}
