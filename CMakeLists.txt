@@ -49,6 +49,9 @@ if (NOT NMEA_BUILD_STATIC_LIB)
     set(NMEA_UNIT_TESTS_LINK_STATIC OFF)
 endif()
 
+# Set default warning flags for all targets in this directory
+add_compile_options(-Wall -Werror)
+
 # Set some nicer output dirs.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
