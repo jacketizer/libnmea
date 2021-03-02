@@ -98,6 +98,7 @@ if (NMEA_BUILD_SHARED_LIB)
     endif()
 
     install(TARGETS nmea_shared DESTINATION lib)
+    target_compile_definitions(nmea_shared PRIVATE -DPARSER_PATH="${CMAKE_INSTALL_PREFIX}/lib/nmea/")
 
     if (POLICY CMP0042)
         cmake_policy(POP)
