@@ -210,6 +210,10 @@ nmea_get_parser_by_sentence(const char *sentence)
 	int i;
 	nmea_parser_module_s *parser;
 
+	if (0 == strlen(sentence)) {
+		return (nmea_parser_module_s *) NULL;
+	}
+
 	for (i = 0; i < n_parsers; i++) {
 		parser = parsers[i];
 		if (0 == strncmp(sentence + 1, parser->parser.type_word, NMEA_PREFIX_LENGTH)) {
