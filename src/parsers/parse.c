@@ -60,8 +60,6 @@ nmea_time_parse(char *s, struct tm *time)
 {
 	char *rv;
 
-	memset(time, 0, sizeof (struct tm));
-
 	if (s == NULL || *s == '\0') {
 		return -1;
 	}
@@ -75,27 +73,26 @@ nmea_time_parse(char *s, struct tm *time)
 }
 
 int
-nmea_date_parse(char *s, struct tm *time)
+nmea_date_parse(char *s, struct tm *date)
 {
 	char *rv;
-
-	// Assume it has been already cleared
-	// memset(time, 0, sizeof (struct tm));
 
 	if (s == NULL || *s == '\0') {
 		return -1;
 	}
 
-	rv = strptime(s, NMEA_DATE_FORMAT, time);
+	rv = strptime(s, NMEA_DATE_FORMAT, date);
 	if (NULL == rv || (int) (rv - s) != NMEA_DATE_FORMAT_LEN) {
 		return -1;
 	}
 
 	// Normalize tm_year according to C standard library
-	if (time->tm_year > 1900)
-		time->tm_year -= TM_YEAR_START; // ZDA message case
-	else
-		time->tm_year += (RMC_YEAR_START - TM_YEAR_START); // RMC message case
+	if (date->tm_year > 1900) { // ZDA message case
+		date->tm_year -= TM_YEAR_START;
+	}
+	else { // RMC message case
+		date->tm_year += (RMC_YEAR_START - TM_YEAR_START);
+	}
 
 	return 0;
 }
