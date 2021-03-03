@@ -23,7 +23,7 @@ SRC_EXAMPLES := $(shell find examples/ -type f -name "*.c")
 BIN_EXAMPLES := $(patsubst %.c, %, $(SRC_EXAMPLES))
 
 CC := gcc
-CFLAGS := -c -fPIC -g -Wall
+CFLAGS := -c -fPIC -g -Wall -Werror
 LDFLAGS := -shared -fvisibility=hidden -Wl,--exclude-libs=ALL,--no-as-needed,-soname,libnmea.so -Wall -g
 LDFLAGS_DL := -ldl
 
@@ -85,7 +85,7 @@ src/parsers/%: src/parsers/%.c $(OBJ_PARSER_DEP)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -MM $< > $(patsubst %.o,%.d,$@)
-	$(CC) $(CFLAGS) -DPARSER_PATH=$(PREFIX)/lib/nmea/ $< -o $@
+	$(CC) $(CFLAGS) -DPARSER_PATH=\"$(PREFIX)/lib/nmea/\" $< -o $@
 endif
 # ifdef NMEA_STATIC
 

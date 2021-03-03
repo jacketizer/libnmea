@@ -9,18 +9,19 @@ jobs:
     steps:
     - name: Check out the repository
       uses: actions/checkout@v2
+    - name: Build and test with CMake
+      run: |
+        mkdir -p cmake-build && cd cmake-build
+        cmake ..
+        make
+        export NMEA_PARSER_PATH=$PWD/parsers/
+        bin/utests
+        bin/utests-nmea
+        bin/minimum
+        bin/utests-parse
     - name: Build and test with make
       run: |
         make
         sudo make install
         make unit-tests
         make system-tests
-    - name: Build and test with CMake
-      run: |
-        mkdir -p cmake-build && cd cmake-build
-        cmake ..
-        make
-        bin/utests
-        bin/utests-nmea
-        bin/minimum
-        bin/utests-parse
