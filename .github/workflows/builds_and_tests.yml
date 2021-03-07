@@ -1,0 +1,27 @@
+# This name is also used in the status badge
+name: builds and tests
+
+on: [push, pull_request]
+
+jobs:
+  build_linux:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+    - name: Build and test with CMake
+      run: |
+        mkdir -p cmake-build && cd cmake-build
+        cmake ..
+        make
+        export NMEA_PARSER_PATH=$PWD/parsers/
+        bin/utests
+        bin/utests-nmea
+        bin/minimum
+        bin/utests-parse
+    - name: Build and test with make
+      run: |
+        make
+        sudo make install
+        make unit-tests
+        make system-tests

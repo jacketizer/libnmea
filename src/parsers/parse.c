@@ -1,5 +1,8 @@
 #include "parse.h"
 
+#define TM_YEAR_START 1900
+#define RMC_YEAR_START 2000
+
 int
 nmea_position_parse(char *s, nmea_position *pos)
 {
@@ -58,8 +61,6 @@ nmea_time_parse(char *s, struct tm *time)
 	char *rv;
 	uint32_t x;
 
-	memset(time, 0, sizeof (struct tm));
-
 	if (s == NULL || *s == '\0') {
 		return -1;
 	}
@@ -79,22 +80,27 @@ nmea_time_parse(char *s, struct tm *time)
 }
 
 int
-nmea_date_parse(char *s, struct tm *time)
+nmea_date_parse(char *s, struct tm *date)
 {
 	char *rv;
 	uint32_t x;
-
-	// Assume it has been already cleared
-	// memset(time, 0, sizeof (struct tm));
 
 	if (s == NULL || *s == '\0') {
 		return -1;
 	}
 
 	x = strtoul(s, &rv, 10);
-	time->tm_mday = x / 10000;
-	time->tm_mon = ((x % 10000) / 100) - 1;
-	time->tm_year = x % 100;
+	date->tm_mday = x / 10000;
+	date->tm_mon = ((x % 10000) / 100) - 1;
+	date->tm_year = x % 100;
+
+	// Normalize tm_year according to C standard library
+	if (date->tm_year > 1900) { // ZDA message case
+		date->tm_year -= TM_YEAR_START;
+	}
+	else { // RMC message case
+		date->tm_year += (RMC_YEAR_START - TM_YEAR_START);
+	}
 
 	return 0;
 }

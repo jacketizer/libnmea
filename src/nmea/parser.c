@@ -10,7 +10,10 @@ nmea_parser_module_s **parsers;
  * Where to find the parser modules.
  * Can be overridden by env variable NMEA_PARSER_PATH
  */
+#ifndef PARSER_PATH
 #define PARSER_PATH "/usr/lib/nmea/"
+#endif
+
 #define FILENAME_MAX 255
 
 static int
@@ -145,8 +148,6 @@ nmea_load_parsers()
 	if (NULL == parser_path) {
 		/* Use default path */
 		parser_path = PARSER_PATH;
-	} else {
-		parser_path = parser_path;
 	}
 
 	n_parsers = _get_so_files(parser_path, files);
@@ -208,6 +209,10 @@ nmea_get_parser_by_sentence(const char *sentence)
 {
 	int i;
 	nmea_parser_module_s *parser;
+
+	if (0 == strlen(sentence)) {
+		return (nmea_parser_module_s *) NULL;
+	}
 
 	for (i = 0; i < n_parsers; i++) {
 		parser = parsers[i];

@@ -98,6 +98,9 @@ void nmea_cleanup()
 nmea_t
 nmea_get_type(const char *sentence)
 {
+	if (NULL == sentence) {
+		return NMEA_UNKNOWN;
+	}
 	nmea_parser_module_s *parser = nmea_get_parser_by_sentence(sentence);
 	if (NULL == parser) {
 		return NMEA_UNKNOWN;
