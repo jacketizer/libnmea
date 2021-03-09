@@ -26,6 +26,11 @@ int
 set_default(nmea_parser_s *parser)
 {
 	memset(parser->data, 0, sizeof (nmea_gpgsv_s));
+	((nmea_gpgsv_s *) parser->data)->sat[0].prn = -1;
+	((nmea_gpgsv_s *) parser->data)->sat[1].prn = -1;
+	((nmea_gpgsv_s *) parser->data)->sat[2].prn = -1;
+	((nmea_gpgsv_s *) parser->data)->sat[3].prn = -1;
+
 	return 0;
 }
 
@@ -57,84 +62,36 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 		data->satellites = atoi(value);
 		break;
 
-	case NMEA_GPGSV_S0_PRN:
-		/* Parse SV0 PRN */
-		data->s0_prn = atoi(value);
+	case NMEA_GPGSV_PRN:
+	case NMEA_GPGSV_PRN + 4:
+	case NMEA_GPGSV_PRN + 8:
+	case NMEA_GPGSV_PRN + 12:
+		/* Parse longitude */
+		data->sat[(val_index - NMEA_GPGSV_PRN) / 4].prn = atoi(value);
 		break;
 
-	case NMEA_GPGSV_S0_EL:
-		/* Parse SV0 Elevation in degrees, 90 maximum */
-		data->s0_el_deg = atoi(value);
+	case NMEA_GPGSV_ELEVATION:
+	case NMEA_GPGSV_ELEVATION + 4:
+	case NMEA_GPGSV_ELEVATION + 8:
+	case NMEA_GPGSV_ELEVATION + 12:
+		/* Parse cardinal direction */
+		data->sat[(val_index - NMEA_GPGSV_ELEVATION) / 4].elevation = atoi(value);
 		break;
 
-	case NMEA_GPGSV_S0_AZ:
-		/* Parse SV0 Azimuth, degrees from true north, 000 - 359  */
-		data->s0_az_deg = atoi(value);
+	case NMEA_GPGSV_AZIMUTH:
+	case NMEA_GPGSV_AZIMUTH + 4:
+	case NMEA_GPGSV_AZIMUTH + 8:
+	case NMEA_GPGSV_AZIMUTH + 12:
+		/* Parse number of satellites */
+		data->sat[(val_index - NMEA_GPGSV_AZIMUTH) / 4].azimuth = atoi(value);
 		break;
 
-	case NMEA_GPGSV_S0_SNR:
-		/* Parse SV0 SNR, 00-99 dB (null when not tracking) */
-		data->s0_snr_db = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S1_PRN:
-		/* Parse SV1 PRN */
-		data->s1_prn = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S1_EL:
-		/* Parse SV1 Elevation in degrees, 90 maximum */
-		data->s1_el_deg = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S1_AZ:
-		/* Parse SV1 Azimuth, degrees from true north, 000 - 359  */
-		data->s1_az_deg = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S1_SNR:
-		/* Parse SV1 SNR, 00-99 dB (null when not tracking) */
-		data->s1_snr_db = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S2_PRN:
-		/* Parse SV2 PRN */
-		data->s2_prn = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S2_EL:
-		/* Parse SV2 Elevation in degrees, 90 maximum */
-		data->s2_el_deg = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S2_AZ:
-		/* Parse SV2 Azimuth, degrees from true north, 000 - 359  */
-		data->s2_az_deg = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S2_SNR:
-		/* Parse SV2 SNR, 00-99 dB (null when not tracking) */
-		data->s2_snr_db = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S3_PRN:
-		/* Parse SV3 PRN */
-		data->s3_prn = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S3_EL:
-		/* Parse SV3 Elevation in degrees, 90 maximum */
-		data->s3_el_deg = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S3_AZ:
-		/* Parse SV3 Azimuth, degrees from true north, 000 - 359  */
-		data->s3_az_deg = atoi(value);
-		break;
-
-	case NMEA_GPGSV_S3_SNR:
-		/* Parse SV3 SNR, 00-99 dB (null when not tracking) */
-		data->s3_snr_db = atoi(value);
+	case NMEA_GPGSV_SNR:
+	case NMEA_GPGSV_SNR + 4:
+	case NMEA_GPGSV_SNR + 8:
+	case NMEA_GPGSV_SNR + 12:
+		/* Parse altitude */
+		data->sat[(val_index - NMEA_GPGSV_SNR) / 4].snr = atoi(value);
 		break;
 
 	default:
