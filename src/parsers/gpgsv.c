@@ -53,12 +53,12 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 		break;
 
 	case NMEA_GPGSV_SENTENCE_NUMBER:
-		/* Parse latitude */
+		/* Parse sentence number */
 		data->sentence_number = atoi(value);
 		break;
 
 	case NMEA_GPGSV_SATELLITES:
-		/* Parse cardinal direction */
+		/* Parse number of SVs in view */
 		data->satellites = atoi(value);
 		break;
 
@@ -82,7 +82,7 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 	case NMEA_GPGSV_AZIMUTH + 4:
 	case NMEA_GPGSV_AZIMUTH + 8:
 	case NMEA_GPGSV_AZIMUTH + 12:
-		/* Parse number of satellies */
+		/* Parse number of satellites */
 		data->sat[(val_index - NMEA_GPGSV_AZIMUTH) / 4].azimuth = atoi(value);
 		break;
 

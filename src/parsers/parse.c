@@ -1,5 +1,8 @@
 #include "parse.h"
 
+#define TM_YEAR_START 1900
+#define RMC_YEAR_START 2000
+
 int
 nmea_position_parse(char *s, nmea_position *pos)
 {
@@ -56,36 +59,47 @@ int
 nmea_time_parse(char *s, struct tm *time)
 {
 	char *rv;
-
-	memset(time, 0, sizeof (struct tm));
+	uint32_t x;
 
 	if (s == NULL || *s == '\0') {
 		return -1;
 	}
 
-	rv = strptime(s, NMEA_TIME_FORMAT, time);
-	if (NULL == rv || (int) (rv - s) != NMEA_TIME_FORMAT_LEN) {
+	x = strtoul(s, &rv, 10);
+	time->tm_hour = x / 10000;
+	time->tm_min = (x % 10000) / 100;
+	time->tm_sec = x % 100;
+	if (time->tm_hour > 23 || time->tm_min > 59 || time->tm_sec > 59 || (int) (rv - s) < NMEA_TIME_FORMAT_LEN) {
 		return -1;
+	}
+	if (*rv == '.') {
+		/* TODO There is a sub-second field. */
 	}
 
 	return 0;
 }
 
 int
-nmea_date_parse(char *s, struct tm *time)
+nmea_date_parse(char *s, struct tm *date)
 {
 	char *rv;
-
-	// Assume it has been already cleared
-	// memset(time, 0, sizeof (struct tm));
+	uint32_t x;
 
 	if (s == NULL || *s == '\0') {
 		return -1;
 	}
 
-	rv = strptime(s, NMEA_DATE_FORMAT, time);
-	if (NULL == rv || (int) (rv - s) != NMEA_DATE_FORMAT_LEN) {
-		return -1;
+	x = strtoul(s, &rv, 10);
+	date->tm_mday = x / 10000;
+	date->tm_mon = ((x % 10000) / 100) - 1;
+	date->tm_year = x % 100;
+
+	// Normalize tm_year according to C standard library
+	if (date->tm_year > 1900) { // ZDA message case
+		date->tm_year -= TM_YEAR_START;
+	}
+	else { // RMC message case
+		date->tm_year += (RMC_YEAR_START - TM_YEAR_START);
 	}
 
 	return 0;

@@ -26,6 +26,9 @@ int
 set_default(nmea_parser_s *parser)
 {
 	memset(parser->data, 0, sizeof (nmea_gpgga_s));
+	// Set the default undulation to an invalid value
+	nmea_gpgga_s *data = (nmea_gpgga_s *) parser->data;
+	data->undulation = INVALID_UNDULATION;
 	return 0;
 }
 
@@ -79,6 +82,11 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 		}
 		break;
 
+	case NMEA_GPGGA_POSITION_FIX:
+		/* Parse position fix indicator */
+		data->position_fix = atoi(value);
+		break;
+
 	case NMEA_GPGGA_N_SATELLITES:
 		/* Parse number of satellies */
 		data->n_satellites = atoi(value);
@@ -86,12 +94,22 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 
 	case NMEA_GPGGA_ALTITUDE:
 		/* Parse altitude */
-		data->altitude = atoi(value);
+		data->altitude = atof(value);
 		break;
 
 	case NMEA_GPGGA_ALTITUDE_UNIT:
 		/* Parse altitude unit */
 		data->altitude_unit = *value;
+		break;
+
+	case NMEA_GPGGA_UNDULATION:
+		/* Parse undulation */
+		data->undulation = atof(value);
+		break;
+
+	case NMEA_GPGGA_UNDULATION_UNIT:
+		/* Parse undulation unit */
+		data->undulation_unit = *value;
 		break;
 
 	default:

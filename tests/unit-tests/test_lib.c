@@ -234,7 +234,7 @@ test_parse_invalid()
 
 	sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*FF\r\n");
 	res = nmea_parse(sentence, strlen(sentence), 1);
-	mu_assert("should return NULL when checksum is invalid", NULL != res);
+	mu_assert("should return NULL when checksum is invalid", NULL == res);
 	free(sentence);
 	nmea_free(res);
 
@@ -252,7 +252,6 @@ test_parse_invalid()
 
 	res = nmea_parse(NULL, 0, 1);
 	mu_assert("should return NULL when sentence is NULL", NULL == res);
-	free(sentence);
 	nmea_free(res);
 
 	return 0;
@@ -285,6 +284,7 @@ all_tests()
 	mu_group("nmea_parse()");
 	mu_run_test(test_parse_ok);
 	mu_run_test(test_parse_unknown);
+	mu_run_test(test_parse_invalid);
 	return 0;
 }
 

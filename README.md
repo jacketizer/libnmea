@@ -1,7 +1,7 @@
 # C Library for Parsing NMEA 0183 Sentences
 
-[![Build Status](https://travis-ci.org/jacketizer/libnmea.svg?branch=master)](https://travis-ci.org/jacketizer/libnmea)
-[![Memory Leaks](https://img.shields.io/badge/memory%20leaks-0%20bytes-brightgreen.svg)](https://travis-ci.org/jacketizer/libnmea)
+[![Build Status](https://github.com/jacketizer/libnmea/workflows/builds%20and%20tests/badge.svg)](https://github.com/jacketizer/libnmea/actions?query=workflow%3A%22builds+and+tests%22+branch%3Amaster)
+![Memory Leaks](https://img.shields.io/badge/memory%20leaks-0%20bytes-brightgreen.svg)
 [![License](https://img.shields.io/npm/l/express.svg)](https://raw.githubusercontent.com/jacketizer/libnmea/master/LICENSE)
 
 Libnmea is a lightweight C library that parses NMEA 0183 sentence strings into
@@ -17,7 +17,7 @@ ideas or improvements, please tell me or submit a merge request :-).
 
 [http//nmea.io](http://nmea.io/)
 
-Supported sentences: `GPGLL`, `GPGGA`, `GPRMC`, and `GPGSV`.
+Supported sentences: `GPGGA`, `GPGLL`, `GPGSA`, `GPGSV`, `GPRMC`, `GPTXT`, and `GPVTG`.
 
 ## To build
 
@@ -59,6 +59,12 @@ export LIBRARY_PATH="<prefix>/lib"
 export C_INCLUDE_PATH="<prefix>/include"
 export LD_LIBRARY_PATH="<prefix>/lib"
 ```
+
+Additionally, set `NMEA_PARSER_PATH` variable before running the program:
+```sh
+export NMEA_PARSER_PATH="<prefix>/lib/nmea/"
+```
+Note that the trailing slash is required!
 
 ## How to use it
 

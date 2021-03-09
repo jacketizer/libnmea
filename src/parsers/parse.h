@@ -1,7 +1,10 @@
 #ifndef INC_NMEA_PARSE_H
 #define INC_NMEA_PARSE_H
 
+#ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE /* glibc2 needs this */
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -43,6 +46,8 @@ nmea_cardinal_t nmea_cardinal_direction_parse(char *s);
  *
  * s is a string containing the time in format "HHMMSS".
  * time is a pointer to a tm struct where the parser time will be stored.
+ * It is assumed that time is already initialized, no initialization is done
+ * to the structure in this function.
  *
  * Returns 0 on success, otherwise -1.
  */
@@ -51,12 +56,14 @@ int nmea_time_parse(char *s, struct tm *time);
 /**
  * Parse date from a string
  *
- * s is a string containing the time in format "DDMMYY".
- * time is a pointer to a tm struct where the parser date will be stored.
+ * s is a string containing the date in format "ddmmyy".
+ * date is a pointer to a tm struct where the parser date will be stored.
+ * It is assumed that date is already initialized, no initialization is done
+ * to the structure in this function.
  *
  * Returns 0 on success, otherwise -1.
  */
-int nmea_date_parse(char *s, struct tm *time);
+int nmea_date_parse(char *s, struct tm *date);
 
 #ifdef __cplusplus
 }
