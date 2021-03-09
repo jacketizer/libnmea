@@ -83,10 +83,10 @@ main(void)
 		printf("\tNum: %d\n", gpgsv->sentences);
 		printf("\tID:  %d\n", gpgsv->sentence_number);
 		printf("\tSV:  %d\n", gpgsv->satellites);
-		printf("\t#1:  %d %d %d %d\n", gpgsv->s0_prn, gpgsv->s0_el_deg, gpgsv->s0_az_deg, gpgsv->s0_snr_db);
-		printf("\t#2:  %d %d %d %d\n", gpgsv->s1_prn, gpgsv->s1_el_deg, gpgsv->s1_az_deg, gpgsv->s1_snr_db);
-		printf("\t#3:  %d %d %d %d\n", gpgsv->s2_prn, gpgsv->s2_el_deg, gpgsv->s2_az_deg, gpgsv->s2_snr_db);
-		printf("\t#4:  %d %d %d %d\n", gpgsv->s3_prn, gpgsv->s3_el_deg, gpgsv->s3_az_deg, gpgsv->s3_snr_db);
+		printf("\t#1:  %d %d %d %d\n", gpgsv->sat[0].prn, gpgsv->sat[0].elevation, gpgsv->sat[0].azimuth, gpgsv->sat[0].snr);
+		printf("\t#2:  %d %d %d %d\n", gpgsv->sat[1].prn, gpgsv->sat[1].elevation, gpgsv->sat[1].azimuth, gpgsv->sat[1].snr);
+		printf("\t#3:  %d %d %d %d\n", gpgsv->sat[2].prn, gpgsv->sat[2].elevation, gpgsv->sat[2].azimuth, gpgsv->sat[2].snr);
+		printf("\t#4:  %d %d %d %d\n", gpgsv->sat[3].prn, gpgsv->sat[3].elevation, gpgsv->sat[3].azimuth, gpgsv->sat[3].snr);
 	}
 
 	nmea_free(data);
