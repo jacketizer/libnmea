@@ -16,7 +16,7 @@ typedef struct {
 	char altitude_unit;
 	double undulation;
 	char undulation_unit;
-  unsigned char position_fix;
+	unsigned char position_fix;
 } nmea_gpgga_s;
 
 /* Value indexes */
