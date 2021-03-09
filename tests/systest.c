@@ -59,7 +59,7 @@ main(void)
 
 			if (NMEA_GPGGA == data->type) {
 				nmea_gpgga_s *gpgga = (nmea_gpgga_s *) data;
-				printf("{ type: 'GPGGA', data: { satellites: %d, altitude: '%d%c' } }\n", gpgga->n_satellites, gpgga->altitude, gpgga->altitude_unit);
+				printf("{ type: 'GPGGA', data: { satellites: %d, altitude: '%.0lf%c' } }\n", gpgga->n_satellites, gpgga->altitude, gpgga->altitude_unit);
 			}
 
 			if (NMEA_GPGLL == data->type) {
@@ -73,7 +73,7 @@ main(void)
 
 			if (NMEA_GPRMC == data->type) {
 				nmea_gprmc_s *pos = (nmea_gprmc_s *) data;
-				strftime(buf, sizeof(buf), "%H:%M:%S", &pos->time);
+				strftime(buf, sizeof(buf), "%H:%M:%S", &pos->date_time);
 				printf("{ type: 'GPRMC', data: { long: '%c%d:%f', lat: '%c%d:%f', time: '%s' } }\n",\
 					(char) pos->longitude.cardinal, pos->longitude.degrees, pos->longitude.minutes,\
 					(char) pos->latitude.cardinal, pos->latitude.degrees, pos->latitude.minutes,\
