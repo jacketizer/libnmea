@@ -15,8 +15,6 @@ If you find any sentence missing, please add it by contributing to the code. I
 am open to suggestions regarding the code and architecture, so if you have any
 ideas or improvements, please tell me or submit a merge request :-).
 
-[http//nmea.io](http://nmea.io/)
-
 Supported sentences: `GPGGA`, `GPGLL`, `GPGSA`, `GPGSV`, `GPRMC`, `GPTXT`, and `GPVTG`.
 
 ## To build
