@@ -148,11 +148,11 @@ if (NMEA_BUILD_STATIC_LIB)
         target_compile_definitions(nmea PRIVATE -DENABLE_${PARSER})
         string(TOLOWER ${PARSER} PARSER)
         add_custom_command(TARGET nmea PRE_LINK
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym init=nmea_${PARSER}_init ${PARSER}.c.obj
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym parse=nmea_${PARSER}_parse ${PARSER}.c.obj
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym set_default=nmea_${PARSER}_set_default ${PARSER}.c.obj
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym allocate_data=nmea_${PARSER}_allocate_data ${PARSER}.c.obj
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym free_data=nmea_${PARSER}_free_data ${PARSER}.c.obj
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym init=nmea_${PARSER}_init ${PARSER}.c${CMAKE_C_OUTPUT_EXTENSION}
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym parse=nmea_${PARSER}_parse ${PARSER}.c${CMAKE_C_OUTPUT_EXTENSION}
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym set_default=nmea_${PARSER}_set_default ${PARSER}.c${CMAKE_C_OUTPUT_EXTENSION}
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym allocate_data=nmea_${PARSER}_allocate_data ${PARSER}.c${CMAKE_C_OUTPUT_EXTENSION}
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym free_data=nmea_${PARSER}_free_data ${PARSER}.c${CMAKE_C_OUTPUT_EXTENSION}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/nmea.dir/src/parsers/)
     endforeach()
     target_sources(nmea PRIVATE ${PARSERS_SRCS})
