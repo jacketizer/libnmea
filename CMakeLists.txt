@@ -233,7 +233,9 @@ if (NMEA_UNIT_TESTS)
     # NMEA unit tests.
     #
     add_executable(utests-nmea src/nmea/parser.c tests/unit-tests/test_nmea_helpers.c)
-    target_link_libraries(utests-nmea ${CMAKE_DL_LIBS})
+    if (UNIX)
+        target_link_libraries(utests-nmea ${CMAKE_DL_LIBS})
+    endif()
 
     set(TESTS utests utests-parse utests-nmea)
 
