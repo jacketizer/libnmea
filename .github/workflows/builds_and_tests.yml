@@ -19,6 +19,7 @@ jobs:
         bin/utests-nmea
         bin/minimum
         bin/utests-parse
+        ../tests/parse_stdin_test.sh bin/parse_stdin
     - name: Build and test with make
       run: |
         make

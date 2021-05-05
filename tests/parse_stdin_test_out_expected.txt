@@ -1,0 +1,58 @@
+GPRMC sentence
+Longitude:
+  Degrees: 80
+  Minutes: 2.496000
+  Cardinal: W
+Latitude:
+  Degrees: 35
+  Minutes: 54.928000
+  Cardinal: N
+Date & Time: 05 May 17:00:58 2021
+Speed, in Knots: 9.400000:
+Track, in degrees: 1.570000
+Magnetic Variation:
+  Degrees: 0.000000
+  Cardinal: E
+Adjusted Track (heading): 1.570000
+GPGGA sentence
+Number of satellites: 0
+Altitude: 0.000000 M
+GPGLL sentence
+Longitude:
+  Degrees: 80
+  Minutes: 2.496000
+  Cardinal: W
+Latitude:
+  Degrees: 35
+  Minutes: 54.928000
+  Cardinal: N
+Time: 17:01:00
+GPGSA Sentence:
+  Mode: A
+  Fix:  3
+  PDOP: 0.70
+  HDOP: 0.70
+  VDOP: 0.50
+GPGSV Sentence:
+  Num: 2
+  ID:  1
+  SV:  6
+  #1:  7 76 278 27
+  #2:  15 7 332 52
+  #3:  8 63 133 57
+  #4:  16 82 309 55
+GPGSV Sentence:
+  Num: 2
+  ID:  2
+  SV:  6
+  #1:  10 84 275 62
+  #2:  9 30 87 38
+  #3:  -1 0 0 0
+  #4:  -1 0 0 0
+GPVTG Sentence:
+  Track [deg]:   360.00
+  Speed [kmph]:  0.00
+  Speed [knots]: 0.00
+GPTXT Sentence:
+  ID: 1 1 2
+  u-blox ag - www.u-blox.com
