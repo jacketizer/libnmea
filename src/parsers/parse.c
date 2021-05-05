@@ -97,8 +97,7 @@ nmea_date_parse(char *s, struct tm *date)
 	// Normalize tm_year according to C standard library
 	if (date->tm_year > 1900) { // ZDA message case
 		date->tm_year -= TM_YEAR_START;
-	}
-	else { // RMC message case
+	} else { // RMC message case
 		date->tm_year += (RMC_YEAR_START - TM_YEAR_START);
 	}
 

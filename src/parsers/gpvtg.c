@@ -42,17 +42,17 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 	nmea_gpvtg_s *data = (nmea_gpvtg_s *) parser->data;
 
 	switch (val_index) {
-		case NMEA_GPVTG_TRACKGOOD:
-			data->track_deg = strtod(value, NULL);
-			break;
-		case NMEA_GPVTG_GNDSPD_KNOTS:
-			data->gndspd_knots = strtod(value, NULL);
-			break;
-		case NMEA_GPVTG_GNDSPD_KMPH:
-			data->gndspd_kmph = strtod(value, NULL);
-			break;
-		default:
-			break;
+	case NMEA_GPVTG_TRACKGOOD:
+		data->track_deg = strtod(value, NULL);
+		break;
+	case NMEA_GPVTG_GNDSPD_KNOTS:
+		data->gndspd_knots = strtod(value, NULL);
+		break;
+	case NMEA_GPVTG_GNDSPD_KMPH:
+		data->gndspd_kmph = strtod(value, NULL);
+		break;
+	default:
+		break;
 	}
 
 	return 0;
