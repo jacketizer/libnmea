@@ -231,7 +231,7 @@ nmea_parse(char *sentence, size_t length, int check_checksum)
 	/* Crop sentence from type word and checksum */
 	val_string = _crop_sentence(sentence, length);
 	if (NULL == val_string) {
-	      	return (nmea_s *) NULL;
+		return (nmea_s *) NULL;
 	}
 
 	/* Split the sentence into values */

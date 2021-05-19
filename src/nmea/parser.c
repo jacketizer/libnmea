@@ -37,7 +37,7 @@ _get_so_files(const char *path, char **files)
 
 		len = strlen(dir->d_name);
 
-		#ifdef __APPLE__
+#ifdef __APPLE__
 		if (len < 6) {
 			continue;
 		}
@@ -45,7 +45,7 @@ _get_so_files(const char *path, char **files)
 		if (0 != strncmp(dir->d_name + len - 6, ".dylib", 6)) {
 			continue;
 		}
-		#else
+#else
 		if (len < 3) {
 			continue;
 		}
@@ -53,7 +53,7 @@ _get_so_files(const char *path, char **files)
 		if (0 != strncmp(dir->d_name + len - 3, ".so", 3)) {
 			continue;
 		}
-		#endif
+#endif
 
 		name = malloc(FILENAME_MAX);
 		if (NULL == name) {
@@ -100,7 +100,7 @@ nmea_init_parser(const char *filename)
 		return (nmea_parser_module_s *) NULL;
 	}
 
- 	parser->handle = plugin;
+	parser->handle = plugin;
 
 	init = dlsym(plugin, "init");
 	if (NULL == init) {
