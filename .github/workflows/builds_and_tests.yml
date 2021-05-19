@@ -25,4 +25,5 @@ jobs:
         make
         sudo make install
         make unit-tests
-        make system-tests
+        make examples
+        tests/parse_stdin_test.sh build/parse_stdin
