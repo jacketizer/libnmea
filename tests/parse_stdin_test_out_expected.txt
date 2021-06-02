@@ -1,0 +1,131 @@
+GPRMC sentence
+Longitude:
+  Degrees: 80
+  Minutes: 2.496000
+  Cardinal: W
+Latitude:
+  Degrees: 35
+  Minutes: 54.928000
+  Cardinal: N
+Date & Time: 05 May 17:00:58 2021
+Speed, in Knots: 9.400000:
+Track, in degrees: 1.570000
+Magnetic Variation:
+  Degrees: 0.000000
+  Cardinal: E
+Adjusted Track (heading): 1.570000
+GPGGA sentence
+Number of satellites: 0
+Altitude: 0.000000 M
+GPGLL sentence
+Longitude:
+  Degrees: 80
+  Minutes: 2.496000
+  Cardinal: W
+Latitude:
+  Degrees: 35
+  Minutes: 54.928000
+  Cardinal: N
+Time: 17:01:00
+GPGSA Sentence:
+  Mode: A
+  Fix:  3
+  PDOP: 0.70
+  HDOP: 0.70
+  VDOP: 0.50
+GPGSV Sentence:
+  Num: 2
+  ID:  1
+  SV:  6
+  #1:  7 76 278 27
+  #2:  15 7 332 52
+  #3:  8 63 133 57
+  #4:  16 82 309 55
+GPGSV Sentence:
+  Num: 2
+  ID:  2
+  SV:  6
+  #1:  10 84 275 62
+  #2:  9 30 87 38
+  #3:  -1 0 0 0
+  #4:  -1 0 0 0
+GPVTG Sentence:
+  Track [deg]:   360.00
+  Speed [kmph]:  0.00
+  Speed [knots]: 0.00
+GPTXT Sentence:
+  ID: 1 1 2
+  u-blox ag - www.u-blox.com
+GPGLL sentence
+Longitude:
+  Degrees: 123
+  Minutes: 11.120000
+  Cardinal: W
+Latitude:
+  Degrees: 49
+  Minutes: 16.450000
+  Cardinal: N
+Time: 22:54:44
+GPGLL sentence
+Longitude:
+  Degrees: 123
+  Minutes: 11.120000
+  Cardinal: W
+Latitude:
+  Degrees: 49
+  Minutes: 16.450000
+  Cardinal: N
+Time: 22:54:44
+GPGLL sentence
+Longitude:
+  Degrees: 123
+  Minutes: 11.120000
+  Cardinal: W
+Latitude:
+  Degrees: 49
+  Minutes: 16.450000
+  Cardinal: N
+Time: 22:54:44
+GPGGA sentence
+Number of satellites: 8
+Altitude: 545.400000 M
+GPGGA sentence
+Number of satellites: 8
+Altitude: 545.400000 M
+GPGGA sentence
+Number of satellites: 8
+Altitude: 545.400000 M
+GPGSA Sentence:
+  Mode: A
+  Fix:  3
+  PDOP: 2.50
+  HDOP: 1.30
+  VDOP: 2.10
+GPGSV Sentence:
+  Num: 2
+  ID:  1
+  SV:  8
+  #1:  1 40 83 46
+  #2:  2 17 308 41
+  #3:  12 7 344 39
+  #4:  14 22 228 45
+GPRMC sentence
+Longitude:
+  Degrees: 11
+  Minutes: 31.000000
+  Cardinal: E
+Latitude:
+  Degrees: 48
+  Minutes: 7.038000
+  Cardinal: N
+Date & Time: 23 Mar 12:35:19 2094
+Speed, in Knots: 22.400000:
+Track, in degrees: 84.400000
+Magnetic Variation:
+  Degrees: 3.100000
+  Cardinal: W
+Adjusted Track (heading): 87.500000
+GPVTG Sentence:
+  Track [deg]:   54.70
+  Speed [kmph]:  10.20
+  Speed [knots]: 5.50

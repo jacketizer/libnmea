@@ -188,6 +188,12 @@ To check for memory leaks, run:
 $ make check-memory-leaks
 ```
 
+To verify that `parse_stdin` example works, build it and run the test script:
+```sh
+$ make examples
+$ tests/parse_stdin/test.sh build/parse_stdin
+```
+
 ## Library functions
 
 Check *nmea.h* for more detailed info about functions. The header files for the
@@ -297,6 +303,11 @@ Example `indent` command:
 $ indent -st -bad -bap -bbb -bc -blf -bli0 -br -brs -bs -cbi0 -ce -cli0 -cs -nbfda -npcs -nprs -nsob -saf -saw -sai src/nmea/nmea.c
 ```
 
+Example `astyle` command:
+```sh
+astyle --style=knf --indent=tab src/nmea/nmea.c
+```
+
 Use hard tabs. Example vim options:
 ```
 :set noexpandtab
@@ -309,3 +320,12 @@ Use hard tabs. Example vim options:
 ### Testing
 
 Every merge request must pass all the tests.
+
+### New sentence types
+
+When contributing support for new sentence types, please do the following:
+
+* Update the [parse_stdin.c](examples/parse_stdin.c) example to handle the newly added sentence type, printing all the parsed data.
+* Add an example message of the newly added type to [parse_stdin_test_in.txt](tests/parse_stdin_test_in.txt).
+* Add expected output to [parse_stdin_out_expected.txt](tests/parse_stdin_test_out_expected.txt).
+* Update README.md where the supported sentence types are listed.

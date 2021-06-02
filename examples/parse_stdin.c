@@ -10,6 +10,10 @@
 #include <nmea/gpgll.h>
 #include <nmea/gpgga.h>
 #include <nmea/gprmc.h>
+#include <nmea/gpgsa.h>
+#include <nmea/gpvtg.h>
+#include <nmea/gptxt.h>
+#include <nmea/gpgsv.h>
 
 char buffer[4096];
 int gps_fd;
@@ -59,7 +63,7 @@ main(void)
 	sigset_t block_mask;
 
 
-	gps_fd = 0; // stdin
+	gps_fd = STDIN_FILENO;
 
 	/* Register signal handler for SIGINT */
 	if (-1 == register_signals()) {
@@ -163,6 +167,47 @@ main(void)
 				}
 
 				printf("Adjusted Track (heading): %f\n", adjusted_course);
+			}
+
+			if (NMEA_GPGSA == data->type) {
+				nmea_gpgsa_s *gpgsa = (nmea_gpgsa_s *) data;
+
+				printf("GPGSA Sentence:\n");
+				printf("  Mode: %c\n", gpgsa->mode);
+				printf("  Fix:  %d\n", gpgsa->fixtype);
+				printf("  PDOP: %.2lf\n", gpgsa->pdop);
+				printf("  HDOP: %.2lf\n", gpgsa->hdop);
+				printf("  VDOP: %.2lf\n", gpgsa->vdop);
+			}
+
+			if (NMEA_GPGSV == data->type) {
+				nmea_gpgsv_s *gpgsv = (nmea_gpgsv_s *) data;
+
+				printf("GPGSV Sentence:\n");
+				printf("  Num: %d\n", gpgsv->sentences);
+				printf("  ID:  %d\n", gpgsv->sentence_number);
+				printf("  SV:  %d\n", gpgsv->satellites);
+				printf("  #1:  %d %d %d %d\n", gpgsv->sat[0].prn, gpgsv->sat[0].elevation, gpgsv->sat[0].azimuth, gpgsv->sat[0].snr);
+				printf("  #2:  %d %d %d %d\n", gpgsv->sat[1].prn, gpgsv->sat[1].elevation, gpgsv->sat[1].azimuth, gpgsv->sat[1].snr);
+				printf("  #3:  %d %d %d %d\n", gpgsv->sat[2].prn, gpgsv->sat[2].elevation, gpgsv->sat[2].azimuth, gpgsv->sat[2].snr);
+				printf("  #4:  %d %d %d %d\n", gpgsv->sat[3].prn, gpgsv->sat[3].elevation, gpgsv->sat[3].azimuth, gpgsv->sat[3].snr);
+			}
+
+			if (NMEA_GPTXT == data->type) {
+				nmea_gptxt_s *gptxt = (nmea_gptxt_s *) data;
+
+				printf("GPTXT Sentence:\n");
+				printf("  ID: %d %d %d\n", gptxt->id_00, gptxt->id_01, gptxt->id_02);
+				printf("  %s\n", gptxt->text);
+			}
+
+			if (NMEA_GPVTG == data->type) {
+				nmea_gpvtg_s *gpvtg = (nmea_gpvtg_s *) data;
+
+				printf("GPVTG Sentence:\n");
+				printf("  Track [deg]:   %.2lf\n", gpvtg->track_deg);
+				printf("  Speed [kmph]:  %.2lf\n", gpvtg->gndspd_kmph);
+				printf("  Speed [knots]: %.2lf\n", gpvtg->gndspd_knots);
 			}
 
 			nmea_free(data);
