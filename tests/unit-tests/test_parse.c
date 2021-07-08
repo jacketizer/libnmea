@@ -145,6 +145,13 @@ test_time_parse_ok()
 	mu_assert("t.tm_min should be 8", 8 == t.tm_min);
 	mu_assert("t.tm_hour should be 9", 9 == t.tm_hour);
 
+	/* Parse time, Applanix trailing zeros */
+	rv = nmea_time_parse("151148.00", &t);
+	mu_assert("should return 0 on success", 0 == rv);
+	mu_assert("t.tm_sec should be 48", 48 == t.tm_sec);
+	mu_assert("t.tm_min should be 11", 11 == t.tm_min);
+	mu_assert("t.tm_hour should be 15", 15 == t.tm_hour);
+
 	return 0;
 }
 
