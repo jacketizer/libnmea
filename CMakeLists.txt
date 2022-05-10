@@ -80,7 +80,7 @@ if (NMEA_BUILD_STATIC_LIB)
         src/nmea/parser_static.c
         src/parsers/parse.c)
     set_target_properties(nmea PROPERTIES VERSION ${LIBNMEA_VERSION})
-    target_include_directories(nmea INTERFACE src/nmea)
+    target_include_directories(nmea INTERFACE src)
     if (UNIX)
         target_link_libraries(nmea ${CMAKE_DL_LIBS})
     endif()
@@ -97,7 +97,7 @@ if (NMEA_BUILD_SHARED_LIB)
 
     add_library(nmea_shared SHARED ${NMEA_SRC})
     set_target_properties(nmea_shared PROPERTIES VERSION ${LIBNMEA_VERSION})
-    target_include_directories(nmea_shared INTERFACE src/nmea)
+    target_include_directories(nmea_shared INTERFACE src)
 
     if (UNIX)
         target_link_libraries(nmea_shared ${CMAKE_DL_LIBS})
