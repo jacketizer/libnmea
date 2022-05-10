@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.5)
 project(libnmea C)
 
 set(LIBNMEA_MAJOR_VERSION 0)
@@ -29,9 +29,9 @@ endforeach()
 option(NMEA_BUILD_STATIC_LIB "Build static libnmea" ON)
 option(NMEA_BUILD_SHARED_LIB "Build shared libnmea" ON)
 option(NMEA_BUILD_EXAMPLES "Build examples" ON)
-option(NMEA_EXAMPLES_LINK_STATIC "Link examples statically" OFF)
+option(NMEA_EXAMPLES_LINK_STATIC "Link examples statically" ON)
 option(NMEA_UNIT_TESTS "Build unit tests" ON)
-option(NMEA_UNIT_TESTS_LINK_STATIC "Link unit tests statically" OFF)
+option(NMEA_UNIT_TESTS_LINK_STATIC "Link unit tests statically" ON)
 option(NMEA_WITH_MEMCHECK "Run unit tests in valgrind" ON)
 
 if (NOT NMEA_BUILD_STATIC_LIB AND NOT NMEA_BUILD_SHARED_LIB)
@@ -80,7 +80,10 @@ if (NMEA_BUILD_STATIC_LIB)
         src/nmea/parser_static.c
         src/parsers/parse.c)
     set_target_properties(nmea PROPERTIES VERSION ${LIBNMEA_VERSION})
-    target_link_libraries(nmea dl)
+    target_include_directories(nmea INTERFACE src)
+    if (UNIX)
+        target_link_libraries(nmea ${CMAKE_DL_LIBS})
+    endif()
     install(TARGETS nmea DESTINATION lib)
 endif()
 
@@ -94,9 +97,10 @@ if (NMEA_BUILD_SHARED_LIB)
 
     add_library(nmea_shared SHARED ${NMEA_SRC})
     set_target_properties(nmea_shared PROPERTIES VERSION ${LIBNMEA_VERSION})
-    target_link_libraries(nmea_shared dl)
+    target_include_directories(nmea_shared INTERFACE src)
 
     if (UNIX)
+        target_link_libraries(nmea_shared ${CMAKE_DL_LIBS})
         set_target_properties(nmea_shared PROPERTIES OUTPUT_NAME nmea)
     endif()
 
@@ -118,7 +122,11 @@ source_group("Parser Sources" FILES ${PARSERS_SRCS})
 
 foreach(PARSER_SRC ${PARSERS_SRCS})
     get_filename_component(PARSER_NAME ${PARSER_SRC} NAME_WE)
-    add_library(${PARSER_NAME} SHARED ${PARSER_SRC} src/parsers/parse.c)
+    if (NMEA_BUILD_STATIC_LIB)
+        add_library(${PARSER_NAME} STATIC ${PARSER_SRC} src/parsers/parse.c)
+    else()
+        add_library(${PARSER_NAME} SHARED ${PARSER_SRC} src/parsers/parse.c)
+    endif()
 
     # Copy parser plugins to separate cmake build directory.
     set_target_properties(${PARSER_NAME} PROPERTIES
@@ -140,11 +148,11 @@ if (NMEA_BUILD_STATIC_LIB)
         target_compile_definitions(nmea PRIVATE -DENABLE_${PARSER})
         string(TOLOWER ${PARSER} PARSER)
         add_custom_command(TARGET nmea PRE_LINK
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym init=nmea_${PARSER}_init ${PARSER}.c.o
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym parse=nmea_${PARSER}_parse ${PARSER}.c.o
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym set_default=nmea_${PARSER}_set_default ${PARSER}.c.o
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym allocate_data=nmea_${PARSER}_allocate_data ${PARSER}.c.o
-            COMMAND ${CMAKE_OBJCOPY} --redefine-sym free_data=nmea_${PARSER}_free_data ${PARSER}.c.o
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym init=nmea_${PARSER}_init ${PARSER}.c${CMAKE_C_OUTPUT_EXTENSION}
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym parse=nmea_${PARSER}_parse ${PARSER}.c${CMAKE_C_OUTPUT_EXTENSION}
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym set_default=nmea_${PARSER}_set_default ${PARSER}.c${CMAKE_C_OUTPUT_EXTENSION}
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym allocate_data=nmea_${PARSER}_allocate_data ${PARSER}.c${CMAKE_C_OUTPUT_EXTENSION}
+            COMMAND ${CMAKE_OBJCOPY} --redefine-sym free_data=nmea_${PARSER}_free_data ${PARSER}.c${CMAKE_C_OUTPUT_EXTENSION}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/nmea.dir/src/parsers/)
     endforeach()
     target_sources(nmea PRIVATE ${PARSERS_SRCS})
@@ -225,7 +233,9 @@ if (NMEA_UNIT_TESTS)
     # NMEA unit tests.
     #
     add_executable(utests-nmea src/nmea/parser.c tests/unit-tests/test_nmea_helpers.c)
-    target_link_libraries(utests-nmea dl)
+    if (UNIX)
+        target_link_libraries(utests-nmea ${CMAKE_DL_LIBS})
+    endif()
 
     set(TESTS utests utests-parse utests-nmea)
 
