@@ -35,3 +35,6 @@
 build/
 *.d
 utests*
+
+# VSCode
+.vscode/

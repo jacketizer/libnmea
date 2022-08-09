@@ -91,14 +91,14 @@ extern int nmea_has_checksum(const char *sentence, size_t length);
  *   - Should be between the correct length.
  *   - Should start with a dollar sign.
  *   - The next five characters should be uppercase letters.
- *   - If it has a checksum, check it.
- *   - Ends with the correct 2 characters.
+ *   - If it has a checksum, check it (optional).
+ *   - Ends with the correct 2 characters (optional).
  *
  * length is the character length of the sentence string.
  *
  * Returns 0 if sentence is valid, otherwise -1.
  */
-extern int nmea_validate(const char *sentence, size_t length, int check_checksum);
+extern int nmea_validate(const char *sentence, size_t length, int check_checksum, int check_escape_chars);
 
 /**
  * Free an nmea data struct.
@@ -116,7 +116,7 @@ extern void nmea_free(nmea_s *data);
  *
  * Returns a pointer to an NMEA data struct, or (nmea_s *) NULL if an error occurs.
  */
-extern nmea_s *nmea_parse(char *sentence, size_t length, int check_checksum);
+extern nmea_s *nmea_parse(char *sentence, size_t length, int check_checksum, int check_escape_chars);
 
 #ifdef __cplusplus
 }
