@@ -103,7 +103,7 @@ test_validate_ok_with_crc()
 {
 	// Valid sentence with checksum
 	char *sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A,*1D\r\n");
-	int res = nmea_validate(sentence, strlen(sentence), 1);
+	int res = nmea_validate(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return 0 when sentence is valid", 0 == res);
 	free(sentence);
 
@@ -118,13 +118,13 @@ test_validate_ok_without_crc()
 
 	// Valid sentence without checksum
 	sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A\r\n");
-	res = nmea_validate(sentence, strlen(sentence), 1);
+	res = nmea_validate(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return 0 when sentence is valid", 0 == res);
 	free(sentence);
 
 	// Valid sentence with invalid checksum
 	sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A*FF\r\n");
-	res = nmea_validate(sentence, strlen(sentence), 0);
+	res = nmea_validate(sentence, strlen(sentence), 0, 1);
 	mu_assert("should return 0 when check_checksum is 0 and crc is invalid", 0 == res);
 	free(sentence);
 
@@ -136,7 +136,7 @@ test_validate_fail_type()
 {
 	// Invalid sentence type
 	char *sentence = strdup("$GPgll,4916.45,N,12311.12,W,225444,A\r\n");
-	int res = nmea_validate(sentence, strlen(sentence), 1);
+	int res = nmea_validate(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return -1 when sentence type is invalid", -1 == res);
 	free(sentence);
 
@@ -148,7 +148,7 @@ test_validate_fail_start()
 {
 	// Invalid sentence start (no $ sign)
 	char *sentence = strdup("£GPGLL,4916.45,N,12311.12,W,225444,A\r\n");
-	int res = nmea_validate(sentence, strlen(sentence), 1);
+	int res = nmea_validate(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return -1 when sentence start is invalid", -1 == res);
 	free(sentence);
 
@@ -163,13 +163,13 @@ test_validate_fail_end()
 
 	// Invalid sentence ending (no \n)
 	sentence = strdup("$GPGLL,4916.45,N,12311.12,W,225444,A");
-	res = nmea_validate(sentence, strlen(sentence), 1);
+	res = nmea_validate(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return -1 when sentence ending is invalid", -1 == res);
 	free(sentence);
 
 	// Too short sentence
 	sentence = strdup("$GP");
-	res = nmea_validate(sentence, strlen(sentence), 1);
+	res = nmea_validate(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return -1 when sentence is too short", -1 == res);
 	free(sentence);
 
@@ -181,7 +181,7 @@ test_validate_fail_empty()
 {
 	// Invalid sentence (empty string)
 	char *sentence = strdup("");
-	int res = nmea_validate(sentence, strlen(sentence), 1);
+	int res = nmea_validate(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return -1 when sentence is empty", -1 == res);
 	free(sentence);
 
@@ -196,14 +196,14 @@ test_parse_ok()
 
 	// With crc\n
 	sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47\r\n");
-	res = nmea_parse(sentence, strlen(sentence), 1);
+	res = nmea_parse(sentence, strlen(sentence), 1, 1);
 	mu_assert("should be able to parse a GPGGA sentence", NULL != res);
 	free(sentence);
 	nmea_free(res);
 
 	// With invalid crc, but check disabled
 	sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*FF\r\n");
-	res = nmea_parse(sentence, strlen(sentence), 0);
+	res = nmea_parse(sentence, strlen(sentence), 0, 1);
 	mu_assert("should be able to parse a GPGGA sentence", NULL != res);
 	free(sentence);
 	nmea_free(res);
@@ -218,7 +218,7 @@ test_parse_unknown()
 	nmea_s *res;
 
 	sentence = strdup("$JACK1,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47\r\n");
-	res = nmea_parse(sentence, strlen(sentence), 1);
+	res = nmea_parse(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return NULL when sentence type is unknown", NULL == res);
 	free(sentence);
 	nmea_free(res);
@@ -233,24 +233,24 @@ test_parse_invalid()
 	nmea_s *res;
 
 	sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*FF\r\n");
-	res = nmea_parse(sentence, strlen(sentence), 1);
+	res = nmea_parse(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return NULL when checksum is invalid", NULL == res);
 	free(sentence);
 	nmea_free(res);
 
 	sentence = strdup("");
-	res = nmea_parse(sentence, strlen(sentence), 1);
+	res = nmea_parse(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return NULL when sentence is empty", NULL == res);
 	free(sentence);
 	nmea_free(res);
 
 	sentence = strdup("invalid");
-	res = nmea_parse(sentence, strlen(sentence), 1);
+	res = nmea_parse(sentence, strlen(sentence), 1, 1);
 	mu_assert("should return NULL when sentence is invalid", NULL == res);
 	free(sentence);
 	nmea_free(res);
 
-	res = nmea_parse(NULL, 0, 1);
+	res = nmea_parse(NULL, 0, 1, 1);
 	mu_assert("should return NULL when sentence is NULL", NULL == res);
 	nmea_free(res);
 
