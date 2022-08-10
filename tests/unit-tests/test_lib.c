@@ -189,6 +189,17 @@ test_validate_fail_empty()
 }
 
 static char *
+test_validate_no_escape_chars()
+{
+	char *sentence = strdup("$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47");
+	int res = nmea_validate(sentence, strlen(sentence), 1, 0);
+	mu_assert("shuld be able to parse sentences with no escape chars, as plain text", 0 == res);
+	free(sentence);
+
+	return 0;
+}
+
+static char *
 test_parse_ok()
 {
 	char *sentence;
@@ -280,6 +291,8 @@ all_tests()
 	mu_run_test(test_validate_fail_start);
 	mu_run_test(test_validate_fail_end);
 	mu_run_test(test_validate_fail_empty);
+
+	mu_run_test(test_validate_no_escape_chars);
 
 	mu_group("nmea_parse()");
 	mu_run_test(test_parse_ok);
