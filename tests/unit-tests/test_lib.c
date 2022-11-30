@@ -23,6 +23,11 @@ test_get_type_ok()
 	mu_assert("should return correct type (GPGGA)", NMEA_GPGGA == res);
 	free(sentence);
 
+	sentence = strdup("$GNGGA,4916.45,N,12311.12,W,225444,A\r\n");
+	res = nmea_get_type(sentence);
+	mu_assert("should return correct type (GPGGA) even if talker is GN", NMEA_GPGGA == res);
+	free(sentence);
+
 	return 0;
 }
 

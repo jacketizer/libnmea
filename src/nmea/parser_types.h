@@ -5,6 +5,10 @@
 
 typedef struct {
 	nmea_t type;
+	/* For compatibility with older versions, type_word also contains the talker ID (e.g. "GP".)
+	 * However the talker ID is not taken account when looking for a parser. For example, the parser
+	 * with type_word="GPRMC" will also be used for a "GNRMC" sentence.
+	 */
 	char type_word[NMEA_PREFIX_LENGTH];
 	nmea_s *data;
 } nmea_parser_s;
