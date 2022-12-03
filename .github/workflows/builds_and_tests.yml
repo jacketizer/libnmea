@@ -20,6 +20,16 @@ jobs:
         bin/minimum
         bin/utests-parse
         ../tests/parse_stdin_test.sh bin/parse_stdin
+    - name: Build and test with CMake (static library only)
+      run: |
+        mkdir -p cmake-build-static && cd cmake-build-static
+        cmake -D NMEA_BUILD_SHARED_LIB=OFF ..
+        make
+        bin/utests
+        bin/utests-nmea
+        bin/minimum
+        bin/utests-parse
+        ../tests/parse_stdin_test.sh bin/parse_stdin
     - name: Build and test with make
       run: |
         make
