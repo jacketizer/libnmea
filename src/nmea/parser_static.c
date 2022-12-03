@@ -109,7 +109,8 @@ nmea_get_parser_by_sentence(const char *sentence)
 	int i;
 
 	for (i = 0; i < PARSER_COUNT; i++) {
-		if (0 == strncmp(sentence + 1, parsers[i].parser.type_word, NMEA_PREFIX_LENGTH)) {
+		/* compare only the sentence ID, ignore the talker ID */
+		if (0 == strncmp(sentence + 3, parsers[i].parser.type_word + 2, NMEA_PREFIX_LENGTH - 2)) {
 			return &(parsers[i]);
 		}
 	}
